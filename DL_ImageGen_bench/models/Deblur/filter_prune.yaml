@@ -1,0 +1,27 @@
+version: 1
+pruners:
+  filter_pruner:
+    class: 'L1RankedStructureParameterPruner'
+    reg_regims:
+      'model.3.weight': [0.2, '3D']
+      'model.7.conv_block.1.weight': [0.2, '3D']
+      'model.8.conv_block.1.weight': [0.2, '3D']
+      'model.9.conv_block.1.weight': [0.2, '3D']
+      'model.10.conv_block.1.weight': [0.2, '3D']
+      'model.11.conv_block.1.weight': [0.2, '3D']
+
+extensions:
+  net_thinner:
+      class: 'FilterRemover'
+      thinning_func_str: remove_filters
+      arch: 'deblurGAN'
+      dataset: 'rgb'
+
+policies:
+  - pruner:
+      instance_name: 'filter_pruner'
+    epochs: [0]
+
+  - extension:
+      instance_name: net_thinner
+    epochs: [0]

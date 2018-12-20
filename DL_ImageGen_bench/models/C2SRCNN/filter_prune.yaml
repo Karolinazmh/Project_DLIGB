@@ -1,0 +1,27 @@
+version: 1
+pruners:
+  filter_pruner:
+    class: 'L1RankedStructureParameterPruner'
+    reg_regims:
+      'mid_part.0.0.weight': [0.4, '3D']
+      'mid_part.1.weight': [0.4, '3D']
+      'mid_part.3.weight': [0.4, '3D']
+      'mid_part.5.weight': [0.4, '3D']
+      'mid_part.7.weight': [0.4, '3D']
+      'mid_part.9.0.weight': [0.4, '3D']
+
+extensions:
+  net_thinner:
+      class: 'FilterRemover'
+      thinning_func_str: remove_filters
+      arch: 'vgg19'
+      dataset: 'imagenet'
+
+policies:
+  - pruner:
+      instance_name: 'filter_pruner'
+    epochs: [0]
+
+  - extension:
+      instance_name: net_thinner
+    epochs: [0]

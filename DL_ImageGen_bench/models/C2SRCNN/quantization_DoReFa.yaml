@@ -1,0 +1,26 @@
+version: 1
+quantizers:
+  dorefa_quantizer:
+    class: DorefaQuantizer
+    bits_activations: 8
+    bits_weights: 8
+    quantize_bias: True
+
+lr_schedulers:
+   training_lr:
+     class: MultiStepLR
+     milestones: [500,1000,1500,2000]
+     gamma: 0.5
+
+policies:
+    - quantizer:
+        instance_name: dorefa_quantizer
+      starting_epoch: 0
+      ending_epoch: 2500
+      frequency: 1
+
+    - lr_scheduler:
+        instance_name: training_lr
+      starting_epoch: 0
+      ending_epoch: 2500
+      frequency: 1
