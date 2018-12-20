@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.models.cifar10 package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.models.imagenet package" href="DL_ImageGen_bench.models.imagenet.html" />
+    <link rel="prev" title="DL_ImageGen_bench.models.Deblur package" href="DL_ImageGen_bench.models.Deblur.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.models.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models.test_solver">DL_ImageGen_bench.models.test_solver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.models.cifar10 package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.models.cifar10.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-models-cifar10-package">
+<h1>DL_ImageGen_bench.models.cifar10 package<a class="headerlink" href="#dl-imagegen-bench-models-cifar10-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10.preresnet_cifar">
+<span id="dl-imagegen-bench-models-cifar10-preresnet-cifar-module"></span><h2>DL_ImageGen_bench.models.cifar10.preresnet_cifar module<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10.preresnet_cifar" title="永久链接至标题">¶</a></h2>
+<p>Pre-Activation ResNet for CIFAR10</p>
+<p>Pre-Activation ResNet for CIFAR10, based on “Identity Mappings in Deep Residual Networks”.
+This is based on TorchVision’s implementation of ResNet for ImageNet, with appropriate
+changes for pre-activation and the 10-class Cifar-10 dataset.
+This ResNet also has layer gates, to be able to dynamically remove layers.</p>
+<dl class="docutils">
+<dt>&#64;article{</dt>
+<dd>He2016,
+author = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+title = {Identity Mappings in Deep Residual Networks},
+journal = {arXiv preprint arXiv:1603.05027},
+year = {2016}</dd>
+</dl>
+<p>}</p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet20_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet20_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet20_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet20_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet32_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet32_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet32_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet32_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet44_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet44_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet44_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet44_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet56_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet56_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet56_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet56_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet110_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet110_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet110_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet110_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet20_cifar_conv_ds">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet20_cifar_conv_ds</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet20_cifar_conv_ds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet20_cifar_conv_ds" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet32_cifar_conv_ds">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet32_cifar_conv_ds</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet32_cifar_conv_ds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet32_cifar_conv_ds" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet44_cifar_conv_ds">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet44_cifar_conv_ds</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet44_cifar_conv_ds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet44_cifar_conv_ds" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet56_cifar_conv_ds">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet56_cifar_conv_ds</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet56_cifar_conv_ds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet56_cifar_conv_ds" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet110_cifar_conv_ds">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.preresnet_cifar.</code><code class="descname">preact_resnet110_cifar_conv_ds</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/preresnet_cifar.html#preact_resnet110_cifar_conv_ds"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.preresnet_cifar.preact_resnet110_cifar_conv_ds" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10.resnet_cifar">
+<span id="dl-imagegen-bench-models-cifar10-resnet-cifar-module"></span><h2>DL_ImageGen_bench.models.cifar10.resnet_cifar module<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10.resnet_cifar" title="永久链接至标题">¶</a></h2>
+<p>Resnet for CIFAR10</p>
+<p>Resnet for CIFAR10, based on “Deep Residual Learning for Image Recognition”.
+This is based on TorchVision’s implementation of ResNet for ImageNet, with appropriate
+changes for the 10-class Cifar-10 dataset.
+This ResNet also has layer gates, to be able to dynamically remove layers.</p>
+<dl class="docutils">
+<dt>&#64;inproceedings{DBLP:conf/cvpr/HeZRS16,</dt>
+<dd><dl class="first docutils">
+<dt>author    = {Kaiming He and</dt>
+<dd>Xiangyu Zhang and
+Shaoqing Ren and
+Jian Sun},</dd>
+</dl>
+<p class="last">title     = {Deep Residual Learning for Image Recognition},
+booktitle = {{CVPR}},
+pages     = {770–778},
+publisher = {{IEEE} Computer Society},
+year      = {2016}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet20_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar.</code><code class="descname">resnet20_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar.html#resnet20_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet20_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet32_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar.</code><code class="descname">resnet32_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar.html#resnet32_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet32_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet44_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar.</code><code class="descname">resnet44_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar.html#resnet44_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet44_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet56_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar.</code><code class="descname">resnet56_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar.html#resnet56_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar.resnet56_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit">
+<span id="dl-imagegen-bench-models-cifar10-resnet-cifar-earlyexit-module"></span><h2>DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit module<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit" title="永久链接至标题">¶</a></h2>
+<p>Resnet for CIFAR10</p>
+<p>Resnet for CIFAR10, based on “Deep Residual Learning for Image Recognition”.
+This is based on TorchVision’s implementation of ResNet for ImageNet, with appropriate
+changes for the 10-class Cifar-10 dataset.
+This ResNet also has layer gates, to be able to dynamically remove layers.</p>
+<dl class="docutils">
+<dt>&#64;inproceedings{DBLP:conf/cvpr/HeZRS16,</dt>
+<dd><dl class="first docutils">
+<dt>author    = {Kaiming He and</dt>
+<dd>Xiangyu Zhang and
+Shaoqing Ren and
+Jian Sun},</dd>
+</dl>
+<p class="last">title     = {Deep Residual Learning for Image Recognition},
+booktitle = {{CVPR}},
+pages     = {770–778},
+publisher = {{IEEE} Computer Society},
+year      = {2016}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet20_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet20_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet20_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet20_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet32_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet32_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet32_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet32_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet44_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet44_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet44_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet44_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet56_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet56_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet56_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet56_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet110_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet110_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet110_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet110_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet1202_cifar_earlyexit">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.</code><code class="descname">resnet1202_cifar_earlyexit</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/resnet_cifar_earlyexit.html#resnet1202_cifar_earlyexit"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit.resnet1202_cifar_earlyexit" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10.simplenet_cifar">
+<span id="dl-imagegen-bench-models-cifar10-simplenet-cifar-module"></span><h2>DL_ImageGen_bench.models.cifar10.simplenet_cifar module<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10.simplenet_cifar" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.simplenet_cifar.simplenet_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.simplenet_cifar.</code><code class="descname">simplenet_cifar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/simplenet_cifar.html#simplenet_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.simplenet_cifar.simplenet_cifar" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10.vgg_cifar">
+<span id="dl-imagegen-bench-models-cifar10-vgg-cifar-module"></span><h2>DL_ImageGen_bench.models.cifar10.vgg_cifar module<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10.vgg_cifar" title="永久链接至标题">¶</a></h2>
+<p>VGG for CIFAR10</p>
+<p>VGG for CIFAR10, based on “Very Deep Convolutional Networks for Large-Scale
+Image Recognition”.
+This is based on TorchVision’s implementation of VGG for ImageNet, with
+appropriate changes for the 10-class Cifar-10 dataset.
+We replaced the three linear classifiers with a single one.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.VGGCifar">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">VGGCifar</code><span class="sig-paren">(</span><em>features</em>, <em>num_classes=10</em>, <em>init_weights=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#VGGCifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.VGGCifar" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.VGGCifar.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#VGGCifar.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.VGGCifar.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg11_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg11_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg11_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg11_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 11-layer model (configuration “A”)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg11_bn_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg11_bn_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg11_bn_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg11_bn_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 11-layer model (configuration “A”) with batch normalization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg13_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg13_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 13-layer model (configuration “B”)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_bn_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg13_bn_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg13_bn_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_bn_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 13-layer model (configuration “B”) with batch normalization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg16_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg16_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 16-layer model (configuration “D”)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_bn_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg16_bn_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg16_bn_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_bn_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 16-layer model (configuration “D”) with batch normalization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg19_bn_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg19_bn_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg19_bn_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg19_bn_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 19-layer model (configuration ‘E’) with batch normalization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg19_cifar">
+<code class="descclassname">DL_ImageGen_bench.models.cifar10.vgg_cifar.</code><code class="descname">vgg19_cifar</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/cifar10/vgg_cifar.html#vgg19_cifar"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg19_cifar" title="永久链接至目标">¶</a></dt>
+<dd><p>VGG 19-layer model (configuration “E”)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.cifar10">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.models.cifar10" title="永久链接至标题">¶</a></h2>
+<p>This package contains CIFAR image classification models for pytorch</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.models.imagenet.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.models.imagenet package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.models.Deblur.html" class="btn btn-neutral" title="DL_ImageGen_bench.models.Deblur package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

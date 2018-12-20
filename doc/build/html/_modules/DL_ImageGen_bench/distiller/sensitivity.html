@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.sensitivity &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.sensitivity</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.sensitivity 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;Perform sensitivity tests on layers and whole networks.</span>
+
+<span class="sd">Construct a schedule for experimenting with network and layer sensitivity</span>
+<span class="sd">to pruning.</span>
+
+<span class="sd">The idea is to set the pruning level (percentage) of specific layers (or the</span>
+<span class="sd">entire network), and then to prune once, run an evaluation on the test dataset,</span>
+<span class="sd">and exit.  This should teach us about the &quot;sensitivity&quot; of the network/layers</span>
+<span class="sd">to pruning.</span>
+
+<span class="sd">This concept is discussed in &quot;Learning both Weights and Connections for</span>
+<span class="sd">Efficient Neural Networks&quot; - https://arxiv.org/pdf/1506.02626v3.pdf</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">from</span> <span class="nn">.scheduler</span> <span class="k">import</span> <span class="n">CompressionScheduler</span>
+
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+<div class="viewcode-block" id="perform_sensitivity_analysis"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis">[文档]</a><span class="k">def</span> <span class="nf">perform_sensitivity_analysis</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">net_params</span><span class="p">,</span> <span class="n">sparsities</span><span class="p">,</span> <span class="n">test_func</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform a sensitivity test for a model&#39;s weights parameters.</span>
+
+<span class="sd">    The model should be trained to maximum accuracy, because we aim to understand</span>
+<span class="sd">    the behavior of the model&#39;s performance in relation to pruning of a specific</span>
+<span class="sd">    weights tensor.</span>
+
+<span class="sd">    By default this function will test all of the model&#39;s parameters.</span>
+
+<span class="sd">    The return value is a complex sensitivities dictionary: the dictionary&#39;s</span>
+<span class="sd">    key is the name (string) of the weights tensor.  The value is another dictionary,</span>
+<span class="sd">    where the tested sparsity-level is the key, and a (top1, top5, loss) tuple</span>
+<span class="sd">    is the value.</span>
+<span class="sd">    Below is an example of such a dictionary:</span>
+
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    {&#39;features.module.6.weight&#39;:    {0.0:  (56.518, 79.07,  1.9159),</span>
+<span class="sd">                                     0.05: (56.492, 79.1,   1.9161),</span>
+<span class="sd">                                     0.10: (56.212, 78.854, 1.9315),</span>
+<span class="sd">                                     0.15: (35.424, 60.3,   3.0866)},</span>
+<span class="sd">     &#39;classifier.module.1.weight&#39;:  {0.0:  (56.518, 79.07,  1.9159),</span>
+<span class="sd">                                     0.05: (56.514, 79.07,  1.9159),</span>
+<span class="sd">                                     0.10: (56.434, 79.074, 1.9138),</span>
+<span class="sd">                                     0.15: (54.454, 77.854, 2.3127)} }</span>
+
+<span class="sd">    The test_func is expected to execute the model on a test/validation dataset,</span>
+<span class="sd">    and return the results for top1 and top5 accuracies, and the loss value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;group parameter contains an illegal value: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+    <span class="n">sensitivities</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="n">net_params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Make a copy of the model, because when we apply the zeros mask (i.e.</span>
+        <span class="c1"># perform pruning), the model&#39;s weights are altered</span>
+        <span class="n">model_cpy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">sensitivity</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sparsity_level</span> <span class="ow">in</span> <span class="n">sparsities</span><span class="p">:</span>
+            <span class="n">sparsity_level</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sparsity_level</span><span class="p">)</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Testing sensitivity of </span><span class="si">%s</span><span class="s2"> [</span><span class="si">%0.1f%%</span><span class="s2"> sparsity]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">sparsity_level</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+            <span class="c1"># Create the pruner (a level pruner), the pruning policy and the</span>
+            <span class="c1"># pruning schedule.</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;element&#39;</span><span class="p">:</span>
+                <span class="c1"># Element-wise sparasity</span>
+                <span class="n">sparsity_levels</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="n">sparsity_level</span><span class="p">}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">SparsityLevelParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">sparsity_levels</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;filter&#39;</span><span class="p">:</span>
+                <span class="c1"># Filter ranking</span>
+                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">regims</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="p">[</span><span class="n">sparsity_level</span><span class="p">,</span> <span class="s1">&#39;3D&#39;</span><span class="p">]}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">L1RankedStructureParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">reg_regims</span><span class="o">=</span><span class="n">regims</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;channel&#39;</span><span class="p">:</span>
+                <span class="c1"># Filter ranking</span>
+                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">regims</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="p">[</span><span class="n">sparsity_level</span><span class="p">,</span> <span class="s1">&#39;Channels&#39;</span><span class="p">]}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">L1RankedStructureParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">reg_regims</span><span class="o">=</span><span class="n">regims</span><span class="p">)</span>
+
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">PruningPolicy</span><span class="p">(</span><span class="n">pruner</span><span class="p">,</span> <span class="n">pruner_args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">scheduler</span> <span class="o">=</span> <span class="n">CompressionScheduler</span><span class="p">(</span><span class="n">model_cpy</span><span class="p">)</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">add_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Compute the pruning mask per the pruner and apply the mask on the weights</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">on_epoch_begin</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">()</span>
+
+            <span class="c1"># Test and record the performance of the pruned model</span>
+            <span class="n">prec1</span><span class="p">,</span> <span class="n">prec5</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">test_func</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_cpy</span><span class="p">)</span>
+            <span class="n">sensitivity</span><span class="p">[</span><span class="n">sparsity_level</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">prec1</span><span class="p">,</span> <span class="n">prec5</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+            <span class="n">sensitivities</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensitivity</span>
+    <span class="k">return</span> <span class="n">sensitivities</span></div>
+
+
+<div class="viewcode-block" id="perform_sensitivity_analysis_sr"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis_sr">[文档]</a><span class="k">def</span> <span class="nf">perform_sensitivity_analysis_sr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">net_params</span><span class="p">,</span> <span class="n">sparsities</span><span class="p">,</span> <span class="n">test_func</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform a sensitivity test for a model&#39;s weights parameters.</span>
+
+<span class="sd">    The model should be trained to maximum accuracy, because we aim to understand</span>
+<span class="sd">    the behavior of the model&#39;s performance in relation to pruning of a specific</span>
+<span class="sd">    weights tensor.</span>
+
+<span class="sd">    By default this function will test all of the model&#39;s parameters.</span>
+
+<span class="sd">    The return value is a complex sensitivities dictionary: the dictionary&#39;s</span>
+<span class="sd">    key is the name (string) of the weights tensor.  The value is another dictionary,</span>
+<span class="sd">    where the tested sparsity-level is the key, and a (top1, top5, loss) tuple</span>
+<span class="sd">    is the value.</span>
+<span class="sd">    Below is an example of such a dictionary:</span>
+
+<span class="sd">    .. code-block:: python</span>
+<span class="sd">    {&#39;features.module.6.weight&#39;:    {0.0:  (56.518, 79.07,  1.9159),</span>
+<span class="sd">                                     0.05: (56.492, 79.1,   1.9161),</span>
+<span class="sd">                                     0.10: (56.212, 78.854, 1.9315),</span>
+<span class="sd">                                     0.15: (35.424, 60.3,   3.0866)},</span>
+<span class="sd">     &#39;classifier.module.1.weight&#39;:  {0.0:  (56.518, 79.07,  1.9159),</span>
+<span class="sd">                                     0.05: (56.514, 79.07,  1.9159),</span>
+<span class="sd">                                     0.10: (56.434, 79.074, 1.9138),</span>
+<span class="sd">                                     0.15: (54.454, 77.854, 2.3127)} }</span>
+
+<span class="sd">    The test_func is expected to execute the model on a test/validation dataset,</span>
+<span class="sd">    and return the results for top1 and top5 accuracies, and the loss value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;group parameter contains an illegal value: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+    <span class="n">sensitivities</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="n">net_params</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Make a copy of the model, because when we apply the zeros mask (i.e.</span>
+        <span class="c1"># perform pruning), the model&#39;s weights are altered</span>
+        <span class="n">model_cpy</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="n">sensitivity</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sparsity_level</span> <span class="ow">in</span> <span class="n">sparsities</span><span class="p">:</span>
+            <span class="n">sparsity_level</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sparsity_level</span><span class="p">)</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Testing sensitivity of </span><span class="si">%s</span><span class="s2"> [</span><span class="si">%0.1f%%</span><span class="s2"> sparsity]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">sparsity_level</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+            <span class="c1"># Create the pruner (a level pruner), the pruning policy and the</span>
+            <span class="c1"># pruning schedule.</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;element&#39;</span><span class="p">:</span>
+                <span class="c1"># Element-wise sparasity</span>
+                <span class="n">sparsity_levels</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="n">sparsity_level</span><span class="p">}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">SparsityLevelParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">sparsity_levels</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;filter&#39;</span><span class="p">:</span>
+                <span class="c1"># Filter ranking</span>
+                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">regims</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="p">[</span><span class="n">sparsity_level</span><span class="p">,</span> <span class="s1">&#39;3D&#39;</span><span class="p">]}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">L1RankedStructureParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">reg_regims</span><span class="o">=</span><span class="n">regims</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group</span> <span class="o">==</span> <span class="s1">&#39;channel&#39;</span><span class="p">:</span>
+                <span class="c1"># Filter ranking</span>
+                <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">regims</span> <span class="o">=</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="p">[</span><span class="n">sparsity_level</span><span class="p">,</span> <span class="s1">&#39;Channels&#39;</span><span class="p">]}</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">pruning</span><span class="o">.</span><span class="n">L1RankedStructureParameterPruner</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">reg_regims</span><span class="o">=</span><span class="n">regims</span><span class="p">)</span>
+
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">PruningPolicy</span><span class="p">(</span><span class="n">pruner</span><span class="p">,</span> <span class="n">pruner_args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">scheduler</span> <span class="o">=</span> <span class="n">CompressionScheduler</span><span class="p">(</span><span class="n">model_cpy</span><span class="p">)</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">add_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Compute the pruning mask per the pruner and apply the mask on the weights</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">on_epoch_begin</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">scheduler</span><span class="o">.</span><span class="n">apply_mask</span><span class="p">()</span>
+
+            <span class="c1"># Test and record the performance of the pruned model</span>
+            <span class="n">psnr</span> <span class="o">=</span> <span class="n">test_func</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model_cpy</span><span class="p">)</span>
+            <span class="n">sensitivity</span><span class="p">[</span><span class="n">sparsity_level</span><span class="p">]</span> <span class="o">=</span> <span class="n">psnr</span>
+            <span class="n">sensitivities</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sensitivity</span>
+    <span class="k">return</span> <span class="n">sensitivities</span></div>
+
+
+<div class="viewcode-block" id="sensitivities_to_png"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_png">[文档]</a><span class="k">def</span> <span class="nf">sensitivities_to_png</span><span class="p">(</span><span class="n">sensitivities</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a mulitplot of the sensitivities.</span>
+
+<span class="sd">    The &#39;sensitivities&#39; argument is expected to have the dict-of-dict structure</span>
+<span class="sd">    described in the documentation of perform_sensitivity_test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># sudo apt-get install python3-tk</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: Function plot_sensitivity requires package matplotlib which&quot;</span>
+              <span class="s2">&quot;is not installed in your execution environment.</span><span class="se">\n</span><span class="s2">&quot;</span>
+              <span class="s2">&quot;Skipping the PNG file generation&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating sensitivity graph&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">sensitivity</span> <span class="ow">in</span> <span class="n">sensitivities</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">sense</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">sparsity</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">sensitivity</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">sparsities</span> <span class="o">=</span> <span class="p">[</span><span class="n">sparsity</span> <span class="k">for</span> <span class="n">sparsity</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">sensitivity</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sparsities</span><span class="p">,</span> <span class="n">sense</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">param_name</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;top5&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;sparsity&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Pruning Sensitivity&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower center&#39;</span><span class="p">,</span>
+               <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span> <span class="n">borderaxespad</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;png&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sensitivities_to_csv"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_csv">[文档]</a><span class="k">def</span> <span class="nf">sensitivities_to_csv</span><span class="p">(</span><span class="n">sensitivities</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a CSV file listing from the sensitivities dictionary.</span>
+
+<span class="sd">    The &#39;sensitivities&#39; argument is expected to have the dict-of-dict structure</span>
+<span class="sd">    described in the documentation of perform_sensitivity_test.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_file</span><span class="p">:</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+        <span class="c1"># write the header</span>
+        <span class="c1"># writer.writerow([&#39;parameter&#39;, &#39;sparsity&#39;, &#39;top1&#39;, &#39;top5&#39;, &#39;loss&#39;])</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;sparsity&#39;</span><span class="p">,</span> <span class="s1">&#39;psnr&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">sensitivity</span> <span class="ow">in</span> <span class="n">sensitivities</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">sparsity</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">sensitivity</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># writer.writerow([param_name] + [sparsity] + list(values))</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">param_name</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">sparsity</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">values</span><span class="p">])</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

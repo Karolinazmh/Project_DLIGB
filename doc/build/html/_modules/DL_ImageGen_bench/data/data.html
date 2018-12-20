@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.data.data &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.data.data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.data.data 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">os.path</span> <span class="k">import</span> <span class="n">exists</span><span class="p">,</span> <span class="n">join</span><span class="p">,</span> <span class="n">basename</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">remove</span>
+<span class="kn">from</span> <span class="nn">six.moves</span> <span class="k">import</span> <span class="n">urllib</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">from</span> <span class="nn">torchvision.transforms</span> <span class="k">import</span> <span class="n">Compose</span><span class="p">,</span> <span class="n">CenterCrop</span><span class="p">,</span> <span class="n">ToTensor</span><span class="p">,</span> <span class="n">Resize</span>
+
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+
+<span class="kn">from</span> <span class="nn">.dataset</span> <span class="k">import</span> <span class="n">DatasetFromFolder</span>
+<span class="kn">from</span> <span class="nn">.dataset</span> <span class="k">import</span> <span class="n">DatasetFromEvaFolder</span>
+
+
+<div class="viewcode-block" id="download_bsd300"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.download_bsd300">[文档]</a><span class="k">def</span> <span class="nf">download_bsd300</span><span class="p">(</span><span class="n">dest</span><span class="o">=</span><span class="s2">&quot;./dataset&quot;</span><span class="p">):</span>
+    <span class="n">output_image_dir</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="s2">&quot;BSDS300/images&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span><span class="n">output_image_dir</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/BSDS300-images.tgz&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;downloading url &quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">basename</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Extracting data&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tar</span><span class="p">:</span>
+                <span class="n">tar</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">dest</span><span class="p">)</span>
+
+        <span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_image_dir</span></div>
+
+
+<div class="viewcode-block" id="calculate_valid_crop_size"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.calculate_valid_crop_size">[文档]</a><span class="k">def</span> <span class="nf">calculate_valid_crop_size</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">crop_size</span> <span class="o">-</span> <span class="p">(</span><span class="n">crop_size</span> <span class="o">%</span> <span class="n">upscale_factor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="input_transform"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.input_transform">[文档]</a><span class="k">def</span> <span class="nf">input_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Compose</span><span class="p">([</span>
+        <span class="n">CenterCrop</span><span class="p">(</span><span class="n">crop_size</span><span class="p">),</span>
+        <span class="n">Resize</span><span class="p">(</span><span class="n">crop_size</span> <span class="o">//</span> <span class="n">upscale_factor</span><span class="p">,</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">),</span>
+        <span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="target_transform"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.target_transform">[文档]</a><span class="k">def</span> <span class="nf">target_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Compose</span><span class="p">([</span>
+        <span class="n">CenterCrop</span><span class="p">(</span><span class="n">crop_size</span><span class="p">),</span>
+        <span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="full_feature_transform"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.full_feature_transform">[文档]</a><span class="k">def</span> <span class="nf">full_feature_transform</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">Compose</span><span class="p">([</span>
+        <span class="n">ToTensor</span><span class="p">(),</span>
+    <span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="get_training_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_training_set">[文档]</a><span class="k">def</span> <span class="nf">get_training_set</span><span class="p">(</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">train_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        获取Training dataset</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            upscale_factor (int): SR 图像的scale倍率 \n</span>
+<span class="sd">            train_dir (str): 训练库的位置</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dataset (class DatasetFromFolder): 训练数据库		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># root_dir = download_bsd300()</span>
+    <span class="c1"># train_dir = join(root_dir, &quot;train_aug&quot;)</span>
+    <span class="c1"># if not exists(train_dir):</span>
+    <span class="c1">#     train_dir = join(root_dir, &quot;train&quot;)</span>
+    <span class="n">crop_size</span> <span class="o">=</span> <span class="n">calculate_valid_crop_size</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">DatasetFromFolder</span><span class="p">(</span><span class="n">train_dir</span><span class="p">,</span>
+                             <span class="n">input_transform</span><span class="o">=</span><span class="n">input_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">),</span>
+                             <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_test_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_test_set">[文档]</a><span class="k">def</span> <span class="nf">get_test_set</span><span class="p">(</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">test_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        获取Validataion dataset (在train的过程中supervise模型性能的数据库)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            upscale_factor (int): SR 图像的scale倍率 \n</span>
+<span class="sd">            test_dir (str): 验证库的位置</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dataset (class DatasetFromFolder): 验证数据库		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># root_dir = download_bsd300()</span>
+    <span class="c1"># test_dir = join(root_dir, &quot;test&quot;)</span>
+    <span class="n">crop_size</span> <span class="o">=</span> <span class="n">calculate_valid_crop_size</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">DatasetFromFolder</span><span class="p">(</span><span class="n">test_dir</span><span class="p">,</span>
+                             <span class="n">input_transform</span><span class="o">=</span><span class="n">input_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="p">),</span>
+                             <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_eva_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_eva_set">[文档]</a><span class="k">def</span> <span class="nf">get_eva_set</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        获取Evaluation dataset</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            opt (dict): 参数列表</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dataset (class DatasetFromFolder): 测试数据库		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">DatasetFromEvaFolder</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">evadata</span><span class="p">,</span>
+                                <span class="n">input_transform</span><span class="o">=</span><span class="n">full_feature_transform</span><span class="p">(),</span>
+                                <span class="n">target_transform</span><span class="o">=</span><span class="n">full_feature_transform</span><span class="p">(),</span>
+                                <span class="n">opt</span><span class="o">=</span><span class="n">opt</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

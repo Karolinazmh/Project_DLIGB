@@ -1,0 +1,859 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.apputils.model_summaries &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.apputils.model_summaries</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.apputils.model_summaries 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;This module provides various model summary information.</span>
+
+<span class="sd">This code is proven to work on CNN image classification models using PyTorch 04.</span>
+<span class="sd">RNNs are currently not working well.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torchvision</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="kn">import</span> <span class="nn">torch.jit</span> <span class="k">as</span> <span class="nn">jit</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="k">import</span> <span class="n">tabulate</span>
+<span class="kn">import</span> <span class="nn">pydot</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="onnx_name_2_pytorch_name"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.onnx_name_2_pytorch_name">[文档]</a><span class="k">def</span> <span class="nf">onnx_name_2_pytorch_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op_type</span><span class="p">):</span>
+    <span class="c1"># Convert a layer&#39;s name from an ONNX name, to a PyTorch name</span>
+    <span class="c1"># For example:</span>
+    <span class="c1">#   ResNet/Sequential[layer3]/BasicBlock[0]/ReLU[relu].1 ==&gt; layer3.0.relu.1</span>
+
+    <span class="c1"># First see if there&#39;s an instance identifier</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c1"># Next, split by square brackets</span>
+    <span class="n">name_parts</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\[.*?\]&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">name_parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">part</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">name_parts</span><span class="p">]</span>
+
+    <span class="c1"># add op_type in name, fix add &amp; transpose has same name, 2018-09-19 CKH</span>
+    <span class="n">name_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op_type</span><span class="p">)</span>
+
+    <span class="c1"># If name doesn&#39;t have the pattern above, it probably means the op was called via</span>
+    <span class="c1"># some functional API and not via a module. Couple of examples:</span>
+    <span class="c1">#   x = x.view(...)</span>
+    <span class="c1">#   x = F.relu(x)</span>
+    <span class="c1"># In this case, to have a meaningful name, we use the op type</span>
+    <span class="n">new_name</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name_parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">op_type</span><span class="p">)</span> <span class="o">+</span> <span class="n">instance</span>
+
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;new sgraph node </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op_type</span><span class="p">,</span> <span class="n">new_name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">new_name</span></div>
+
+
+<div class="viewcode-block" id="SummaryGraph"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph">[文档]</a><span class="k">class</span> <span class="nc">SummaryGraph</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;We use Pytorch&#39;s JIT tracer to run a forward pass and generate a trace graph, which</span>
+<span class="sd">    is an internal representation of the model.  We then use ONNX to &quot;clean&quot; this</span>
+<span class="sd">    representation.  After builiding a new representation of the graph, we can print</span>
+<span class="sd">    it to a table, a PNG, add information to nodes, etc.</span>
+
+<span class="sd">    The trace is a C++ component and the API is not documented, so we need to dig into some</span>
+<span class="sd">    Pytorch internals code to understand how to get the info we need.</span>
+<span class="sd">    https://github.com/pytorch/pytorch/blob/master/torch/onnx/__init__.py</span>
+<span class="sd">    https://github.com/pytorch/pytorch/blob/master/torch/onnx/symbolic.py</span>
+
+<span class="sd">    We think that using the trace output to generate a representation of the graph, is</span>
+<span class="sd">    the best method available in Pytorch, due to the module&#39;s dynamic nature.</span>
+<span class="sd">    Pytorch&#39;s module API naturally ignores layers/operations which are implemented as</span>
+<span class="sd">    torch.autograd.Function, without an nn.Module.  For example:</span>
+<span class="sd">        out = F.relu(self.bn1(self.conv1(x)))</span>
+
+<span class="sd">    Another case where traversing the nn.Module API is not sufficient to create a</span>
+<span class="sd">    representation of the graph, is the same nn.Module is used several times in the</span>
+<span class="sd">    graph.  For example:</span>
+
+<span class="sd">        out = self.conv1(x)</span>
+<span class="sd">        out = self.bn1(out)</span>
+<span class="sd">        out = self.relu(out)    &lt;=== First use of self.relu</span>
+
+<span class="sd">        out = self.conv2(out)</span>
+<span class="sd">        out = self.bn2(out)</span>
+<span class="sd">        out = self.relu(out)    &lt;=== Second use of self.relu</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">Edge</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Edge&#39;</span><span class="p">,</span> <span class="s1">&#39;src dst&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">set_training</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">trace</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">jit</span><span class="o">.</span><span class="n">get_trace_graph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+
+            <span class="c1"># Let ONNX do the heavy lifting: fusing the convolution nodes; fusing the nodes</span>
+            <span class="c1"># composing a GEMM operation; etc.</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">_optimize_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">graph</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">graph</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ops</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="n">in_out</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">inputs</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">outputs</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">in_out</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__add_param</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+                <span class="n">new_op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create_op</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+                <span class="c1"># Operators with the same name create very confusing graphs (Resnet, for example),</span>
+                <span class="c1"># so we &quot;unroll&quot; them.</span>
+                <span class="c1"># Sometimes operations of different types have the same name, so we differentiate</span>
+                <span class="c1"># using both name and type</span>
+                <span class="c1"># (this happens, for example, when an operator is called via some functional API and</span>
+                <span class="c1"># not via a module)</span>
+                <span class="n">same</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span>
+                        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;orig-name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;orig-name&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">same</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">same</span><span class="p">))</span>
+
+                <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onnx_name_2_pytorch_name</span><span class="p">(</span><span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="p">[</span><span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">new_op</span>
+
+                <span class="k">for</span> <span class="n">input_</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">inputs</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__add_input</span><span class="p">(</span><span class="n">new_op</span><span class="p">,</span> <span class="n">input_</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SummaryGraph</span><span class="o">.</span><span class="n">Edge</span><span class="p">(</span><span class="n">input_</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">(),</span> <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
+
+                <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">outputs</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__add_output</span><span class="p">(</span><span class="n">new_op</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SummaryGraph</span><span class="o">.</span><span class="n">Edge</span><span class="p">(</span><span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">output</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">()))</span>
+
+                <span class="n">new_op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">attr_name</span><span class="p">:</span> <span class="n">node</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">attributeNames</span><span class="p">()}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_macs_attr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_footprint_attr</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_arithmetic_intensity_attr</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__create_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onnx_node</span><span class="p">):</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onnx_node</span><span class="o">.</span><span class="n">scopeName</span><span class="p">()</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;orig-name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onnx_node</span><span class="o">.</span><span class="n">scopeName</span><span class="p">()</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onnx_node</span><span class="o">.</span><span class="n">kind</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;::onnx&#39;</span><span class="p">)</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">op</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">op</span>
+
+    <span class="k">def</span> <span class="nf">__add_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add_param</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">param</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]:</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__add_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add_param</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">param</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__add_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__tensor_desc</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">()]</span> <span class="o">=</span> <span class="n">param</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">param</span>
+
+    <span class="k">def</span> <span class="nf">__tensor_desc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="n">tensor</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">tensor</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">uniqueName</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># try parsing the FM tensor type.  For example: Float(1, 64, 8, 8)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">type</span><span class="p">())</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)]</span>
+            <span class="n">tensor</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># Size not specified in type</span>
+            <span class="n">tensor</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">tensor</span>
+
+<div class="viewcode-block" id="SummaryGraph.param_shape"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_shape">[文档]</a>    <span class="k">def</span> <span class="nf">param_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">param_id</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.volume"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.volume">[文档]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="n">dims</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.param_volume"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_volume">[文档]</a>    <span class="k">def</span> <span class="nf">param_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SummaryGraph</span><span class="o">.</span><span class="n">volume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_shape</span><span class="p">(</span><span class="n">param_id</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.add_macs_attr"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_macs_attr">[文档]</a>    <span class="k">def</span> <span class="nf">add_macs_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;MACs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Conv&#39;</span><span class="p">:</span>
+                <span class="n">conv_out</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">conv_in</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">conv_w</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;kernel_shape&#39;</span><span class="p">]</span>
+                <span class="n">ofm_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_volume</span><span class="p">(</span><span class="n">conv_out</span><span class="p">)</span>
+                <span class="c1"># MACs = volume(OFM) * (#IFM * K^2)</span>
+                <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;MACs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ofm_vol</span> <span class="o">*</span> <span class="n">SummaryGraph</span><span class="o">.</span><span class="n">volume</span><span class="p">(</span><span class="n">conv_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">conv_in</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Gemm&#39;</span><span class="p">:</span>
+                <span class="n">conv_out</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">conv_in</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">n_ifm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_shape</span><span class="p">(</span><span class="n">conv_in</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">n_ofm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_shape</span><span class="p">(</span><span class="n">conv_out</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># MACs = #IFM * #OFM</span>
+                <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;MACs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_ofm</span> <span class="o">*</span> <span class="n">n_ifm</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.add_footprint_attr"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_footprint_attr">[文档]</a>    <span class="k">def</span> <span class="nf">add_footprint_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Gemm&#39;</span><span class="p">,</span> <span class="s1">&#39;MaxPool&#39;</span><span class="p">]:</span>
+                <span class="n">conv_out</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">conv_in</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">ofm_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_volume</span><span class="p">(</span><span class="n">conv_out</span><span class="p">)</span>
+                <span class="n">ifm_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_volume</span><span class="p">(</span><span class="n">conv_in</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Conv&#39;</span> <span class="ow">or</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Gemm&#39;</span><span class="p">:</span>
+                    <span class="n">conv_w</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">weights_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_volume</span><span class="p">(</span><span class="n">conv_w</span><span class="p">)</span>
+                    <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ofm_vol</span> <span class="o">+</span> <span class="n">ifm_vol</span> <span class="o">+</span> <span class="n">weights_vol</span>
+                    <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;fm_vol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ofm_vol</span> <span class="o">+</span> <span class="n">ifm_vol</span>
+                    <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;weights_vol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights_vol</span>
+                <span class="k">elif</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MaxPool&#39;</span><span class="p">:</span>
+                    <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ofm_vol</span> <span class="o">+</span> <span class="n">ifm_vol</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.add_arithmetic_intensity_attr"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_arithmetic_intensity_attr">[文档]</a>    <span class="k">def</span> <span class="nf">add_arithmetic_intensity_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ai&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># integers are enough, and note that we also round up</span>
+                <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;ai&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;MACs&#39;</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="o">*</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">])</span> <span class="o">//</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;footprint&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.get_attr"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_attr">[文档]</a>    <span class="k">def</span> <span class="nf">get_attr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">op</span><span class="p">:</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="n">attr</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">f</span><span class="p">(</span><span class="n">op</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.get_ops"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_ops">[文档]</a>    <span class="k">def</span> <span class="nf">get_ops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">op</span><span class="p">:</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">op</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">f</span><span class="p">(</span><span class="n">op</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.find_op"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_op">[文档]</a>    <span class="k">def</span> <span class="nf">find_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lost_op_name</span><span class="p">):</span>
+        <span class="c1"># lost_op_name = &#39;shrink.0.g1con1.Conv&#39;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lost_op_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="c1"># part of name key to get op, 2018-09-19 CKH</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">lost_op_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+        <span class="c1"># if &#39;.&#39; in lost_op_name:</span>
+        <span class="c1">#     op_find = [x[1] for x in self.ops.items() if lost_op_name in x[0]]</span>
+        <span class="c1">#     dst_op = op_find[0]</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     dst_op = self.ops.get(lost_op_name, None)</span>
+        <span class="c1"># return dst_op</span>
+
+<div class="viewcode-block" id="SummaryGraph.find_param"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_param">[文档]</a>    <span class="k">def</span> <span class="nf">find_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.predecessors"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors">[文档]</a>    <span class="k">def</span> <span class="nf">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">done_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of &lt;op&gt;&#39;s predecessors&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">done_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">done_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="o">==</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+            <span class="n">done_list</span> <span class="o">+=</span> <span class="n">preds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="o">==</span> <span class="n">op</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+            <span class="n">done_list</span> <span class="o">+=</span> <span class="n">preds</span>
+
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">preds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">predecessor</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">done_list</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.predecessors_f"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors_f">[文档]</a>    <span class="k">def</span> <span class="nf">predecessors_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">predecessors_types</span><span class="p">,</span> <span class="n">done_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logging</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of &lt;op&gt;&#39;s predecessors, if they match the &lt;predecessors_types&gt; criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_op</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">node_is_an_op</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node_is_an_op</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_param</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">msglogger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;predecessors_f: Could not find node </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">))</span>
+                <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">done_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">done_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">done_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">predecessors_types</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">predecessors_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">predecessors_types</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">node_is_an_op</span><span class="p">:</span>
+            <span class="c1"># We check if we found the type of node we&#39;re looking for,</span>
+            <span class="c1"># and that this is not the first node in our search.</span>
+            <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">predecessors_types</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">done_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+
+            <span class="c1"># This is an operation node</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="o">==</span> <span class="n">node_name</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This is a data node</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="o">==</span> <span class="n">node_name</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predecessors_f</span><span class="p">(</span><span class="n">predecessor</span><span class="p">,</span> <span class="n">predecessors_types</span><span class="p">,</span> <span class="n">done_list</span><span class="p">,</span> <span class="n">logging</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.successors"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors">[文档]</a>    <span class="k">def</span> <span class="nf">successors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">done_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of &lt;op&gt;&#39;s successors&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">done_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">done_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># This is an operation node</span>
+            <span class="n">succs</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="o">==</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+            <span class="n">done_list</span> <span class="o">+=</span> <span class="n">succs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This is a data node</span>
+            <span class="n">succs</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="o">==</span> <span class="n">node</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+            <span class="n">done_list</span> <span class="o">+=</span> <span class="n">succs</span>
+
+        <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">succs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">succs</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">done_list</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="SummaryGraph.successors_f"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors_f">[文档]</a>    <span class="k">def</span> <span class="nf">successors_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">successors_types</span><span class="p">,</span> <span class="n">done_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logging</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of &lt;op&gt;&#39;s successors, if they match the &lt;successors_types&gt; criteria.</span>
+
+<span class="sd">        Traverse the graph, starting at node &lt;node_name&gt;, and search for successor</span>
+<span class="sd">        nodes, that have one of the node types listed in &lt;successors_types&gt;.</span>
+<span class="sd">        If none is found, then return an empty list.</span>
+
+<span class="sd">        &lt;node_name&gt; and the returned list of successors are strings, because</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_op</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="n">node_is_an_op</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node_is_an_op</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_param</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#raise ValueError(&quot;something went wrong&quot;)</span>
+                <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">done_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">done_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">done_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">successors_types</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">successors_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">successors_types</span><span class="p">]</span>
+
+        <span class="c1"># we add type in Graph ops, so we use the op_name without type here to find succs, 2018-09-19 CKH</span>
+        <span class="c1"># succs = []</span>
+        <span class="k">if</span> <span class="n">node_is_an_op</span><span class="p">:</span>
+            <span class="c1"># We check if we found the type of node we&#39;re looking for,</span>
+            <span class="c1"># and that this is not the first node in our search.</span>
+            <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">successors_types</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">done_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
+
+            <span class="c1"># This is an operation node</span>
+            <span class="c1"># for i in range(len(self.edges)):</span>
+            <span class="c1">#     if &#39;.&#39; in self.edges[i].src:</span>
+            <span class="c1">#         thin_src_name = self.edges[i].src.split(&#39;.&#39;)[0:-1]</span>
+            <span class="c1">#         thin_src_name = &#39;.&#39;.join(thin_src_name)</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         thin_src_name = self.edges[i].src</span>
+            <span class="c1">#</span>
+            <span class="c1">#     if &#39;.&#39; in self.edges[i].dst:</span>
+            <span class="c1">#         thin_dst_name = self.edges[i].dst.split(&#39;.&#39;)[0:-1]</span>
+            <span class="c1">#         thin_dst_name = &#39;.&#39;.join(thin_dst_name)</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         thin_dst_name = self.edges[i].dst</span>
+            <span class="c1">#</span>
+            <span class="c1">#     if thin_src_name == node_name and thin_dst_name not in done_list:</span>
+            <span class="c1">#         succs.append(thin_dst_name)</span>
+
+            <span class="n">succs</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="o">==</span> <span class="n">node_name</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This is a data node</span>
+            <span class="c1"># for i in range(len(self.edges)):</span>
+            <span class="c1">#     if &#39;.&#39; in self.edges[i].src:</span>
+            <span class="c1">#         thin_src_name = self.edges[i].src.split(&#39;.&#39;)[0:-1]</span>
+            <span class="c1">#         thin_src_name = &#39;.&#39;.join(thin_src_name)</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         thin_src_name = self.edges[i].src</span>
+            <span class="c1">#</span>
+            <span class="c1">#     if &#39;.&#39; in self.edges[i].dst:</span>
+            <span class="c1">#         thin_dst_name = self.edges[i].dst.split(&#39;.&#39;)[0:-1]</span>
+            <span class="c1">#         thin_dst_name = &#39;.&#39;.join(thin_dst_name)</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         thin_dst_name = self.edges[i].dst</span>
+            <span class="c1">#</span>
+            <span class="c1">#     if thin_src_name == node_name and thin_dst_name not in done_list:</span>
+            <span class="c1">#         succs.append(thin_dst_name)</span>
+
+            <span class="n">succs</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="o">==</span> <span class="n">node_name</span> <span class="ow">and</span>
+                                                         <span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_list</span><span class="p">)]</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># 递归寻找下一个结点, 递归的出口是找到的下一个结点是op</span>
+        <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">succs</span><span class="p">:</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">successors_f</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">successors_types</span><span class="p">,</span> <span class="n">done_list</span><span class="p">,</span> <span class="n">logging</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span></div></div>
+
+
+<div class="viewcode-block" id="attributes_summary"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.attributes_summary">[文档]</a><span class="k">def</span> <span class="nf">attributes_summary</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">ignore_attrs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a summary of a graph&#39;s attributes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sgraph: a SummaryGraph instance</span>
+<span class="sd">        ignore_attrs: a list of attributes to ignore in the output datafraem</span>
+
+<span class="sd">    Output:</span>
+<span class="sd">        A Pandas dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">pretty_val</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">format</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="s2">&quot;,d&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pretty_attrs</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">ignore_attrs</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ignore_attrs</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">ret</span> <span class="o">+=</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">pretty_val</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="s1">&#39;Attributes&#39;</span><span class="p">])</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">op</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="p">):</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">pretty_attrs</span><span class="p">(</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">],</span> <span class="n">ignore_attrs</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="attributes_summary_tbl"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.attributes_summary_tbl">[文档]</a><span class="k">def</span> <span class="nf">attributes_summary_tbl</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">ignore_attrs</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">attributes_summary</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">ignore_attrs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;psql&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="connectivity_summary"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.connectivity_summary">[文档]</a><span class="k">def</span> <span class="nf">connectivity_summary</span><span class="p">(</span><span class="n">sgraph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a summary of each node&#39;s connectivity.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sgraph: a SummaryGraph instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="s1">&#39;Inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;Outputs&#39;</span><span class="p">])</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">op</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="connectivity_summary_verbose"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.connectivity_summary_verbose">[文档]</a><span class="k">def</span> <span class="nf">connectivity_summary_verbose</span><span class="p">(</span><span class="n">sgraph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a summary of each node&#39;s connectivity, with details</span>
+<span class="sd">    about the parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sgraph: a SummaryGraph instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">format_list</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span> <span class="n">ret</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Type&#39;</span><span class="p">,</span> <span class="s1">&#39;Inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;Outputs&#39;</span><span class="p">])</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">op</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blob</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">blob</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]))</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">blob</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
+                <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blob</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">blob</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]))</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">format_list</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">format_list</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="connectivity_tbl_summary"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.connectivity_tbl_summary">[文档]</a><span class="k">def</span> <span class="nf">connectivity_tbl_summary</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">connectivity_summary_verbose</span><span class="p">(</span><span class="n">sgraph</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">connectivity_summary</span><span class="p">(</span><span class="n">sgraph</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tabulate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;psql&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_pydot_graph"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.create_pydot_graph">[文档]</a><span class="k">def</span> <span class="nf">create_pydot_graph</span><span class="p">(</span><span class="n">op_nodes</span><span class="p">,</span> <span class="n">data_nodes</span><span class="p">,</span> <span class="n">param_nodes</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Low-level API to create a PyDot graph (dot formatted).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pydot_graph</span> <span class="o">=</span> <span class="n">pydot</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="s1">&#39;Net&#39;</span><span class="p">,</span> <span class="n">graph_type</span><span class="o">=</span><span class="s1">&#39;digraph&#39;</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="n">rankdir</span><span class="p">)</span>
+
+    <span class="n">op_node_style</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;record&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;fillcolor&#39;</span><span class="p">:</span> <span class="s1">&#39;#6495ED&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="s1">&#39;rounded, filled&#39;</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">op_node</span> <span class="ow">in</span> <span class="n">op_nodes</span><span class="p">:</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">op_node_style</span>
+        <span class="c1"># Check if we should override the style of this node.</span>
+        <span class="k">if</span> <span class="n">styles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">op_node</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">styles</span><span class="p">:</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="n">styles</span><span class="p">[</span><span class="n">op_node</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="n">pydot_graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">op_node</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op_node</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">data_node</span> <span class="ow">in</span> <span class="n">data_nodes</span><span class="p">:</span>
+        <span class="n">pydot_graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">data_node</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_node</span><span class="p">)))</span>
+
+    <span class="n">node_style</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;oval&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;fillcolor&#39;</span><span class="p">:</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="s1">&#39;rounded, filled&#39;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">param_nodes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">param_node</span> <span class="ow">in</span> <span class="n">param_nodes</span><span class="p">:</span>
+            <span class="n">pydot_graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">pydot</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">param_node</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">node_style</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">param_node</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">pydot_graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">pydot</span><span class="o">.</span><span class="n">Edge</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">pydot_graph</span></div>
+
+
+<div class="viewcode-block" id="create_png"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.create_png">[文档]</a><span class="k">def</span> <span class="nf">create_png</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a PNG object containing a graphiz-dot graph of the network,</span>
+<span class="sd">    as represented by SummaryGraph &#39;sgraph&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw.</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
+<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
+<span class="sd">                a legal pydot style dictionary.  For example:</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
+<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
+<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">op_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="n">data_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">param_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="nb">id</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">n_data</span> <span class="o">=</span> <span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">data_node_has_parent</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+            <span class="n">data_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">param_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_data</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">edges</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">display_param_nodes</span><span class="p">:</span>
+        <span class="c1"># Use only the edges that don&#39;t have a parameter source</span>
+        <span class="n">non_param_ids</span> <span class="o">=</span> <span class="n">op_nodes</span> <span class="o">+</span> <span class="p">[</span><span class="n">dn</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">dn</span> <span class="ow">in</span> <span class="n">data_nodes</span><span class="p">]</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">src</span> <span class="ow">in</span> <span class="n">non_param_ids</span><span class="p">]</span>
+        <span class="n">param_nodes</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">op_nodes</span> <span class="o">=</span> <span class="p">[(</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">op</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="n">pydot_graph</span> <span class="o">=</span> <span class="n">create_pydot_graph</span><span class="p">(</span><span class="n">op_nodes</span><span class="p">,</span> <span class="n">data_nodes</span><span class="p">,</span> <span class="n">param_nodes</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">rankdir</span><span class="p">,</span> <span class="n">styles</span><span class="p">)</span>
+    <span class="n">png</span> <span class="o">=</span> <span class="n">pydot_graph</span><span class="o">.</span><span class="n">create_png</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">png</span></div>
+
+
+<div class="viewcode-block" id="draw_model_to_file"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.draw_model_to_file">[文档]</a><span class="k">def</span> <span class="nf">draw_model_to_file</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">png_fname</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a PNG file, containing a graphiz-dot graph of the netowrk represented</span>
+<span class="sd">    by SummaryGraph &#39;sgraph&#39;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw.</span>
+<span class="sd">        png_fname (string): PNG file name</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
+<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
+<span class="sd">                a legal pydot style dictionary.  For example:</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
+<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
+<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">png</span> <span class="o">=</span> <span class="n">create_png</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="o">=</span><span class="n">display_param_nodes</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">png_fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
+        <span class="n">fid</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">png</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="draw_img_classifier_to_file"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.draw_img_classifier_to_file">[文档]</a><span class="k">def</span> <span class="nf">draw_img_classifier_to_file</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">png_fname</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">rankdir</span><span class="o">=</span><span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="n">styles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Draw a PyTorch image classifier to a PNG file.  This a helper function that</span>
+<span class="sd">    simplifies the interface of draw_model_to_file().</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model: PyTorch model instance</span>
+<span class="sd">        png_fname (string): PNG file name</span>
+<span class="sd">        dataset (string): one of &#39;imagenet&#39; or &#39;cifar10&#39;.  This is required in order to</span>
+<span class="sd">                          create a dummy input of the correct shape.</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
+<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
+<span class="sd">                a legal pydot style dictionary.  For example:</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
+<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
+<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;imagenet&#39;</span><span class="p">:</span>
+            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;cifar10&#39;</span><span class="p">:</span>
+            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unsupported dataset (</span><span class="si">%s</span><span class="s2">) - aborting draw operation&quot;</span> <span class="o">%</span> <span class="n">dataset</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">make_non_parallel_copy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">SummaryGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="p">)</span>
+        <span class="n">draw_model_to_file</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">png_fname</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="p">,</span> <span class="n">rankdir</span><span class="p">,</span> <span class="n">styles</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Network PNG image generation completed&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;An error has occured while generating the network PNG image.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please check that you have graphviz installed.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">$ sudo apt-get install graphviz&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="data_node_has_parent"><a class="viewcode-back" href="../../../DL_ImageGen_bench.apputils.html#DL_ImageGen_bench.apputils.model_summaries.data_node_has_parent">[文档]</a><span class="k">def</span> <span class="nf">data_node_has_parent</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">dst</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span> <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

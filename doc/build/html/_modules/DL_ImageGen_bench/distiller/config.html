@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.config &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.config</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.config 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;CompressionScheduler configuration parsing.</span>
+
+<span class="sd">There are three ways to configure an instance of CompressionScheduler:</span>
+
+<span class="sd">1. Direct creating and programming of the scheduling objects.  For example:</span>
+<span class="sd">    # Element-wise sparasity</span>
+<span class="sd">    sparsity_levels = {net_param: sparsity_level}</span>
+<span class="sd">    pruner = distiller.pruning.SparsityLevelParameterPruner(name=&#39;sensitivity&#39;, levels=sparsity_levels)</span>
+<span class="sd">    policy = distiller.PruningPolicy(pruner, pruner_args=None)</span>
+<span class="sd">    scheduler = CompressionScheduler(model)</span>
+<span class="sd">    scheduler.add_policy(policy, epochs=[0, 2, 4])</span>
+<span class="sd">2. Creating a dictionary containing the configuration.</span>
+<span class="sd">3. Creating a YAML file containing the configuration.</span>
+
+<span class="sd">When a YAML file is loaded, its dictionary is extracted and passed to ```dictConfig```.&lt;br&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">from</span> <span class="nn">distiller.thinning</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">distiller.pruning</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">distiller.regularization</span> <span class="k">import</span> <span class="n">L1Regularizer</span><span class="p">,</span> <span class="n">GroupLassoRegularizer</span>
+<span class="kn">from</span> <span class="nn">distiller.learning_rate</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">distiller.quantization</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">app_cfg_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;app_cfg&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="dict_config"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.config.dict_config">[文档]</a><span class="k">def</span> <span class="nf">dict_config</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">):</span>
+    <span class="n">app_cfg_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Schedule contents:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">sched_dict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">schedule</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">CompressionScheduler</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="n">pruners</span> <span class="o">=</span> <span class="n">__factory</span><span class="p">(</span><span class="s1">&#39;pruners&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">)</span>
+    <span class="n">regularizers</span> <span class="o">=</span> <span class="n">__factory</span><span class="p">(</span><span class="s1">&#39;regularizers&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">)</span>
+    <span class="n">quantizers</span> <span class="o">=</span> <span class="n">__factory</span><span class="p">(</span><span class="s1">&#39;quantizers&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantizers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error: Multiple Quantizers not supported&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">extensions</span> <span class="o">=</span> <span class="n">__factory</span><span class="p">(</span><span class="s1">&#39;extensions&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lr_policies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">policy_def</span> <span class="ow">in</span> <span class="n">sched_dict</span><span class="p">[</span><span class="s1">&#39;policies&#39;</span><span class="p">]:</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s1">&#39;pruner&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">instance_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="s1">&#39;pruner&#39;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Fatal Error: a policy is defined with a null pruner&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Here</span><span class="se">\&#39;</span><span class="s1">s the policy definition for your reference:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+                    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">instance_name</span> <span class="ow">in</span> <span class="n">pruners</span><span class="p">,</span> <span class="s2">&quot;Pruner </span><span class="si">{}</span><span class="s2"> was not defined in the list of pruners&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instance_name</span><span class="p">)</span>
+                <span class="n">pruner</span> <span class="o">=</span> <span class="n">pruners</span><span class="p">[</span><span class="n">instance_name</span><span class="p">]</span>
+                <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">PruningPolicy</span><span class="p">(</span><span class="n">pruner</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s1">&#39;regularizer&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+                <span class="n">instance_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="s1">&#39;regularizer&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">instance_name</span> <span class="ow">in</span> <span class="n">regularizers</span><span class="p">,</span> <span class="s2">&quot;Regularizer </span><span class="si">{}</span><span class="s2"> was not defined in the list of regularizers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instance_name</span><span class="p">)</span>
+                <span class="n">regularizer</span> <span class="o">=</span> <span class="n">regularizers</span><span class="p">[</span><span class="n">instance_name</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">RegularizationPolicy</span><span class="p">(</span><span class="n">regularizer</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">RegularizationPolicy</span><span class="p">(</span><span class="n">regularizer</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s1">&#39;quantizer&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+                <span class="n">instance_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="s1">&#39;quantizer&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">instance_name</span> <span class="ow">in</span> <span class="n">quantizers</span><span class="p">,</span> <span class="s2">&quot;Quantizer </span><span class="si">{}</span><span class="s2"> was not defined in the list of quantizers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instance_name</span><span class="p">)</span>
+                <span class="n">quantizer</span> <span class="o">=</span> <span class="n">quantizers</span><span class="p">[</span><span class="n">instance_name</span><span class="p">]</span>
+                <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">QuantizationPolicy</span><span class="p">(</span><span class="n">quantizer</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="s1">&#39;lr_scheduler&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+                <span class="c1"># LR schedulers take an optimizer in their CTOR, so postpone handling until we&#39;re certain</span>
+                <span class="c1"># a quantization policy was initialized (if exists)</span>
+                <span class="n">lr_policies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">policy_def</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">elif</span> <span class="s1">&#39;extension&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+                <span class="n">instance_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="n">instance_name</span> <span class="ow">in</span> <span class="n">extensions</span><span class="p">,</span> <span class="s2">&quot;Extension </span><span class="si">{}</span><span class="s2"> was not defined in the list of extensions&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">instance_name</span><span class="p">)</span>
+                <span class="n">extension</span> <span class="o">=</span> <span class="n">extensions</span><span class="p">[</span><span class="n">instance_name</span><span class="p">]</span>
+                <span class="n">policy</span> <span class="o">=</span> <span class="n">extension</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FATAL Parsing error while parsing the pruning schedule - unknown policy [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">policy_def</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">add_policy_to_scheduler</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_def</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+
+        <span class="c1"># Any changes to the optmizer caused by a quantizer have occured by now, so safe to create LR schedulers</span>
+        <span class="n">lr_schedulers</span> <span class="o">=</span> <span class="n">__factory</span><span class="p">(</span><span class="s1">&#39;lr_schedulers&#39;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">policy_def</span> <span class="ow">in</span> <span class="n">lr_policies</span><span class="p">:</span>
+            <span class="n">instance_name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="s1">&#39;lr_scheduler&#39;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">instance_name</span> <span class="ow">in</span> <span class="n">lr_schedulers</span><span class="p">,</span> <span class="s2">&quot;LR-scheduler </span><span class="si">{}</span><span class="s2"> was not defined in the list of lr-schedulers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">instance_name</span><span class="p">)</span>
+            <span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">lr_schedulers</span><span class="p">[</span><span class="n">instance_name</span><span class="p">]</span>
+            <span class="n">policy</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">LRPolicy</span><span class="p">(</span><span class="n">lr_scheduler</span><span class="p">)</span>
+            <span class="n">add_policy_to_scheduler</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_def</span><span class="p">,</span> <span class="n">schedule</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+        <span class="c1"># propagate the assertion information</span>
+        <span class="k">raise</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FATAL Parsing error!</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">),</span> <span class="n">exception</span><span class="p">))</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">schedule</span></div>
+
+
+<div class="viewcode-block" id="add_policy_to_scheduler"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.config.add_policy_to_scheduler">[文档]</a><span class="k">def</span> <span class="nf">add_policy_to_scheduler</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">policy_def</span><span class="p">,</span> <span class="n">schedule</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;epochs&#39;</span> <span class="ow">in</span> <span class="n">policy_def</span><span class="p">:</span>
+        <span class="n">schedule</span><span class="o">.</span><span class="n">add_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">policy_def</span><span class="p">[</span><span class="s1">&#39;epochs&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">schedule</span><span class="o">.</span><span class="n">add_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">,</span> <span class="n">starting_epoch</span><span class="o">=</span><span class="n">policy_def</span><span class="p">[</span><span class="s1">&#39;starting_epoch&#39;</span><span class="p">],</span>
+                            <span class="n">ending_epoch</span><span class="o">=</span><span class="n">policy_def</span><span class="p">[</span><span class="s1">&#39;ending_epoch&#39;</span><span class="p">],</span>
+                            <span class="n">frequency</span><span class="o">=</span><span class="n">policy_def</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="file_config"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.config.file_config">[文档]</a><span class="k">def</span> <span class="nf">file_config</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read the schedule from file&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reading compression schedule from: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sched_dict</span> <span class="o">=</span> <span class="n">yaml_ordered_load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">dict_config</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">FATAL Parsing error while parsing the pruning schedule configuration file </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">__factory</span><span class="p">(</span><span class="n">container_type</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sched_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">container_type</span> <span class="ow">in</span> <span class="n">sched_dict</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cfg_kwargs</span> <span class="ow">in</span> <span class="n">sched_dict</span><span class="p">[</span><span class="n">container_type</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">cfg_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="c1"># Instantiate pruners using the &#39;class&#39; argument</span>
+                    <span class="n">cfg_kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+                    <span class="n">cfg_kwargs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                    <span class="n">class_</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">cfg_kwargs</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]]</span>
+                    <span class="n">container</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_</span><span class="p">(</span><span class="o">**</span><span class="n">__filter_kwargs</span><span class="p">(</span><span class="n">cfg_kwargs</span><span class="p">,</span> <span class="n">class_</span><span class="o">.</span><span class="fm">__init__</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Fatal error while parsing [section:</span><span class="si">%s</span><span class="s2">] [item:</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">container_type</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">),</span> <span class="n">exception</span><span class="p">))</span>
+                    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Fatal while creating </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">container_type</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exception: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">exception</span><span class="p">),</span> <span class="n">exception</span><span class="p">))</span>
+            <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">container</span>
+
+
+<span class="k">def</span> <span class="nf">__filter_kwargs</span><span class="p">(</span><span class="n">dict_to_filter</span><span class="p">,</span> <span class="n">function_to_call</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Utility to remove extra keyword arguments</span>
+
+<span class="sd">    This function will remove any unwanted kwargs and pass the rest of the kwargs</span>
+<span class="sd">    to the called function.  This is needed because we want to call some existing</span>
+<span class="sd">    constructor functions, using the YAML dictionary, which contains extra parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">function_to_call</span><span class="p">)</span>
+    <span class="n">filter_keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">param</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">)]</span>
+    <span class="n">filtered_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dict_to_filter</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">filter_keys</span><span class="p">:</span>
+            <span class="n">filtered_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_to_filter</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">filtered_dict</span>
+
+
+<span class="k">def</span> <span class="nf">__policy_params</span><span class="p">(</span><span class="n">policy_def</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">policy_def</span><span class="p">[</span><span class="nb">type</span><span class="p">][</span><span class="s1">&#39;instance_name&#39;</span><span class="p">]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">policy_def</span><span class="p">[</span><span class="nb">type</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span>
+
+
+<div class="viewcode-block" id="yaml_ordered_load"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.config.yaml_ordered_load">[文档]</a><span class="k">def</span> <span class="nf">yaml_ordered_load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">Loader</span><span class="p">,</span> <span class="n">object_pairs_hook</span><span class="o">=</span><span class="n">OrderedDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to load YAML file using an OrderedDict</span>
+<span class="sd">    See: https://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">class</span> <span class="nc">OrderedLoader</span><span class="p">(</span><span class="n">Loader</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">construct_mapping</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">loader</span><span class="o">.</span><span class="n">flatten_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">object_pairs_hook</span><span class="p">(</span><span class="n">loader</span><span class="o">.</span><span class="n">construct_pairs</span><span class="p">(</span><span class="n">node</span><span class="p">))</span>
+
+    <span class="n">OrderedLoader</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span>
+        <span class="n">yaml</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span>
+        <span class="n">construct_mapping</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="n">OrderedLoader</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

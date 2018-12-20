@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.apputils package" href="DL_ImageGen_bench.apputils.html" />
+    <link rel="prev" title="Welcome to DL ImageGen Bench’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DL_ImageGen_bench package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-package">
+<h1>DL_ImageGen_bench package<a class="headerlink" href="#dl-imagegen-bench-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html">DL_ImageGen_bench.apputils.Deblur_apputils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.get_data">DL_ImageGen_bench.apputils.Deblur_apputils.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.html">DL_ImageGen_bench.apputils.Deblur_apputils.html module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.image_pool">DL_ImageGen_bench.apputils.Deblur_apputils.image_pool module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.metrics">DL_ImageGen_bench.apputils.Deblur_apputils.metrics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.png">DL_ImageGen_bench.apputils.Deblur_apputils.png module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.util">DL_ImageGen_bench.apputils.Deblur_apputils.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.visualizer">DL_ImageGen_bench.apputils.Deblur_apputils.visualizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.execution_env">DL_ImageGen_bench.apputils.execution_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.model_summaries">DL_ImageGen_bench.apputils.model_summaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.platform_summaries">DL_ImageGen_bench.apputils.platform_summaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html">DL_ImageGen_bench.data.Deblur_data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.aligned_dataset">DL_ImageGen_bench.data.Deblur_data.aligned_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.base_data_loader">DL_ImageGen_bench.data.Deblur_data.base_data_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.base_dataset">DL_ImageGen_bench.data.Deblur_data.base_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.custom_dataset_data_loader">DL_ImageGen_bench.data.Deblur_data.custom_dataset_data_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.data_loader">DL_ImageGen_bench.data.Deblur_data.data_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.image_folder">DL_ImageGen_bench.data.Deblur_data.image_folder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.single_dataset">DL_ImageGen_bench.data.Deblur_data.single_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.unaligned_dataset">DL_ImageGen_bench.data.Deblur_data.unaligned_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.html#module-DL_ImageGen_bench.data.data">DL_ImageGen_bench.data.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.html#module-DL_ImageGen_bench.data.dataset">DL_ImageGen_bench.data.dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.html#module-DL_ImageGen_bench.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html">DL_ImageGen_bench.distiller.data_loggers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.collector">DL_ImageGen_bench.distiller.data_loggers.collector module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.logger">DL_ImageGen_bench.distiller.data_loggers.logger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.tbbackend">DL_ImageGen_bench.distiller.data_loggers.tbbackend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html">DL_ImageGen_bench.distiller.pruning package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner">DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner">DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.level_pruner">DL_ImageGen_bench.distiller.pruning.level_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.magnitude_pruner">DL_ImageGen_bench.distiller.pruning.magnitude_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.pruner">DL_ImageGen_bench.distiller.pruning.pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner">DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.sensitivity_pruner">DL_ImageGen_bench.distiller.pruning.sensitivity_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.structure_pruner">DL_ImageGen_bench.distiller.pruning.structure_pruner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html">DL_ImageGen_bench.distiller.quantization package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.clipped_linear">DL_ImageGen_bench.distiller.quantization.clipped_linear module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.q_utils">DL_ImageGen_bench.distiller.quantization.q_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.quantizer">DL_ImageGen_bench.distiller.quantization.quantizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.range_linear">DL_ImageGen_bench.distiller.quantization.range_linear module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html">DL_ImageGen_bench.distiller.regularization package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.group_regularizer">DL_ImageGen_bench.distiller.regularization.group_regularizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.l1_regularizer">DL_ImageGen_bench.distiller.regularization.l1_regularizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.regularizer">DL_ImageGen_bench.distiller.regularization.regularizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.config">DL_ImageGen_bench.distiller.config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.directives">DL_ImageGen_bench.distiller.directives module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.knowledge_distillation">DL_ImageGen_bench.distiller.knowledge_distillation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.learning_rate">DL_ImageGen_bench.distiller.learning_rate module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.model_summaries">DL_ImageGen_bench.distiller.model_summaries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.policy">DL_ImageGen_bench.distiller.policy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.scheduler">DL_ImageGen_bench.distiller.scheduler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.sensitivity">DL_ImageGen_bench.distiller.sensitivity module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thinning">DL_ImageGen_bench.distiller.thinning module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thresholding">DL_ImageGen_bench.distiller.thresholding module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.models.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.C2SRCNN.html">DL_ImageGen_bench.models.C2SRCNN package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.C2SRCNN.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.C2SRCNN.html#module-DL_ImageGen_bench.models.C2SRCNN.model">DL_ImageGen_bench.models.C2SRCNN.model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.C2SRCNN.html#module-DL_ImageGen_bench.models.C2SRCNN.solver">DL_ImageGen_bench.models.C2SRCNN.solver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.C2SRCNN.html#module-DL_ImageGen_bench.models.C2SRCNN">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html">DL_ImageGen_bench.models.Deblur package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.base_model">DL_ImageGen_bench.models.Deblur.base_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.conditional_gan_model">DL_ImageGen_bench.models.Deblur.conditional_gan_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.losses">DL_ImageGen_bench.models.Deblur.losses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.models">DL_ImageGen_bench.models.Deblur.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.networks">DL_ImageGen_bench.models.Deblur.networks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.solver">DL_ImageGen_bench.models.Deblur.solver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.test_model">DL_ImageGen_bench.models.Deblur.test_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur.test_solver">DL_ImageGen_bench.models.Deblur.test_solver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.Deblur.html#module-DL_ImageGen_bench.models.Deblur">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html">DL_ImageGen_bench.models.cifar10 package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10.preresnet_cifar">DL_ImageGen_bench.models.cifar10.preresnet_cifar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10.resnet_cifar">DL_ImageGen_bench.models.cifar10.resnet_cifar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit">DL_ImageGen_bench.models.cifar10.resnet_cifar_earlyexit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10.simplenet_cifar">DL_ImageGen_bench.models.cifar10.simplenet_cifar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10.vgg_cifar">DL_ImageGen_bench.models.cifar10.vgg_cifar module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.cifar10.html#module-DL_ImageGen_bench.models.cifar10">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html">DL_ImageGen_bench.models.imagenet package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#module-DL_ImageGen_bench.models.imagenet.alexnet_batchnorm">DL_ImageGen_bench.models.imagenet.alexnet_batchnorm module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#module-DL_ImageGen_bench.models.imagenet.mobilenet">DL_ImageGen_bench.models.imagenet.mobilenet module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#module-DL_ImageGen_bench.models.imagenet.preresnet_imagenet">DL_ImageGen_bench.models.imagenet.preresnet_imagenet module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#module-DL_ImageGen_bench.models.imagenet.resnet_earlyexit">DL_ImageGen_bench.models.imagenet.resnet_earlyexit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.imagenet.html#module-DL_ImageGen_bench.models.imagenet">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models.test_solver">DL_ImageGen_bench.models.test_solver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.options.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html">DL_ImageGen_bench.options.Deblur_options package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html#module-DL_ImageGen_bench.options.Deblur_options.base_options">DL_ImageGen_bench.options.Deblur_options.base_options module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html#module-DL_ImageGen_bench.options.Deblur_options.test_options">DL_ImageGen_bench.options.Deblur_options.test_options module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html#module-DL_ImageGen_bench.options.Deblur_options.train_options">DL_ImageGen_bench.options.Deblur_options.train_options module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Deblur_options.html#module-DL_ImageGen_bench.options.Deblur_options">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.Normal_options.html">DL_ImageGen_bench.options.Normal_options package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Normal_options.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Normal_options.html#module-DL_ImageGen_bench.options.Normal_options.test_options">DL_ImageGen_bench.options.Normal_options.test_options module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Normal_options.html#module-DL_ImageGen_bench.options.Normal_options.train_options">DL_ImageGen_bench.options.Normal_options.train_options module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.options.Normal_options.html#module-DL_ImageGen_bench.options.Normal_options">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.options.html#module-DL_ImageGen_bench.options">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.evaluation">
+<span id="dl-imagegen-bench-evaluation-module"></span><h2>DL_ImageGen_bench.evaluation module<a class="headerlink" href="#module-DL_ImageGen_bench.evaluation" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.evaluation.main">
+<code class="descclassname">DL_ImageGen_bench.evaluation.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/evaluation.html#main"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.evaluation.main" title="永久链接至目标">¶</a></dt>
+<dd><p>模型训练阶段(Testing Phase)的主入口</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">models.test_solver</span> <span class="k">import</span> <span class="n">XSRCNNTester</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">options.Normal_options.test_options</span> <span class="k">import</span> <span class="n">TestOptions</span> <span class="k">as</span> <span class="n">NormTestOptions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">data.data</span> <span class="k">import</span> <span class="n">get_eva_set</span>
+<span class="go"># Step 1. 参数列表获取(Options Get)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">args</span> <span class="o">=</span> <span class="n">NormTestOptions</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="go"># Step 2. 数据获取(Dataset Get)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_set</span> <span class="o">=</span> <span class="n">get_eva_set</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go"># Step 3. 测试过程(Trainer)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">XSRCNNTester</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">test_data_loader</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.train">
+<span id="dl-imagegen-bench-train-module"></span><h2>DL_ImageGen_bench.train module<a class="headerlink" href="#module-DL_ImageGen_bench.train" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.train.main">
+<code class="descclassname">DL_ImageGen_bench.train.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/train.html#main"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.train.main" title="永久链接至目标">¶</a></dt>
+<dd><p>模型训练阶段(Training Phase)的主入口</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">models.C2SRCNN.solver</span> <span class="k">import</span> <span class="n">C2SRCNNTrainer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">options.Normal_options.train_options</span> <span class="k">import</span> <span class="n">TrainOptions</span> <span class="k">as</span> <span class="n">NormTrainOption</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">data.data</span> <span class="k">import</span> <span class="n">get_training_set</span><span class="p">,</span> <span class="n">get_test_set</span>
+<span class="go"># Step 1. 参数列表获取(Options Get)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">args</span> <span class="o">=</span> <span class="n">DeblurGANTrainOptions</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+<span class="go"># Step 2. 数据获取(Dataset Get)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_set</span> <span class="o">=</span> <span class="n">get_training_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">traindata</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">test_set</span> <span class="o">=</span> <span class="n">get_test_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">testdata</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">training_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">testing_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">testBatchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go"># Step 3. 训练过程(Trainer)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">C2SRCNNTrainer</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">training_data_loader</span><span class="p">,</span> <span class="n">testing_data_loader</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.apputils.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.apputils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to DL ImageGen Bench’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

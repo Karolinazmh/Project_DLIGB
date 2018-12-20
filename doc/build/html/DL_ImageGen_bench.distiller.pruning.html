@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.pruning package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.distiller.quantization package" href="DL_ImageGen_bench.distiller.quantization.html" />
+    <link rel="prev" title="DL_ImageGen_bench.distiller.data_loggers package" href="DL_ImageGen_bench.distiller.data_loggers.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.config">DL_ImageGen_bench.distiller.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.directives">DL_ImageGen_bench.distiller.directives module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.knowledge_distillation">DL_ImageGen_bench.distiller.knowledge_distillation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.learning_rate">DL_ImageGen_bench.distiller.learning_rate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.model_summaries">DL_ImageGen_bench.distiller.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.policy">DL_ImageGen_bench.distiller.policy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.scheduler">DL_ImageGen_bench.distiller.scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.sensitivity">DL_ImageGen_bench.distiller.sensitivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thinning">DL_ImageGen_bench.distiller.thinning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thresholding">DL_ImageGen_bench.distiller.thresholding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.pruning package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.distiller.pruning.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-distiller-pruning-package">
+<h1>DL_ImageGen_bench.distiller.pruning package<a class="headerlink" href="#dl-imagegen-bench-distiller-pruning-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-automated-gradual-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner.AutomatedGradualPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner.</code><code class="descname">AutomatedGradualPruner</code><span class="sig-paren">(</span><em>name</em>, <em>initial_sparsity</em>, <em>final_sparsity</em>, <em>weights</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/automated_gradual_pruner.html#AutomatedGradualPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner.AutomatedGradualPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>Prune to an exact pruning level specification.</p>
+<p>An automated gradual pruning algorithm that prunes the smallest magnitude
+weights to achieve a preset level of network sparsity.</p>
+<p>Michael Zhu and Suyog Gupta, “To prune, or not to prune: exploring the
+efficacy of pruning for model compression”, 2017 NIPS Workshop on Machine
+Learning of Phones and other Consumer Devices,
+(<a class="reference external" href="https://arxiv.org/pdf/1710.01878.pdf">https://arxiv.org/pdf/1710.01878.pdf</a>)</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner.AutomatedGradualPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/automated_gradual_pruner.html#AutomatedGradualPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner.AutomatedGradualPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-baidu-rnn-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner.BaiduRNNPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner.</code><code class="descname">BaiduRNNPruner</code><span class="sig-paren">(</span><em>name</em>, <em>q</em>, <em>ramp_epoch_offset</em>, <em>ramp_slope_mult</em>, <em>weights</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/baidu_rnn_pruner.html#BaiduRNNPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner.BaiduRNNPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>An element-wise pruner for RNN networks.</p>
+<p>Narang, Sharan &amp; Diamos, Gregory &amp; Sengupta, Shubho &amp; Elsen, Erich. (2017).
+Exploring Sparsity in Recurrent Neural Networks.
+(<a class="reference external" href="https://arxiv.org/abs/1704.05119">https://arxiv.org/abs/1704.05119</a>)</p>
+<p>This implementation slightly differs from the algorithm original paper in that
+the algorithm changes the pruning rate at the training-step granularity, while
+Distiller controls the pruning rate at epoch granularity.</p>
+<p>Equation (1):</p>
+<blockquote>
+<div><blockquote>
+<div>2 * q * freq</div></blockquote>
+<dl class="docutils">
+<dt>start_slope = ——————————————————-</dt>
+<dd>2 * (ramp_itr - start_itr ) + 3 * (end_itr - ramp_itr )</dd>
+</dl>
+</div></blockquote>
+<p>Pruning algorithm (1):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if current itr &lt; ramp itr then</dt>
+<dd>threshold =  start_slope * (current_itr - start_itr + 1) / freq</dd>
+<dt>else</dt>
+<dd><blockquote class="first">
+<div><dl class="docutils">
+<dt>threshold = (start_slope * (ramp_itr    - start_itr + 1) +</dt>
+<dd>ramp_slope  * (current_itr - ramp_itr  + 1)) / freq</dd>
+</dl>
+</div></blockquote>
+<p>end if</p>
+<p class="last">mask = abs(param) &lt; threshold</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner.BaiduRNNPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/baidu_rnn_pruner.html#BaiduRNNPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner.BaiduRNNPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.level_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-level-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.level_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.level_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.level_pruner.</code><code class="descname">SparsityLevelParameterPruner</code><span class="sig-paren">(</span><em>name</em>, <em>levels</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/level_pruner.html#SparsityLevelParameterPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>Prune to an exact pruning level specification.</p>
+<p>This pruner is very similar to MagnitudeParameterPruner, but instead of
+specifying an absolute threshold for pruning, you specify a target sparsity
+level (expressed as a fraction: 0.5 means 50% sparsity.)</p>
+<p>To find the correct threshold, we view the tensor as one large 1D vector, sort
+it using the absolute values of the elements, and then take topk elements.</p>
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner.prune_level">
+<em class="property">static </em><code class="descname">prune_level</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>desired_sparsity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/level_pruner.html#SparsityLevelParameterPruner.prune_level"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner.prune_level" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/level_pruner.html#SparsityLevelParameterPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.level_pruner.SparsityLevelParameterPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.magnitude_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-magnitude-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.magnitude_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.magnitude_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.magnitude_pruner.MagnitudeParameterPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.magnitude_pruner.</code><code class="descname">MagnitudeParameterPruner</code><span class="sig-paren">(</span><em>name</em>, <em>thresholds</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/magnitude_pruner.html#MagnitudeParameterPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.magnitude_pruner.MagnitudeParameterPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>This is the most basic magnitude-based pruner.</p>
+<p>This pruner supports configuring a scalar threshold for each layer.
+A default threshold is mandatory and is used for layers without explicit
+threshold setting.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.magnitude_pruner.MagnitudeParameterPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/magnitude_pruner.html#MagnitudeParameterPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.magnitude_pruner.MagnitudeParameterPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.pruner">
+<span id="dl-imagegen-bench-distiller-pruning-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.pruner" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.pruning.pruner.threshold_model">
+<code class="descclassname">DL_ImageGen_bench.distiller.pruning.pruner.</code><code class="descname">threshold_model</code><span class="sig-paren">(</span><em>model</em>, <em>threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/pruner.html#threshold_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.pruner.threshold_model" title="永久链接至目标">¶</a></dt>
+<dd><p>Threshold an entire model using the provided threshold</p>
+<p>This function prunes weights only (biases are left untouched).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-ranked-structures-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.</code><code class="descname">L1RankedStructureParameterPruner</code><span class="sig-paren">(</span><em>name</em>, <em>reg_regims</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/ranked_structures_pruner.html#L1RankedStructureParameterPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>Uses mean L1-norm to rank structures and prune a specified percentage of structures</p>
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_channels">
+<em class="property">static </em><code class="descname">rank_channels</code><span class="sig-paren">(</span><em>fraction_to_prune</em>, <em>param</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/ranked_structures_pruner.html#L1RankedStructureParameterPruner.rank_channels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_channels" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_prune_channels">
+<code class="descname">rank_prune_channels</code><span class="sig-paren">(</span><em>fraction_to_prune</em>, <em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/ranked_structures_pruner.html#L1RankedStructureParameterPruner.rank_prune_channels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_prune_channels" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_prune_filters">
+<code class="descname">rank_prune_filters</code><span class="sig-paren">(</span><em>fraction_to_prune</em>, <em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/ranked_structures_pruner.html#L1RankedStructureParameterPruner.rank_prune_filters"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.rank_prune_filters" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/ranked_structures_pruner.html#L1RankedStructureParameterPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner.L1RankedStructureParameterPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.sensitivity_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-sensitivity-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.sensitivity_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.sensitivity_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.sensitivity_pruner.SensitivityPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.sensitivity_pruner.</code><code class="descname">SensitivityPruner</code><span class="sig-paren">(</span><em>name</em>, <em>sensitivities</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/sensitivity_pruner.html#SensitivityPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.sensitivity_pruner.SensitivityPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>Use algorithm from “Learning both Weights and Connections for Efficient
+Neural Networks” - <a class="reference external" href="https://arxiv.org/pdf/1506.02626v3.pdf">https://arxiv.org/pdf/1506.02626v3.pdf</a></p>
+<p>I.e.: “The pruning threshold is chosen as a quality parameter multiplied
+by the standard deviation of a layers weights.”
+In this code, the “quality parameter” is referred to as “sensitivity” and
+is based on the values learned from performing sensitivity analysis.</p>
+<p>Note that this implementation deviates slightly from the algorithm Song Han
+describes in his PhD dissertation, in that the threshold value is set only
+once.  In his PhD dissertation, Song Han describes a growing threshold, at
+each iteration.  This requires n+1 hyper-parameters (n being the number of
+pruning iterations we use): the threshold and the threshold increase (delta)
+at each pruning iteration.
+The implementation that follows, takes advantage of the fact that as pruning
+progresses, more weights are pulled toward zero, and therefore the threshold
+“traps” more weights.  Thus, we can use less hyper-parameters and achieve the
+same results.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.sensitivity_pruner.SensitivityPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/sensitivity_pruner.html#SensitivityPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.sensitivity_pruner.SensitivityPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning.structure_pruner">
+<span id="dl-imagegen-bench-distiller-pruning-structure-pruner-module"></span><h2>DL_ImageGen_bench.distiller.pruning.structure_pruner module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning.structure_pruner" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.pruning.structure_pruner.StructureParameterPruner">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.pruning.structure_pruner.</code><code class="descname">StructureParameterPruner</code><span class="sig-paren">(</span><em>name</em>, <em>model</em>, <em>reg_regims</em>, <em>threshold_criteria</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/structure_pruner.html#StructureParameterPruner"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.structure_pruner.StructureParameterPruner" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">distiller.thresholding.GroupThresholdMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.pruning.pruner._ParameterPruner</span></code></p>
+<p>Prune parameter structures.</p>
+<p>Pruning criterion: average L1-norm.  If the average L1-norm (absolute value) of the eleements
+in the structure is below threshold, then the structure is pruned.</p>
+<p>We use the average, instead of plain L1-norm, because we don’t want the threshold to depend on
+the structure size.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.pruning.structure_pruner.StructureParameterPruner.set_param_mask">
+<code class="descname">set_param_mask</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/pruning/structure_pruner.html#StructureParameterPruner.set_param_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.pruning.structure_pruner.StructureParameterPruner.set_param_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.pruning">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.pruning" title="永久链接至标题">¶</a></h2>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">distiller.pruning</span></code> is a package implementing various pruning algorithms.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.distiller.quantization.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.distiller.quantization package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.distiller.data_loggers.html" class="btn btn-neutral" title="DL_ImageGen_bench.distiller.data_loggers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.thinning &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.thinning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.thinning 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;Model thinning support.</span>
+<span class="sd">Thinning a model is the process of taking a dense network architecture with a parameter model that</span>
+<span class="sd">has structure-sparsity (filters or channels) in the weights tensors of convolution layers, and making changes</span>
+<span class="sd">in the network architecture and parameters, in order to completely remove the structures.</span>
+<span class="sd">The new architecture is smaller (condensed), with less channels and filters in some of the convolution layers.</span>
+<span class="sd">Linear and BatchNormalization layers are also adjusted as required.</span>
+<span class="sd">To perform thinning, we create a SummaryGraph (‘sgraph’) of our model.  We use the ‘sgraph’ to infer the</span>
+<span class="sd">data-dependency between the modules in the PyTorch network.  This entire process is not trivial and will be</span>
+<span class="sd">documented in a different place.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">.policy</span> <span class="k">import</span> <span class="n">ScheduledTrainingPolicy</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">from</span> <span class="nn">distiller</span> <span class="k">import</span> <span class="n">normalize_module_name</span><span class="p">,</span> <span class="n">denormalize_module_name</span>
+<span class="kn">from</span> <span class="nn">apputils</span> <span class="k">import</span> <span class="n">SummaryGraph</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="k">import</span> <span class="n">create_model</span>
+<span class="c1"># from C3SRCNN.model import Net</span>
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+<span class="n">ThinningRecipe</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ThinningRecipe&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">,</span> <span class="s1">&#39;parameters&#39;</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;A ThinningRecipe is composed of two sets of instructions.</span>
+<span class="sd">1. Instructions for setting module attributes (e.g. Conv2d.out_channels).  This set</span>
+<span class="sd">is called &#39;ThinningRecipe.modules&#39;.</span>
+<span class="sd">2. Information on how to select specific dimensions from parameter tensors.  This</span>
+<span class="sd">set is called &#39;ThinningRecipe.parameters&#39;.</span>
+<span class="sd">ThinningRecipe.modules is a dictionary keyed by the module names (strings).  Values</span>
+<span class="sd">are called &#39;module-directives&#39;, and are grouped in another dictionary, whose keys are</span>
+<span class="sd">the module attributes.  For example:</span>
+<span class="sd">    features.module.19:</span>
+<span class="sd">        in_channels: 231</span>
+<span class="sd">        out_channels: 512</span>
+<span class="sd">    classifier.0:</span>
+<span class="sd">        in_channels: 22589</span>
+<span class="sd">ThinningRecipe.parameters is a dictionary keyed by the parameter names (strings).</span>
+<span class="sd">Values are called &#39;parameter directives&#39;, and each directive is a list of tuples.</span>
+<span class="sd">These tuples can have 2 values, or 4 values.</span>
+<span class="sd">2-value tuples have the format: (dimension-to-change, indices-to-select)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ThinningRecipe&#39;</span><span class="p">,</span> <span class="s1">&#39;resnet_cifar_remove_layers&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;ChannelRemover&#39;</span><span class="p">,</span> <span class="s1">&#39;remove_channels&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;FilterRemover&#39;</span><span class="p">,</span>  <span class="s1">&#39;remove_filters&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;find_nonzero_channels&#39;</span><span class="p">,</span> <span class="s1">&#39;find_nonzero_channels_list&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;execute_thinning_recipes_list&#39;</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">create_graph</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">arch</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;imagenet&#39;</span><span class="p">:</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">),</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;cifar10&#39;</span><span class="p">:</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">dummy_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Unsupported dataset (</span><span class="si">{}</span><span class="s2">) - aborting draw operation&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">arch</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">SummaryGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">param_name_2_layer_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">param_name</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;weights&#39;</span><span class="p">)]</span>
+
+
+<span class="k">def</span> <span class="nf">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">directive</span><span class="p">):</span>
+    <span class="n">param_directive</span> <span class="o">=</span> <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">param_directive</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">directive</span><span class="p">)</span>
+    <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_directive</span>
+
+
+<span class="k">def</span> <span class="nf">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="n">module_name</span> <span class="o">=</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
+    <span class="n">mod_directive</span> <span class="o">=</span> <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">mod_directive</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mod_directive</span>
+
+
+<span class="k">def</span> <span class="nf">bn_thinning</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">bn_name</span><span class="p">,</span> <span class="n">len_thin_features</span><span class="p">,</span> <span class="n">thin_features</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adjust the sizes of the parameters of a BatchNormalization layer</span>
+<span class="sd">    This function is invoked after the Convolution layer preceeding a BN layer has</span>
+<span class="sd">    changed dimensions (filters or channels were removed), and the BN layer also</span>
+<span class="sd">    requires updating as a result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bn_module</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="n">bn_name</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bn_module</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">batchnorm</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">)</span>
+
+    <span class="n">bn_directive</span> <span class="o">=</span> <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bn_name</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="n">bn_directive</span><span class="p">[</span><span class="s1">&#39;num_features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">len_thin_features</span>
+    <span class="c1"># These are tensors that BN uses for temporary storage of batch statistics.</span>
+    <span class="c1"># The dimensions of these tensors need adjustment, by removing specific elements</span>
+    <span class="c1"># from the tensors.</span>
+    <span class="n">bn_directive</span><span class="p">[</span><span class="s1">&#39;running_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin_features</span><span class="p">)</span>
+    <span class="n">bn_directive</span><span class="p">[</span><span class="s1">&#39;running_var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin_features</span><span class="p">)</span>
+    <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">bn_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bn_directive</span>
+
+    <span class="c1"># These are the scale and shift tensors</span>
+    <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">bn_name</span><span class="o">+</span><span class="s1">&#39;.weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin_features</span><span class="p">)]</span>
+    <span class="n">thinning_recipe</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">bn_name</span><span class="o">+</span><span class="s1">&#39;.bias&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">thin_features</span><span class="p">)]</span>
+
+
+<div class="viewcode-block" id="resnet_cifar_remove_layers"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.resnet_cifar_remove_layers">[文档]</a><span class="k">def</span> <span class="nf">resnet_cifar_remove_layers</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove layers from ResNet-Cifar</span>
+<span class="sd">    Search for convolution layers which have 100% sparse weight tensors and remove</span>
+<span class="sd">    them from the model.  This ugly code is specific to ResNet for Cifar, using the</span>
+<span class="sd">    layer gating mechanism that we added in order to remove layers from the network.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a list of all the layers that have their weights tensor 100% sparse</span>
+    <span class="n">layers_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_name</span> <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">distiller</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="n">layers_to_remove</span><span class="p">:</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">param_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">layer</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;downsample&#39;</span><span class="p">:</span>
+            <span class="n">downsample</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing layer: </span><span class="si">%s</span><span class="s2"> [layer=</span><span class="si">%d</span><span class="s2"> block=</span><span class="si">%d</span><span class="s2"> downsample=</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span>
+                           <span class="p">(</span><span class="n">param_name</span><span class="p">[:</span><span class="n">param_name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.weight&#39;</span><span class="p">)],</span> <span class="n">layer</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">downsample</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">conv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Removing layer: </span><span class="si">%s</span><span class="s2"> [layer=</span><span class="si">%d</span><span class="s2"> block=</span><span class="si">%d</span><span class="s2"> conv=</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span>
+                           <span class="p">(</span><span class="n">param_name</span><span class="p">[:</span><span class="n">param_name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.weight&#39;</span><span class="p">)],</span> <span class="n">layer</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">conv</span><span class="p">))</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">layer_gates</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="n">block</span><span class="p">][</span><span class="n">conv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="remove_channels"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.remove_channels">[文档]</a><span class="k">def</span> <span class="nf">remove_channels</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">arch</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+    <span class="n">sgraph</span> <span class="o">=</span> <span class="n">create_graph</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">arch</span><span class="p">)</span>
+    <span class="n">thinning_recipe</span> <span class="o">=</span> <span class="n">create_thinning_recipe_channels</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">)</span>
+    <span class="n">apply_and_save_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="find_nonzero_channels"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.find_nonzero_channels">[文档]</a><span class="k">def</span> <span class="nf">find_nonzero_channels</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Count the number of non-zero channels in a weights tensor.</span>
+<span class="sd">    Non-zero channels are channels that have at least one coefficient that is</span>
+<span class="sd">    non-zero.  Counting non-zero channels involves some tensor acrobatics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">num_filters</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">num_channels</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># First, reshape the weights tensor such that each channel (kernel) in the original</span>
+    <span class="c1"># tensor, is now a row in the 2D tensor.</span>
+    <span class="n">view_2d</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="c1"># Next, compute the sums of each kernel</span>
+    <span class="n">kernel_sums</span> <span class="o">=</span> <span class="n">view_2d</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Now group by channels</span>
+    <span class="n">k_sums_mat</span> <span class="o">=</span> <span class="n">kernel_sums</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">num_filters</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+    <span class="n">nonzero_channels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">k_sums_mat</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">num_channels</span> <span class="o">&gt;</span> <span class="n">nonzero_channels</span><span class="o">.</span><span class="n">nelement</span><span class="p">():</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;In tensor </span><span class="si">%s</span><span class="s2"> found </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2"> zero channels&quot;</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span>
+                       <span class="n">num_channels</span> <span class="o">-</span> <span class="n">nonzero_channels</span><span class="o">.</span><span class="n">nelement</span><span class="p">(),</span> <span class="n">num_channels</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nonzero_channels</span></div>
+
+
+<div class="viewcode-block" id="find_nonzero_channels_list"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.find_nonzero_channels_list">[文档]</a><span class="k">def</span> <span class="nf">find_nonzero_channels_list</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">):</span>
+    <span class="n">nnz_channels</span> <span class="o">=</span> <span class="n">find_nonzero_channels</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+    <span class="n">nnz_channels</span> <span class="o">=</span> <span class="n">nnz_channels</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">nnz_channels</span><span class="o">.</span><span class="n">numel</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">nnz_channels</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">apply_and_save_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Now actually remove the filters, chaneels and make the weight tensors smaller</span>
+        <span class="n">execute_thinning_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+
+        <span class="c1"># Stash the recipe, so that it will be serialized together with the model</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;thinning_recipes&#39;</span><span class="p">):</span>
+            <span class="c1"># Add the new recipe to the existing recipes.  They will be applied by order.</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">thinning_recipes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">thinning_recipes</span> <span class="o">=</span> <span class="p">[</span><span class="n">thinning_recipe</span><span class="p">]</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created, applied and saved a thinning recipe&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to create a thinning recipe&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="remove_filters"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.remove_filters">[文档]</a><span class="k">def</span> <span class="nf">remove_filters</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">arch</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+    <span class="c1"># sgraph = create_graph(dataset, arch)</span>
+
+    <span class="c1"># Add our model in remove filters 2018-09-19 CKH</span>
+    <span class="c1"># set dummy_input base on arch from compression scheduler 2018-10-19 13:36:53 by CKH</span>
+    <span class="k">if</span> <span class="n">arch</span> <span class="o">==</span> <span class="s1">&#39;deblurGAN&#39;</span><span class="p">:</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+    <span class="n">sgraph</span> <span class="o">=</span> <span class="n">SummaryGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">cuda</span><span class="p">())</span>
+
+    <span class="n">thinning_recipe</span> <span class="o">=</span> <span class="n">create_thinning_recipe_filters</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">)</span>
+    <span class="n">apply_and_save_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<span class="k">def</span> <span class="nf">create_thinning_recipe_channels</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a recipe for removing channels from Convolution layers.</span>
+<span class="sd">    The 4D weights of the model parameters (i.e. the convolution parameters) are</span>
+<span class="sd">    examined one by one, to determine which has channels that are all zeros.</span>
+<span class="sd">    For each weights tensor that has at least one zero-channel, we create a</span>
+<span class="sd">    &quot;thinning recipe&quot;.</span>
+<span class="sd">    The thinning recipe contains meta-instructions of how the model</span>
+<span class="sd">    should be changed in order to remove the channels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Invoking create_thinning_recipe_channels&quot;</span><span class="p">)</span>
+
+    <span class="n">thinning_recipe</span> <span class="o">=</span> <span class="n">ThinningRecipe</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="p">{},</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">{</span><span class="n">mod_name</span><span class="p">:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()}</span>
+
+    <span class="c1"># Traverse all of the model&#39;s parameters, search for zero-channels, and</span>
+    <span class="c1"># create a thinning recipe that descibes the required changes to the model.</span>
+    <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+        <span class="c1"># We are only interested in 4D weights (of Convolution layers)</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">num_channels</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">nonzero_channels</span> <span class="o">=</span> <span class="n">find_nonzero_channels</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="n">num_nnz_channels</span> <span class="o">=</span> <span class="n">nonzero_channels</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">num_nnz_channels</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trying to set zero channels for parameter </span><span class="si">%s</span><span class="s2"> is not allowed&quot;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="c1"># If there are non-zero channels in this tensor then continue to next tensor</span>
+        <span class="k">if</span> <span class="n">num_channels</span> <span class="o">&lt;=</span> <span class="n">num_nnz_channels</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># We are removing channels, so update the number of incoming channels (IFMs)</span>
+        <span class="c1"># in the convolutional layer</span>
+        <span class="n">layer_name</span> <span class="o">=</span> <span class="n">param_name_2_layer_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span>
+        <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;in_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_channels</span><span class="p">)</span>
+
+        <span class="c1"># Select only the non-zero filters</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">nonzero_channels</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+        <span class="c1"># Find all instances of Convolution layers that immediately preceed this layer</span>
+        <span class="n">predecessors</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">predecessors_f</span><span class="p">(</span><span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">])</span>
+        <span class="c1"># Convert the layers names to PyTorch&#39;s convoluted naming scheme (when DataParallel is used)</span>
+        <span class="n">predecessors</span> <span class="o">=</span> <span class="p">[</span><span class="n">normalize_module_name</span><span class="p">(</span><span class="n">predecessor</span><span class="p">)</span> <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">predecessors</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">predecessors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Could not find predecessors for name=</span><span class="si">{}</span><span class="s2"> normal=</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">),</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">predecessors</span><span class="p">:</span>
+            <span class="c1"># For each of the convolutional layers that preceed, we have to reduce the number of output channels.</span>
+            <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;out_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_channels</span><span class="p">)</span>
+
+            <span class="c1"># Now remove channels from the weights tensor of the successor conv</span>
+            <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.weight&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">layers</span><span class="p">[</span><span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">)]</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># This convolution has bias coefficients</span>
+                <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predecessor</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.bias&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+        <span class="c1"># Now handle the BatchNormalization layer that follows the convolution</span>
+        <span class="n">bn_layers</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">predecessors_f</span><span class="p">(</span><span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;BatchNormalization&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bn_layers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bn_layers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="c1"># Thinning of the BN layer that follows the convolution</span>
+            <span class="n">bn_layer_name</span> <span class="o">=</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">bn_thinning</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">bn_layer_name</span><span class="p">,</span>
+                        <span class="n">len_thin_features</span><span class="o">=</span><span class="n">num_nnz_channels</span><span class="p">,</span> <span class="n">thin_features</span><span class="o">=</span><span class="n">indices</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">thinning_recipe</span>
+
+
+<span class="k">def</span> <span class="nf">create_thinning_recipe_filters</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a recipe for removing filters from Convolution layers.</span>
+<span class="sd">    The 4D weights of the model parameters (i.e. the convolution parameters) are</span>
+<span class="sd">    examined one by one, to determine which has filters that are all zeros.</span>
+<span class="sd">    For each weights tensor that has at least one zero-filter, we create a</span>
+<span class="sd">    &quot;thinning recipe&quot;.</span>
+<span class="sd">    The thinning recipe contains meta-instructions of how the model</span>
+<span class="sd">    should be changed in order to remove the filters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Invoking create_thinning_recipe_filters&quot;</span><span class="p">)</span>
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">thinning_recipe</span> <span class="o">=</span> <span class="n">ThinningRecipe</span><span class="p">(</span><span class="n">modules</span><span class="o">=</span><span class="p">{},</span> <span class="n">parameters</span><span class="o">=</span><span class="p">{})</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">{</span><span class="n">mod_name</span><span class="p">:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()}</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    log 2018-09-19 CKH</span>
+<span class="sd">        如果是1x1和dwconv3x3相连, 都要做pruning filter, 那在thinning的时候, 对于dwconv3x3, 它要按照前向结点thinning一次param, 再按本身</span>
+<span class="sd">    的recipe再thinning一次, 但是dwconv3x3实际上param只有一个维度, 比如32x32的dwconv3x3, parameter只有[32,1], 那就不可能thinning两次</span>
+<span class="sd">    因为按前向结点thinning的时候, 要thinning一个filter, in和out同时都被thinning掉了, 因为in&amp;out之间只有一条线相连, 所以这种情况就不要做</span>
+<span class="sd">    dwconv3x3的thinning, 做1x1的thinning, 就达到对3x3 filter pruning的目的了</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+        <span class="c1"># We are only interested in 4D weights</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Find the number of zero-valued filters in this weights tensor</span>
+        <span class="n">filter_view</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">num_filters</span> <span class="o">=</span> <span class="n">filter_view</span><span class="o">.</span><span class="n">size</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nonzero_filters</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">filter_view</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">num_nnz_filters</span> <span class="o">=</span> <span class="n">nonzero_filters</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">num_nnz_filters</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trying to set zero filters for parameter </span><span class="si">%s</span><span class="s2"> is not allowed&quot;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="c1"># If there are non-zero filters in this tensor then continue to next tensor</span>
+        <span class="k">if</span> <span class="n">num_filters</span> <span class="o">&lt;=</span> <span class="n">num_nnz_filters</span><span class="p">:</span>
+            <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SKipping </span><span class="si">{}</span><span class="s2"> shape=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param_name_2_layer_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;In tensor </span><span class="si">%s</span><span class="s2"> found </span><span class="si">%d</span><span class="s2">/</span><span class="si">%d</span><span class="s2"> zero filters&quot;</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span>
+                       <span class="n">num_filters</span> <span class="o">-</span> <span class="n">num_nnz_filters</span><span class="p">,</span> <span class="n">num_filters</span><span class="p">)</span>
+
+        <span class="c1"># We are removing filters, so update the number of outgoing channels (OFMs)</span>
+        <span class="c1"># in the convolutional layer</span>
+        <span class="n">layer_name</span> <span class="o">=</span> <span class="n">param_name_2_layer_name</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">)</span>
+        <span class="c1"># 改变architecture的in_ch和out_ch</span>
+        <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;out_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">)</span>
+
+        <span class="c1"># Select only the non-zero filters</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">nonzero_filters</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="c1"># 改变parameter tensor的维度大小</span>
+        <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This convolution has bias coefficients</span>
+            <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layer_name</span><span class="o">+</span><span class="s1">&#39;.bias&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+        <span class="c1"># Find all instances of Convolution or FC (GEMM) layers that immediately follow this layer</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> =&gt; </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)))</span>
+
+        <span class="c1"># Add type name before put in successors_f 2018-09-19 CKH</span>
+        <span class="n">norm_module_name</span> <span class="o">=</span> <span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+
+        <span class="c1"># 可以考虑用isinstance(layers[successor], torch.nn.modules.Conv2d)的方式来判断module的type 2018-09-19 CKH</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">norm_module_name</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
+            <span class="n">norm_module_name</span> <span class="o">+=</span> <span class="s1">&#39;.Conv&#39;</span>
+
+        <span class="n">successors</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">successors_f</span><span class="p">(</span><span class="n">norm_module_name</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Gemm&#39;</span><span class="p">])</span>
+        <span class="c1"># Convert the layers names to PyTorch&#39;s convoluted naming scheme (when DataParallel is used)</span>
+        <span class="n">successors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">succs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">succs</span> <span class="ow">in</span> <span class="n">successors</span><span class="p">]</span>
+        <span class="n">successors</span> <span class="o">=</span> <span class="p">[</span><span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span> <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">successors</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">successors</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
+                <span class="c1"># 如果遇到successor是dwconv, 需要把dw的out_ch也改掉(只改architecture), 同时把dwconv的后向结点的in_ch也改掉</span>
+                <span class="c1"># (architecture和parameter维度都要改), 先默认dwcon不会紧跟一个dwconv 2018-09-19 CKH</span>
+                <span class="n">successor_norm_module_name</span> <span class="o">=</span> <span class="n">normalize_module_name</span><span class="p">(</span><span class="n">successor</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor_norm_module_name</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
+                    <span class="n">successor_norm_module_name</span> <span class="o">+=</span> <span class="s1">&#39;.Conv&#39;</span>
+
+                <span class="k">if</span> <span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span> <span class="o">==</span> <span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">in_channels</span><span class="p">:</span>
+                    <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;in_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">)</span>
+                    <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;out_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">)</span>
+                    <span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">num_nnz_filters</span>
+                    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[recipe] </span><span class="si">{}</span><span class="s2">: setting in_channels = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">num_nnz_filters</span><span class="p">))</span>
+
+                    <span class="c1"># Now remove channels from the weights tensor of the successor conv</span>
+                    <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.weight&#39;</span><span class="p">,</span>
+                                           <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+                    <span class="c1"># 对于1x1后面的depthwise3x3, 在前向1x1的output_channel被剪掉后, 需要①剪掉input_channel②剪掉output_channel</span>
+                    <span class="c1"># ③剪掉bias, 这三个操作的mask和1x1的mask都一样, 也就是1x1的output_channel一动, 跟着后面depthwise3x3全部要动</span>
+                    <span class="c1"># 2018-09-20 CKH</span>
+                    <span class="k">if</span> <span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># This convolution has bias coefficients</span>
+                        <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor</span> <span class="o">+</span> <span class="s1">&#39;.bias&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+                    <span class="n">successors2</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">successors_f</span><span class="p">(</span><span class="n">successor_norm_module_name</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Conv&#39;</span><span class="p">,</span> <span class="s1">&#39;Gemm&#39;</span><span class="p">])</span>
+                    <span class="c1"># Convert the layers names to PyTorch&#39;s convoluted naming scheme (when DataParallel is used)</span>
+                    <span class="n">successors2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">succs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">succs</span> <span class="ow">in</span> <span class="n">successors2</span><span class="p">]</span>
+                    <span class="n">successors2</span> <span class="o">=</span> <span class="p">[</span><span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span> <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">successors2</span><span class="p">]</span>
+
+                    <span class="k">for</span> <span class="n">successor2</span> <span class="ow">in</span> <span class="n">successors2</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor2</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">):</span>
+                            <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor2</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;in_channels&#39;</span><span class="p">,</span>
+                                                    <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">)</span>
+                            <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[recipe] </span><span class="si">{}</span><span class="s2">: setting in_channels = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">num_nnz_filters</span><span class="p">))</span>
+                            <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span>
+                                                   <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor2</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.weight&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># For each of the convolutional layers that follow, we have to reduce the number of input channels.</span>
+                    <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;in_channels&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">)</span>
+                    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[recipe] </span><span class="si">{}</span><span class="s2">: setting in_channels = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">num_nnz_filters</span><span class="p">))</span>
+
+                    <span class="c1"># Now remove channels from the weights tensor of the successor conv</span>
+                    <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.weight&#39;</span><span class="p">,</span>
+                                           <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">indices</span><span class="p">))</span>
+
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">Linear</span><span class="p">):</span>
+                <span class="c1"># If a Linear (Fully-Connected) layer follows, we need to update it&#39;s in_features member</span>
+                <span class="n">fm_size</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">in_features</span> <span class="o">//</span> <span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">out_channels</span>
+                <span class="n">in_features</span> <span class="o">=</span> <span class="n">fm_size</span> <span class="o">*</span> <span class="n">num_nnz_filters</span>
+                <span class="n">append_module_directive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">successor</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s1">&#39;in_features&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">in_features</span><span class="p">)</span>
+                <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[recipe] </span><span class="si">{}</span><span class="s2">: setting in_features = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">successor</span><span class="p">,</span> <span class="n">in_features</span><span class="p">))</span>
+
+                <span class="c1"># Now remove channels from the weights tensor of the successor FC layer:</span>
+                <span class="c1"># This is a bit tricky:</span>
+                <span class="n">fm_height</span> <span class="o">=</span> <span class="n">fm_width</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fm_size</span><span class="p">))</span>
+                <span class="n">view_4D</span> <span class="o">=</span> <span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">out_features</span><span class="p">,</span> <span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span><span class="o">.</span><span class="n">out_channels</span><span class="p">,</span> <span class="n">fm_height</span><span class="p">,</span> <span class="n">fm_width</span><span class="p">)</span>
+                <span class="n">view_2D</span> <span class="o">=</span> <span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">successor</span><span class="p">]</span><span class="o">.</span><span class="n">out_features</span><span class="p">,</span> <span class="n">in_features</span><span class="p">)</span>
+                <span class="n">append_param_directive</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">successor</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.weight&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">view_4D</span><span class="p">,</span> <span class="n">view_2D</span><span class="p">))</span>
+
+        <span class="c1"># Now handle the BatchNormalization layer that follows the convolution</span>
+        <span class="n">bn_layers</span> <span class="o">=</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">successors_f</span><span class="p">(</span><span class="n">normalize_module_name</span><span class="p">(</span><span class="n">layer_name</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;BatchNormalization&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bn_layers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">bn_layers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="c1"># Thinning of the BN layer that follows the convolution</span>
+            <span class="n">bn_layer_name</span> <span class="o">=</span> <span class="n">denormalize_module_name</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">bn_layers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">bn_thinning</span><span class="p">(</span><span class="n">thinning_recipe</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">bn_layer_name</span><span class="p">,</span>
+                        <span class="n">len_thin_features</span><span class="o">=</span><span class="n">num_nnz_filters</span><span class="p">,</span> <span class="n">thin_features</span><span class="o">=</span><span class="n">indices</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">thinning_recipe</span>
+
+
+<div class="viewcode-block" id="ChannelRemover"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.ChannelRemover">[文档]</a><span class="k">class</span> <span class="nc">ChannelRemover</span><span class="p">(</span><span class="n">ScheduledTrainingPolicy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A policy which applies a network thinning function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thinning_func_str</span><span class="p">,</span> <span class="n">arch</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thinning_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">thinning_func_str</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="n">arch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+
+<div class="viewcode-block" id="ChannelRemover.on_epoch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.ChannelRemover.on_epoch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thinning_func</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;optimizer&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="FilterRemover"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.FilterRemover">[文档]</a><span class="k">class</span> <span class="nc">FilterRemover</span><span class="p">(</span><span class="n">ScheduledTrainingPolicy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A policy which applies a network thinning function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thinning_func_str</span><span class="p">,</span> <span class="n">arch</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thinning_func</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">thinning_func_str</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arch</span> <span class="o">=</span> <span class="n">arch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_cb</span> <span class="o">=</span> <span class="s2">&quot;on_minibatch_begin&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+            <span class="c1"># We want to execute the thinning function only once, not every invocation of on_minibatch_begin</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thinning_func</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="FilterRemover.on_minibatch_begin"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_begin">[文档]</a>    <span class="k">def</span> <span class="nf">on_minibatch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+        <span class="c1"># We hook onto the on_minibatch_begin because we want to run after the pruner which sparsified</span>
+        <span class="c1"># the tensors.  Pruners configure their pruning mask in on_epoch_begin, but apply the mask</span>
+        <span class="c1"># only in on_minibatch_begin</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_cb</span> <span class="o">!=</span> <span class="s2">&quot;on_minibatch_begin&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__apply</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FilterRemover.on_minibatch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_minibatch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_cb</span> <span class="o">!=</span> <span class="s2">&quot;on_minibatch_end&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__apply</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FilterRemover.on_epoch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_epoch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="c1"># The epoch has ended and we reset the &#39;done&#39; flag, so that the FilterRemover instance can be reused</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">done</span> <span class="o">=</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="execute_thinning_recipes_list"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.thinning.execute_thinning_recipes_list">[文档]</a><span class="k">def</span> <span class="nf">execute_thinning_recipes_list</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">recipe_list</span><span class="p">):</span>
+    <span class="c1"># Invoke this function when you want to use a list of thinning recipes to convert a programmed model</span>
+    <span class="c1"># to a thinned model. For example, this is invoked when loading a model from a checkpoint.</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">recipe</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">recipe_list</span><span class="p">):</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Executing recipe </span><span class="si">%d</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">execute_thinning_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loaded_from_file</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Executed </span><span class="si">%d</span><span class="s2"> recipes&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipe_list</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">optimizer_thinning</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">new_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adjust the size of the SGD vecolity-tracking tensors.</span>
+
+<span class="sd">    The SGD momentum update (velocity) is dependent on the weights, and because during thinning we</span>
+<span class="sd">    dynamically change the weights shapes, we need to make the apporpriate changes in the Optimizer,</span>
+<span class="sd">    or disable the momentum.</span>
+
+<span class="sd">    This function is brittle as it is tested on SGD only and relies on the internal representation of</span>
+<span class="sd">    the SGD optimizer, which can change w/o notice.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
+        <span class="n">momentum</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;momentum&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">momentum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">id</span><span class="p">(</span><span class="n">param</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="n">param_state</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;momentum_buffer&#39;</span> <span class="ow">in</span> <span class="n">param_state</span><span class="p">:</span>
+                <span class="n">param_state</span><span class="p">[</span><span class="s1">&#39;momentum_buffer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">param_state</span><span class="p">[</span><span class="s1">&#39;momentum_buffer&#39;</span><span class="p">],</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;optimizer_thinning: new shape </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">new_shape</span><span class="p">))</span>
+                    <span class="n">param_state</span><span class="p">[</span><span class="s1">&#39;momentum_buffer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_state</span><span class="p">[</span><span class="s1">&#39;momentum_buffer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resize_</span><span class="p">(</span><span class="o">*</span><span class="n">new_shape</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="k">def</span> <span class="nf">execute_thinning_recipe</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loaded_from_file</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Apply a thinning recipe to a model.</span>
+<span class="sd">    This will remove filters and channels, as well as handle batch-normalization parameter</span>
+<span class="sd">    adjustment, and thinning of weight tensors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">{</span><span class="n">mod_name</span><span class="p">:</span> <span class="n">m</span> <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">()}</span>
+    <span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">directives</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">directives</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;running_var&#39;</span><span class="p">]:</span>
+                <span class="n">running</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">],</span> <span class="n">attr</span><span class="p">)</span>
+                <span class="n">dim_to_trim</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">indices_to_select</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># Check if we&#39;re trying to trim a parameter that is already &quot;thin&quot;</span>
+                <span class="k">if</span> <span class="n">running</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim_to_trim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">indices_to_select</span><span class="o">.</span><span class="n">nelement</span><span class="p">():</span>
+                    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[thinning] </span><span class="si">{}</span><span class="s2">: setting </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                                   <span class="nb">format</span><span class="p">(</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">indices_to_select</span><span class="o">.</span><span class="n">nelement</span><span class="p">()))</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">],</span> <span class="n">attr</span><span class="p">,</span>
+                            <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">running</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim_to_trim</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">indices_to_select</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[thinning] </span><span class="si">{}</span><span class="s2">: setting </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">layer_name</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">layers</span><span class="p">[</span><span class="n">layer_name</span><span class="p">],</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param_directives</span> <span class="ow">in</span> <span class="n">recipe</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">model_find_param</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">param</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">directive</span> <span class="ow">in</span> <span class="n">param_directives</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="n">directive</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="n">directive</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">len_indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">nelement</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">directive</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>  <span class="c1"># TODO: this code is hard to follow</span>
+                <span class="n">selection_view</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">directive</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="c1"># Check if we&#39;re trying to trim a parameter that is already &quot;thin&quot;</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_indices</span><span class="p">:</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">selection_view</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># We also need to change the dimensions of the gradient tensor.</span>
+                        <span class="n">grad_selection_view</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">resize_</span><span class="p">(</span><span class="o">*</span><span class="n">directive</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="n">grad_selection_view</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_indices</span><span class="p">:</span>
+                            <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">grad_selection_view</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">optimizer_thinning</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">directive</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+                                <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated [4D] velocity buffer for </span><span class="si">{}</span><span class="s2"> (dim=</span><span class="si">{}</span><span class="s2">,size=</span><span class="si">{}</span><span class="s2">,shape=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span>
+                                                <span class="nb">format</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">len_indices</span><span class="p">,</span> <span class="n">directive</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+
+                <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">directive</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">resize_</span><span class="p">(</span><span class="o">*</span><span class="n">directive</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_indices</span><span class="p">:</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+                    <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;[thinning] changed param </span><span class="si">{}</span><span class="s2"> shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">len_indices</span><span class="p">))</span>
+                <span class="c1"># We also need to change the dimensions of the gradient tensor.</span>
+                <span class="c1"># If have not done a backward-pass thus far, then the gradient will</span>
+                <span class="c1"># not exist, and therefore won&#39;t need to be re-dimensioned.</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_indices</span><span class="p">:</span>
+                    <span class="n">param</span><span class="o">.</span><span class="n">grad</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">grad</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">optimizer_thinning</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+                        <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Updated velocity buffer </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">param_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">loaded_from_file</span><span class="p">:</span>
+                <span class="c1"># If the masks are loaded from a checkpoint file, then we don&#39;t need to change</span>
+                <span class="c1"># their shape, because they are already correctly shaped</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">zeros_mask_dict</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span>
+                <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span> <span class="o">!=</span> <span class="n">len_indices</span><span class="p">):</span>
+                    <span class="n">zeros_mask_dict</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_select</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

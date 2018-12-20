@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.models.Deblur.losses &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../../models.html">DL_ImageGen_bench.models</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.models.Deblur.losses</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.models.Deblur.losses 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="k">import</span> <span class="n">init</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">torch.autograd</span> <span class="k">as</span> <span class="nn">autograd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torchvision.models</span> <span class="k">as</span> <span class="nn">models</span>
+<span class="kn">import</span> <span class="nn">apputils.Deblur_apputils.util</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">apputils.Deblur_apputils.image_pool</span> <span class="k">import</span> <span class="n">ImagePool</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="c1">###############################################################################</span>
+<span class="c1"># Functions</span>
+<span class="c1">###############################################################################</span>
+
+<div class="viewcode-block" id="ContentLoss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.ContentLoss">[文档]</a><span class="k">class</span> <span class="nc">ContentLoss</span><span class="p">():</span>
+<div class="viewcode-block" id="ContentLoss.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.ContentLoss.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">loss</span></div>
+			
+<div class="viewcode-block" id="ContentLoss.get_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.ContentLoss.get_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fakeIm</span><span class="p">,</span> <span class="n">realIm</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">fakeIm</span><span class="p">,</span> <span class="n">realIm</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PerceptualLoss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss">[文档]</a><span class="k">class</span> <span class="nc">PerceptualLoss</span><span class="p">():</span>
+
+<div class="viewcode-block" id="PerceptualLoss.contentFunc"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.contentFunc">[文档]</a>	<span class="k">def</span> <span class="nf">contentFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">conv_3_3_layer</span> <span class="o">=</span> <span class="mi">14</span>
+		<span class="n">cnn</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg19</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">features</span>
+		<span class="n">cnn</span> <span class="o">=</span> <span class="n">cnn</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">cnn</span><span class="p">)):</span>
+			<span class="n">model</span><span class="o">.</span><span class="n">add_module</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">layer</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">conv_3_3_layer</span><span class="p">:</span>
+				<span class="k">break</span>
+		<span class="k">return</span> <span class="n">model</span></div>
+
+<div class="viewcode-block" id="PerceptualLoss.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">loss</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">contentFunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentFunc</span><span class="p">()</span></div>
+			
+<div class="viewcode-block" id="PerceptualLoss.get_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fakeIm</span><span class="p">,</span> <span class="n">realIm</span><span class="p">):</span>
+		<span class="n">f_fake</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentFunc</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">fakeIm</span><span class="p">)</span>
+		<span class="n">f_real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentFunc</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">realIm</span><span class="p">)</span>
+		<span class="n">f_real_no_grad</span> <span class="o">=</span> <span class="n">f_real</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+		<span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">f_fake</span><span class="p">,</span> <span class="n">f_real_no_grad</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">loss</span></div>
+
+<div class="viewcode-block" id="PerceptualLoss.get_feature"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_feature">[文档]</a>	<span class="k">def</span> <span class="nf">get_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inIm</span><span class="p">):</span>  <span class="c1"># modified by KaiKang, for VGG feature dump</span>
+		<span class="n">feaIm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentFunc</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inIm</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">feaIm</span></div></div>
+
+		
+<div class="viewcode-block" id="GANLoss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.GANLoss">[文档]</a><span class="k">class</span> <span class="nc">GANLoss</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_l1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_real_label</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">target_fake_label</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+				 <span class="n">tensor</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">GANLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">real_label</span> <span class="o">=</span> <span class="n">target_real_label</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">fake_label</span> <span class="o">=</span> <span class="n">target_fake_label</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">real_label_var</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">fake_label_var</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">tensor</span>
+		<span class="k">if</span> <span class="n">use_l1</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCELoss</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GANLoss.get_target_tensor"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.GANLoss.get_target_tensor">[文档]</a>	<span class="k">def</span> <span class="nf">get_target_tensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">target_is_real</span><span class="p">):</span>
+		<span class="n">target_tensor</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="n">target_is_real</span><span class="p">:</span>
+			<span class="n">create_label</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">real_label_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+							<span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_label_var</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">input</span><span class="o">.</span><span class="n">numel</span><span class="p">()))</span>
+			<span class="k">if</span> <span class="n">create_label</span><span class="p">:</span>
+				<span class="n">real_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_label</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">real_label_var</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">real_tensor</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+			<span class="n">target_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_label_var</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">create_label</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_label_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+							<span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_label_var</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">input</span><span class="o">.</span><span class="n">numel</span><span class="p">()))</span>
+			<span class="k">if</span> <span class="n">create_label</span><span class="p">:</span>
+				<span class="n">fake_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_label</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">fake_label_var</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">fake_tensor</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+			<span class="n">target_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_label_var</span>
+		<span class="k">return</span> <span class="n">target_tensor</span></div>
+
+	<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">target_is_real</span><span class="p">):</span>
+		<span class="n">target_tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_target_tensor</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">target_is_real</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">target_tensor</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DiscLoss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss">[文档]</a><span class="k">class</span> <span class="nc">DiscLoss</span><span class="p">():</span>
+<div class="viewcode-block" id="DiscLoss.name"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.name">[文档]</a>	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s1">&#39;DiscLoss&#39;</span></div>
+
+<div class="viewcode-block" id="DiscLoss.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">criterionGAN</span> <span class="o">=</span> <span class="n">GANLoss</span><span class="p">(</span><span class="n">use_l1</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tensor</span><span class="o">=</span><span class="n">tensor</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">fake_AB_pool</span> <span class="o">=</span> <span class="n">ImagePool</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">pool_size</span><span class="p">)</span></div>
+		
+<div class="viewcode-block" id="DiscLoss.get_g_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_g_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">):</span>
+		<span class="c1"># First, G(A) should fake the discriminator</span>
+		<span class="n">pred_fake</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">fakeB</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterionGAN</span><span class="p">(</span><span class="n">pred_fake</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+		
+<div class="viewcode-block" id="DiscLoss.get_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">,</span> <span class="n">realB</span><span class="p">):</span>
+		<span class="c1"># Fake</span>
+		<span class="c1"># stop backprop to the generator by detaching fake_B</span>
+		<span class="c1"># Generated Image Disc Output should be close to zero</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pred_fake</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">fakeB</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">loss_D_fake</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterionGAN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pred_fake</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+		<span class="c1"># Real</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">pred_real</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">realB</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">loss_D_real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterionGAN</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pred_real</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+		<span class="c1"># Combined loss</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_D_fake</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_D_real</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span></div></div>
+		
+<div class="viewcode-block" id="DiscLossLS"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS">[文档]</a><span class="k">class</span> <span class="nc">DiscLossLS</span><span class="p">(</span><span class="n">DiscLoss</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscLossLS.name"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.name">[文档]</a>	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s1">&#39;DiscLossLS&#39;</span></div>
+
+<div class="viewcode-block" id="DiscLossLS.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+		<span class="n">DiscLoss</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">criterionGAN</span> <span class="o">=</span> <span class="n">GANLoss</span><span class="p">(</span><span class="n">use_l1</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tensor</span><span class="o">=</span><span class="n">tensor</span><span class="p">)</span></div>
+		
+<div class="viewcode-block" id="DiscLossLS.get_g_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_g_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">DiscLoss</span><span class="o">.</span><span class="n">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">)</span></div>
+		
+<div class="viewcode-block" id="DiscLossLS.get_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">,</span> <span class="n">realB</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">DiscLoss</span><span class="o">.</span><span class="n">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">,</span> <span class="n">realB</span><span class="p">)</span></div></div>
+		
+<div class="viewcode-block" id="DiscLossWGANGP"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP">[文档]</a><span class="k">class</span> <span class="nc">DiscLossWGANGP</span><span class="p">(</span><span class="n">DiscLossLS</span><span class="p">):</span>
+<div class="viewcode-block" id="DiscLossWGANGP.name"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.name">[文档]</a>	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s1">&#39;DiscLossWGAN-GP&#39;</span></div>
+
+<div class="viewcode-block" id="DiscLossWGANGP.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+		<span class="n">DiscLossLS</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">LAMBDA</span> <span class="o">=</span> <span class="mi">10</span></div>
+		
+<div class="viewcode-block" id="DiscLossWGANGP.get_g_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_g_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">):</span>
+		<span class="c1"># First, G(A) should fake the discriminator</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">fakeB</span><span class="p">)</span>
+		<span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div>
+		
+<div class="viewcode-block" id="DiscLossWGANGP.calc_gradient_penalty"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.calc_gradient_penalty">[文档]</a>	<span class="k">def</span> <span class="nf">calc_gradient_penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">netD</span><span class="p">,</span> <span class="n">real_data</span><span class="p">,</span> <span class="n">fake_data</span><span class="p">):</span>
+		<span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">real_data</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+		<span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+
+		<span class="n">interpolates</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">real_data</span> <span class="o">+</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">fake_data</span><span class="p">)</span>
+
+		<span class="n">interpolates</span> <span class="o">=</span> <span class="n">interpolates</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+		<span class="n">interpolates</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">interpolates</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+		
+		<span class="n">disc_interpolates</span> <span class="o">=</span> <span class="n">netD</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">interpolates</span><span class="p">)</span>
+
+		<span class="n">gradients</span> <span class="o">=</span> <span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="n">disc_interpolates</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">interpolates</span><span class="p">,</span>
+								  <span class="n">grad_outputs</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">disc_interpolates</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">cuda</span><span class="p">(),</span>
+								  <span class="n">create_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_inputs</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+		<span class="n">gradient_penalty</span> <span class="o">=</span> <span class="p">((</span><span class="n">gradients</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">LAMBDA</span>
+		<span class="k">return</span> <span class="n">gradient_penalty</span></div>
+		
+<div class="viewcode-block" id="DiscLossWGANGP.get_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_loss">[文档]</a>	<span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">realA</span><span class="p">,</span> <span class="n">fakeB</span><span class="p">,</span> <span class="n">realB</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">fakeB</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+		
+		<span class="c1"># Real</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">D_real</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">realB</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">D_real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_real</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+		<span class="c1"># Combined loss</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_fake</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">D_real</span>
+		<span class="n">gradient_penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_gradient_penalty</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">realB</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">fakeB</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span> <span class="o">+</span> <span class="n">gradient_penalty</span></div></div>
+
+
+<div class="viewcode-block" id="init_loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.init_loss">[文档]</a><span class="k">def</span> <span class="nf">init_loss</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+	<span class="n">disc_loss</span> <span class="o">=</span> <span class="kc">None</span>
+	<span class="n">content_loss</span> <span class="o">=</span> <span class="kc">None</span>
+	
+	<span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;content_gan&#39;</span><span class="p">:</span>
+		<span class="n">content_loss</span> <span class="o">=</span> <span class="n">PerceptualLoss</span><span class="p">()</span>
+		<span class="n">content_loss</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">())</span>
+	<span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;pix2pix&#39;</span><span class="p">:</span>
+		<span class="n">content_loss</span> <span class="o">=</span> <span class="n">ContentLoss</span><span class="p">()</span>
+		<span class="n">content_loss</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">L1Loss</span><span class="p">())</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Model [</span><span class="si">%s</span><span class="s2">] not recognized.&quot;</span> <span class="o">%</span> <span class="n">opt</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+		<span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span> <span class="o">==</span> <span class="s1">&#39;wgan-gp&#39;</span><span class="p">:</span>
+			<span class="n">disc_loss</span> <span class="o">=</span> <span class="n">DiscLossWGANGP</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span> <span class="o">==</span> <span class="s1">&#39;lsgan&#39;</span><span class="p">:</span>
+			<span class="n">disc_loss</span> <span class="o">=</span> <span class="n">DiscLossLS</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span> <span class="o">==</span> <span class="s1">&#39;gan&#39;</span><span class="p">:</span>
+			<span class="n">disc_loss</span> <span class="o">=</span> <span class="n">DiscLoss</span><span class="p">()</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;GAN [</span><span class="si">%s</span><span class="s2">] not recognized.&quot;</span> <span class="o">%</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span><span class="p">)</span>
+		<span class="n">disc_loss</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+		<span class="k">return</span> <span class="n">disc_loss</span><span class="p">,</span> <span class="n">content_loss</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">content_loss</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

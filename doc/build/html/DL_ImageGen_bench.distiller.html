@@ -1,0 +1,1431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.distiller.data_loggers package" href="DL_ImageGen_bench.distiller.data_loggers.html" />
+    <link rel="prev" title="DL_ImageGen_bench.data.Deblur_data package" href="DL_ImageGen_bench.data.Deblur_data.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DL_ImageGen_bench.distiller package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.config">DL_ImageGen_bench.distiller.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.directives">DL_ImageGen_bench.distiller.directives module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.knowledge_distillation">DL_ImageGen_bench.distiller.knowledge_distillation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.learning_rate">DL_ImageGen_bench.distiller.learning_rate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.model_summaries">DL_ImageGen_bench.distiller.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.policy">DL_ImageGen_bench.distiller.policy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.scheduler">DL_ImageGen_bench.distiller.scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.sensitivity">DL_ImageGen_bench.distiller.sensitivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.thinning">DL_ImageGen_bench.distiller.thinning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.thresholding">DL_ImageGen_bench.distiller.thresholding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.distiller">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.distiller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-distiller-package">
+<h1>DL_ImageGen_bench.distiller package<a class="headerlink" href="#dl-imagegen-bench-distiller-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html">DL_ImageGen_bench.distiller.data_loggers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.collector">DL_ImageGen_bench.distiller.data_loggers.collector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.logger">DL_ImageGen_bench.distiller.data_loggers.logger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers.tbbackend">DL_ImageGen_bench.distiller.data_loggers.tbbackend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.data_loggers.html#module-DL_ImageGen_bench.distiller.data_loggers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html">DL_ImageGen_bench.distiller.pruning package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner">DL_ImageGen_bench.distiller.pruning.automated_gradual_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner">DL_ImageGen_bench.distiller.pruning.baidu_rnn_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.level_pruner">DL_ImageGen_bench.distiller.pruning.level_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.magnitude_pruner">DL_ImageGen_bench.distiller.pruning.magnitude_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.pruner">DL_ImageGen_bench.distiller.pruning.pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner">DL_ImageGen_bench.distiller.pruning.ranked_structures_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.sensitivity_pruner">DL_ImageGen_bench.distiller.pruning.sensitivity_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning.structure_pruner">DL_ImageGen_bench.distiller.pruning.structure_pruner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.pruning.html#module-DL_ImageGen_bench.distiller.pruning">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html">DL_ImageGen_bench.distiller.quantization package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.clipped_linear">DL_ImageGen_bench.distiller.quantization.clipped_linear module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.q_utils">DL_ImageGen_bench.distiller.quantization.q_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.quantizer">DL_ImageGen_bench.distiller.quantization.quantizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization.range_linear">DL_ImageGen_bench.distiller.quantization.range_linear module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.quantization.html#module-DL_ImageGen_bench.distiller.quantization">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html">DL_ImageGen_bench.distiller.regularization package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.group_regularizer">DL_ImageGen_bench.distiller.regularization.group_regularizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.l1_regularizer">DL_ImageGen_bench.distiller.regularization.l1_regularizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization.regularizer">DL_ImageGen_bench.distiller.regularization.regularizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.distiller.regularization.html#module-DL_ImageGen_bench.distiller.regularization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.config">
+<span id="dl-imagegen-bench-distiller-config-module"></span><h2>DL_ImageGen_bench.distiller.config module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.config" title="永久链接至标题">¶</a></h2>
+<p>CompressionScheduler configuration parsing.</p>
+<p>There are three ways to configure an instance of CompressionScheduler:</p>
+<ol class="arabic simple">
+<li><dl class="first docutils">
+<dt>Direct creating and programming of the scheduling objects.  For example:</dt>
+<dd># Element-wise sparasity
+sparsity_levels = {net_param: sparsity_level}
+pruner = distiller.pruning.SparsityLevelParameterPruner(name=’sensitivity’, levels=sparsity_levels)
+policy = distiller.PruningPolicy(pruner, pruner_args=None)
+scheduler = CompressionScheduler(model)
+scheduler.add_policy(policy, epochs=[0, 2, 4])</dd>
+</dl>
+</li>
+<li>Creating a dictionary containing the configuration.</li>
+<li>Creating a YAML file containing the configuration.</li>
+</ol>
+<p>When a YAML file is loaded, its dictionary is extracted and passed to <code class="docutils literal notranslate"><span class="pre">`dictConfig`</span></code>.&lt;br&gt;</p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.config.add_policy_to_scheduler">
+<code class="descclassname">DL_ImageGen_bench.distiller.config.</code><code class="descname">add_policy_to_scheduler</code><span class="sig-paren">(</span><em>policy</em>, <em>policy_def</em>, <em>schedule</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/config.html#add_policy_to_scheduler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.config.add_policy_to_scheduler" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.config.dict_config">
+<code class="descclassname">DL_ImageGen_bench.distiller.config.</code><code class="descname">dict_config</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>sched_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/config.html#dict_config"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.config.dict_config" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.config.file_config">
+<code class="descclassname">DL_ImageGen_bench.distiller.config.</code><code class="descname">file_config</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/config.html#file_config"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.config.file_config" title="永久链接至目标">¶</a></dt>
+<dd><p>Read the schedule from file</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.config.yaml_ordered_load">
+<code class="descclassname">DL_ImageGen_bench.distiller.config.</code><code class="descname">yaml_ordered_load</code><span class="sig-paren">(</span><em>stream</em>, <em>Loader=&lt;class 'yaml.loader.Loader'&gt;</em>, <em>object_pairs_hook=&lt;class 'collections.OrderedDict'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/config.html#yaml_ordered_load"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.config.yaml_ordered_load" title="永久链接至目标">¶</a></dt>
+<dd><p>Function to load YAML file using an OrderedDict
+See: <a class="reference external" href="https://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts">https://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.directives">
+<span id="dl-imagegen-bench-distiller-directives-module"></span><h2>DL_ImageGen_bench.distiller.directives module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.directives" title="永久链接至标题">¶</a></h2>
+<p>Scheduling directives</p>
+<p>Scheduling directives are instructions (directives) that the scheduler can
+execute as part of scheduling pruning activities.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.directives.FreezeTraining">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.directives.</code><code class="descname">FreezeTraining</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/directives.html#FreezeTraining"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.directives.FreezeTraining" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.directives.adjust_dropout">
+<code class="descclassname">DL_ImageGen_bench.distiller.directives.</code><code class="descname">adjust_dropout</code><span class="sig-paren">(</span><em>module</em>, <em>new_probabilty</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/directives.html#adjust_dropout"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.directives.adjust_dropout" title="永久链接至目标">¶</a></dt>
+<dd><p>Replace the dropout probability of dropout layers</p>
+<p>As explained in the paper “Learning both Weights and Connections for
+Efficient Neural Networks”:</p>
+<blockquote>
+<div>Dropout is widely used to prevent over-fitting, and this also applies to retraining.
+During retraining, however, the dropout ratio must be adjusted to account for the
+change in model capacity. In dropout, each parameter is probabilistically dropped
+during training, but will come back during inference. In pruning, parameters are
+dropped forever after pruning and have no chance to come back during both training
+and inference. As the parameters get sparse, the classifier will select the most
+informative predictors and thus have much less prediction variance, which reduces
+over-fitting. As pruning already reduced model capacity, the retraining dropout ratio
+should be smaller.</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.directives.freeze_all">
+<code class="descclassname">DL_ImageGen_bench.distiller.directives.</code><code class="descname">freeze_all</code><span class="sig-paren">(</span><em>model</em>, <em>freeze</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/directives.html#freeze_all"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.directives.freeze_all" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.directives.freeze_training">
+<code class="descclassname">DL_ImageGen_bench.distiller.directives.</code><code class="descname">freeze_training</code><span class="sig-paren">(</span><em>model</em>, <em>which_params</em>, <em>freeze</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/directives.html#freeze_training"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.directives.freeze_training" title="永久链接至目标">¶</a></dt>
+<dd><p>This function will freeze/defrost training for certain layers.</p>
+<p>Sometimes, when we prune and retrain a certain layer type,
+we’d like to freeze the training of the other layers.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.knowledge_distillation">
+<span id="dl-imagegen-bench-distiller-knowledge-distillation-module"></span><h2>DL_ImageGen_bench.distiller.knowledge_distillation module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.knowledge_distillation" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.knowledge_distillation.</code><code class="descname">DistillationLossWeights</code><span class="sig-paren">(</span><em>distill</em>, <em>student</em>, <em>teacher</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.distill">
+<code class="descname">distill</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.distill" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.student">
+<code class="descname">student</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.student" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.teacher">
+<code class="descname">teacher</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.DistillationLossWeights.teacher" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.knowledge_distillation.</code><code class="descname">KnowledgeDistillationPolicy</code><span class="sig-paren">(</span><em>student_model</em>, <em>teacher_model</em>, <em>temperature=1.0</em>, <em>loss_weights=DistillationLossWeights(distill=0.5</em>, <em>student=0.5</em>, <em>teacher=0)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#KnowledgeDistillationPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>Policy which enables knowledge distillation from a teacher model to a student model, as presented in [1].</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd><ol class="first last arabic simple">
+<li>In addition to the standard policy callbacks, this class also provides a ‘forward’ function that must
+be called instead of calling the student model directly as is usually done. This is needed to facilitate
+running the teacher model in addition to the student, and for caching the logits for loss calculation.</li>
+<li>[TO BE ENABLED IN THE NEAR FUTURE] Option to train the teacher model in parallel with the student model,
+described as “scheme A” in [2]. This can be achieved by passing teacher loss weight &gt; 0.</li>
+<li>[1] proposes a weighted average between the different losses. We allow arbitrary weights to be assigned
+to each loss.</li>
+</ol>
+</dd>
+<dt>Arguments:</dt>
+<dd><dl class="first docutils">
+<dt>student_model (nn.Module): The student model, that is - the main model being trained. If only initialized with</dt>
+<dd>random weights, this matches “scheme B” in [2]. If it has been bootstrapped with trained FP32 weights,
+this matches “scheme C”.</dd>
+<dt>teacher_model (nn.Module): The teacher model from which soft targets are generated for knowledge distillation.</dt>
+<dd>Usually this is a pre-trained model, however in the future it will be possible to train this model as well
+(see Note 1 above)</dd>
+</dl>
+<p>temperature (float): Temperature value used when calculating soft targets and logits (see [1]).
+loss_weights (DistillationLossWeights): Named tuple with 3 loss weights</p>
+<blockquote class="last">
+<div><ol class="loweralpha simple">
+<li>‘distill’ for student predictions (default: 0.5) vs. teacher soft-targets</li>
+<li>‘student’ for student predictions vs. true labels (default: 0.5)</li>
+<li>‘teacher’ for teacher predictions vs. true labels (default: 0). Currently this is just a placeholder,
+and cannot be set to a non-zero value.</li>
+</ol>
+</div></blockquote>
+</dd>
+</dl>
+<p>[1] Hinton et al., Distilling the Knowledge in a Neural Network (<a class="reference external" href="https://arxiv.org/abs/1503.02531">https://arxiv.org/abs/1503.02531</a>)
+[2] Mishra and Marr, Apprentice: Using Knowledge Distillation Techniques To Improve Low-Precision Network Accuracy</p>
+<blockquote>
+<div>(<a class="reference external" href="https://arxiv.org/abs/1711.05852">https://arxiv.org/abs/1711.05852</a>)</div></blockquote>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.before_backward_pass">
+<code class="descname">before_backward_pass</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>loss</em>, <em>zeros_mask_dict</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#KnowledgeDistillationPolicy.before_backward_pass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.before_backward_pass" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has completed the forward-pass,
+and is about to begin the backward pass.</p>
+<p>This callback receives a ‘loss’ argument. The callback should not modify this argument, but it can
+optionally return an instance of ‘PolicyLoss’ which will be used in place of <a href="#id1"><span class="problematic" id="id2">`</span></a>loss’.</p>
+<dl class="docutils">
+<dt>Note: The ‘loss_components’ parameter within ‘PolicyLoss’ should contain any new, individual loss components</dt>
+<dd>the callback contributed to ‘overall_loss’. It should not contain the incoming ‘loss’ argument.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#KnowledgeDistillationPolicy.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Performs forward propagation through both student and teached models and caches the logits.
+This function MUST be used instead of calling the student model directly.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>The student model’s returned output, to be consistent with what a script using this would expect</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#KnowledgeDistillationPolicy.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>A new epcoh is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_end">
+<code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#KnowledgeDistillationPolicy.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The current epoch has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.knowledge_distillation.add_distillation_args">
+<code class="descclassname">DL_ImageGen_bench.distiller.knowledge_distillation.</code><code class="descname">add_distillation_args</code><span class="sig-paren">(</span><em>argparser</em>, <em>arch_choices=None</em>, <em>enable_pretrained=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/knowledge_distillation.html#add_distillation_args"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.knowledge_distillation.add_distillation_args" title="永久链接至目标">¶</a></dt>
+<dd><p>Helper function to make it easier to add command line arguments for knowledge distillation to any script</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>argparser (argparse.ArgumentParser): Existing parser to which to add the arguments
+arch_choices: Optional list of choices to be enforced by the parser for model selection
+enable_pretrained (bool): Flag to enable/disable argument for “pre-trained” models.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.learning_rate">
+<span id="dl-imagegen-bench-distiller-learning-rate-module"></span><h2>DL_ImageGen_bench.distiller.learning_rate module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.learning_rate" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.learning_rate.</code><code class="descname">MultiStepMultiGammaLR</code><span class="sig-paren">(</span><em>optimizer</em>, <em>milestones</em>, <em>gammas</em>, <em>last_epoch=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/learning_rate.html#MultiStepMultiGammaLR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler._LRScheduler</span></code></p>
+<p>Similar to torch.otpim.MultiStepLR, but instead of a single gamma value, specify a gamma value per-milestone.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>optimizer (Optimizer): Wrapped optimizer.
+milestones (list): List of epoch indices. Must be increasing.
+gammas (list): List of gamma values. Must have same length as milestones.
+last_epoch (int): The index of last epoch. Default: -1.</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR.get_lr">
+<code class="descname">get_lr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/learning_rate.html#MultiStepMultiGammaLR.get_lr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR.get_lr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.learning_rate.PolynomialLR">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.learning_rate.</code><code class="descname">PolynomialLR</code><span class="sig-paren">(</span><em>optimizer</em>, <em>T_max</em>, <em>power</em>, <em>last_epoch=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/learning_rate.html#PolynomialLR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.learning_rate.PolynomialLR" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.optim.lr_scheduler._LRScheduler</span></code></p>
+<p>Set the learning rate for each parameter group using a polynomial defined as:
+lr = base_lr * (1 - T_cur/T_max) ^ (power), where T_cur is the current epoch and T_max is the maximum number of
+epochs.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>optimizer (Optimizer): Wrapped optimizer.
+T_max (int): Maximum number of epochs
+power (int): Degree of polynomial
+last_epoch (int): The index of last epoch. Default: -1.</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.learning_rate.PolynomialLR.get_lr">
+<code class="descname">get_lr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/learning_rate.html#PolynomialLR.get_lr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.learning_rate.PolynomialLR.get_lr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.model_summaries">
+<span id="dl-imagegen-bench-distiller-model-summaries-module"></span><h2>DL_ImageGen_bench.distiller.model_summaries module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.model_summaries" title="永久链接至标题">¶</a></h2>
+<p>Model statistics summaries.</p>
+<ul class="simple">
+<li>weights sparsities</li>
+<li>optimizer state</li>
+<li>model details</li>
+</ul>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_summaries.model_summary">
+<code class="descclassname">DL_ImageGen_bench.distiller.model_summaries.</code><code class="descname">model_summary</code><span class="sig-paren">(</span><em>model</em>, <em>what</em>, <em>dataset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/model_summaries.html#model_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_summaries.model_summary" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_summaries.weights_sparsity_summary">
+<code class="descclassname">DL_ImageGen_bench.distiller.model_summaries.</code><code class="descname">weights_sparsity_summary</code><span class="sig-paren">(</span><em>model, return_total_sparsity=False, param_dims=[2, 4]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/model_summaries.html#weights_sparsity_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_summaries.weights_sparsity_summary" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_summaries.weights_sparsity_tbl_summary">
+<code class="descclassname">DL_ImageGen_bench.distiller.model_summaries.</code><code class="descname">weights_sparsity_tbl_summary</code><span class="sig-paren">(</span><em>model, return_total_sparsity=False, param_dims=[2, 4]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/model_summaries.html#weights_sparsity_tbl_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_summaries.weights_sparsity_tbl_summary" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_summaries.model_performance_summary">
+<code class="descclassname">DL_ImageGen_bench.distiller.model_summaries.</code><code class="descname">model_performance_summary</code><span class="sig-paren">(</span><em>model</em>, <em>dummy_input</em>, <em>batch_size=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/model_summaries.html#model_performance_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_summaries.model_performance_summary" title="永久链接至目标">¶</a></dt>
+<dd><p>Collect performance data</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_summaries.model_performance_tbl_summary">
+<code class="descclassname">DL_ImageGen_bench.distiller.model_summaries.</code><code class="descname">model_performance_tbl_summary</code><span class="sig-paren">(</span><em>model</em>, <em>dummy_input</em>, <em>batch_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/model_summaries.html#model_performance_tbl_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_summaries.model_performance_tbl_summary" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.policy">
+<span id="dl-imagegen-bench-distiller-policy-module"></span><h2>DL_ImageGen_bench.distiller.policy module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.policy" title="永久链接至标题">¶</a></h2>
+<p>Policies for scheduling by a CompressionScheduler instance.</p>
+<ul class="simple">
+<li>PruningPolicy: prunning policy</li>
+<li>RegularizationPolicy: regulization scheduling</li>
+<li>LRPolicy: learning-rate decay scheduling</li>
+</ul>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.PruningPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">PruningPolicy</code><span class="sig-paren">(</span><em>pruner</em>, <em>pruner_args</em>, <em>classes=None</em>, <em>layers=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#PruningPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PruningPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>Base class for pruning policies.</p>
+<p>The current implementation restricts the pruning step to the beginning of
+each epoch.  This can be easily changed.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.PruningPolicy.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#PruningPolicy.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PruningPolicy.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>A new epcoh is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.PruningPolicy.on_minibatch_begin">
+<code class="descname">on_minibatch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#PruningPolicy.on_minibatch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PruningPolicy.on_minibatch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>The forward-pass of a new mini-batch is about to begin</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.RegularizationPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">RegularizationPolicy</code><span class="sig-paren">(</span><em>regularizer</em>, <em>keep_mask=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#RegularizationPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.RegularizationPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>Regularization policy.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.RegularizationPolicy.before_backward_pass">
+<code class="descname">before_backward_pass</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>loss</em>, <em>zeros_mask_dict</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#RegularizationPolicy.before_backward_pass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.RegularizationPolicy.before_backward_pass" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has completed the forward-pass,
+and is about to begin the backward pass.</p>
+<p>This callback receives a ‘loss’ argument. The callback should not modify this argument, but it can
+optionally return an instance of ‘PolicyLoss’ which will be used in place of <a href="#id3"><span class="problematic" id="id4">`</span></a>loss’.</p>
+<dl class="docutils">
+<dt>Note: The ‘loss_components’ parameter within ‘PolicyLoss’ should contain any new, individual loss components</dt>
+<dd>the callback contributed to ‘overall_loss’. It should not contain the incoming ‘loss’ argument.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.RegularizationPolicy.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#RegularizationPolicy.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.RegularizationPolicy.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>A new epcoh is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.RegularizationPolicy.on_minibatch_end">
+<code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#RegularizationPolicy.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.RegularizationPolicy.on_minibatch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.QuantizationPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">QuantizationPolicy</code><span class="sig-paren">(</span><em>quantizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#QuantizationPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.QuantizationPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.QuantizationPolicy.on_minibatch_end">
+<code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#QuantizationPolicy.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.QuantizationPolicy.on_minibatch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.LRPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">LRPolicy</code><span class="sig-paren">(</span><em>lr_scheduler</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#LRPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.LRPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>Learning-rate decay scheduling policy.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.LRPolicy.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#LRPolicy.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.LRPolicy.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>A new epcoh is about to begin</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">ScheduledTrainingPolicy</code><span class="sig-paren">(</span><em>classes=None</em>, <em>layers=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for all scheduled training policies.</p>
+<p>The CompressionScheduler invokes these methods as the training progresses.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.before_backward_pass">
+<code class="descname">before_backward_pass</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>loss</em>, <em>zeros_mask_dict</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy.before_backward_pass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.before_backward_pass" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has completed the forward-pass,
+and is about to begin the backward pass.</p>
+<p>This callback receives a ‘loss’ argument. The callback should not modify this argument, but it can
+optionally return an instance of ‘PolicyLoss’ which will be used in place of <a href="#id5"><span class="problematic" id="id6">`</span></a>loss’.</p>
+<dl class="docutils">
+<dt>Note: The ‘loss_components’ parameter within ‘PolicyLoss’ should contain any new, individual loss components</dt>
+<dd>the callback contributed to ‘overall_loss’. It should not contain the incoming ‘loss’ argument.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>A new epcoh is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_epoch_end">
+<code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_epoch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The current epoch has ended</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_minibatch_begin">
+<code class="descname">on_minibatch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy.on_minibatch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_minibatch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>The forward-pass of a new mini-batch is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_minibatch_end">
+<code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/policy.html#ScheduledTrainingPolicy.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy.on_minibatch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.PolicyLoss">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">PolicyLoss</code><span class="sig-paren">(</span><em>overall_loss</em>, <em>loss_components</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PolicyLoss" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.policy.PolicyLoss.loss_components">
+<code class="descname">loss_components</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PolicyLoss.loss_components" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.policy.PolicyLoss.overall_loss">
+<code class="descname">overall_loss</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.PolicyLoss.overall_loss" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.policy.LossComponent">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.policy.</code><code class="descname">LossComponent</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.LossComponent" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.policy.LossComponent.name">
+<code class="descname">name</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.LossComponent.name" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.policy.LossComponent.value">
+<code class="descname">value</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.policy.LossComponent.value" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.scheduler">
+<span id="dl-imagegen-bench-distiller-scheduler-module"></span><h2>DL_ImageGen_bench.distiller.scheduler module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.scheduler" title="永久链接至标题">¶</a></h2>
+<p>Compression scheduling.</p>
+<p>This implements the scheduling of the compression policies.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.scheduler.</code><code class="descname">CompressionScheduler</code><span class="sig-paren">(</span><em>model</em>, <em>device=device(type='cuda')</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Responsible for scheduling pruning and masking parameters.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.add_policy">
+<code class="descname">add_policy</code><span class="sig-paren">(</span><em>policy</em>, <em>epochs=None</em>, <em>starting_epoch=None</em>, <em>ending_epoch=None</em>, <em>frequency=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.add_policy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.add_policy" title="永久链接至目标">¶</a></dt>
+<dd><p>Add a new policy to the schedule.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>epochs (list): A list, or range, of epochs in which to apply the policy</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.apply_mask">
+<code class="descname">apply_mask</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.apply_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.apply_mask" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.before_backward_pass">
+<code class="descname">before_backward_pass</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>loss</em>, <em>optimizer=None</em>, <em>return_loss_components=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.before_backward_pass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.before_backward_pass" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.load_state_dict">
+<code class="descname">load_state_dict</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.load_state_dict"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.load_state_dict" title="永久链接至目标">¶</a></dt>
+<dd><p>Loads the scheduler state.</p>
+<p>Currently the scheduler state is comprised only of the set of pruning masks.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><dl class="first last docutils">
+<dt>state_dict (dict): scheduler state. Should be an object returned</dt>
+<dd>from a call to <a class="reference internal" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.state_dict" title="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.state_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">state_dict()</span></code></a>.  It is a dictionary of parameter
+names (keys) and parameter masks (values).</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_begin">
+<code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_begin" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_end">
+<code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_end" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_begin">
+<code class="descname">on_minibatch_begin</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_minibatch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_begin" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_end">
+<code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_end" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.state_dict">
+<code class="descname">state_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.state_dict"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.state_dict" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns the state of the scheduler as a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>.</p>
+<p>Currently it contains just the pruning mask.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.verify_policy_loss">
+<em class="property">static </em><code class="descname">verify_policy_loss</code><span class="sig-paren">(</span><em>policy_loss</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.verify_policy_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.verify_policy_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.scheduler.ParameterMasker">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.scheduler.</code><code class="descname">ParameterMasker</code><span class="sig-paren">(</span><em>param_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#ParameterMasker"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.ParameterMasker" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.scheduler.ParameterMasker.apply_mask">
+<code class="descname">apply_mask</code><span class="sig-paren">(</span><em>tensor</em>, <em>in_backward_cb=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#ParameterMasker.apply_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.ParameterMasker.apply_mask" title="永久链接至目标">¶</a></dt>
+<dd><p>Apply a mask on the tensor.</p>
+<p>The tensor is either a gradients tensor (when apply_mask is invoked from the
+backward hook of the variable owning the gradient); or a weights tensor
+(when apply_mask is invoked by the scheduler).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.scheduler.create_model_masks_dict">
+<code class="descclassname">DL_ImageGen_bench.distiller.scheduler.</code><code class="descname">create_model_masks_dict</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#create_model_masks_dict"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.create_model_masks_dict" title="永久链接至目标">¶</a></dt>
+<dd><p>A convinience function to create a dictionary of paramter maskers for a model</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.sensitivity">
+<span id="dl-imagegen-bench-distiller-sensitivity-module"></span><h2>DL_ImageGen_bench.distiller.sensitivity module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.sensitivity" title="永久链接至标题">¶</a></h2>
+<p>Perform sensitivity tests on layers and whole networks.</p>
+<p>Construct a schedule for experimenting with network and layer sensitivity
+to pruning.</p>
+<p>The idea is to set the pruning level (percentage) of specific layers (or the
+entire network), and then to prune once, run an evaluation on the test dataset,
+and exit.  This should teach us about the “sensitivity” of the network/layers
+to pruning.</p>
+<p>This concept is discussed in “Learning both Weights and Connections for
+Efficient Neural Networks” - <a class="reference external" href="https://arxiv.org/pdf/1506.02626v3.pdf">https://arxiv.org/pdf/1506.02626v3.pdf</a></p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis">
+<code class="descclassname">DL_ImageGen_bench.distiller.sensitivity.</code><code class="descname">perform_sensitivity_analysis</code><span class="sig-paren">(</span><em>model</em>, <em>net_params</em>, <em>sparsities</em>, <em>test_func</em>, <em>group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/sensitivity.html#perform_sensitivity_analysis"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis" title="永久链接至目标">¶</a></dt>
+<dd><p>Perform a sensitivity test for a model’s weights parameters.</p>
+<p>The model should be trained to maximum accuracy, because we aim to understand
+the behavior of the model’s performance in relation to pruning of a specific
+weights tensor.</p>
+<p>By default this function will test all of the model’s parameters.</p>
+<p>The return value is a complex sensitivities dictionary: the dictionary’s
+key is the name (string) of the weights tensor.  The value is another dictionary,
+where the tested sparsity-level is the key, and a (top1, top5, loss) tuple
+is the value.
+Below is an example of such a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>{‘features.module.6.weight’:    {0.0:  (56.518, 79.07,  1.9159),</dt>
+<dd><blockquote class="first">
+<div>0.05: (56.492, 79.1,   1.9161),
+0.10: (56.212, 78.854, 1.9315),
+0.15: (35.424, 60.3,   3.0866)},</div></blockquote>
+<dl class="last docutils">
+<dt>‘classifier.module.1.weight’:  {0.0:  (56.518, 79.07,  1.9159),</dt>
+<dd>0.05: (56.514, 79.07,  1.9159),
+0.10: (56.434, 79.074, 1.9138),
+0.15: (54.454, 77.854, 2.3127)} }</dd>
+</dl>
+</dd>
+</dl>
+<p>The test_func is expected to execute the model on a test/validation dataset,
+and return the results for top1 and top5 accuracies, and the loss value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis_sr">
+<code class="descclassname">DL_ImageGen_bench.distiller.sensitivity.</code><code class="descname">perform_sensitivity_analysis_sr</code><span class="sig-paren">(</span><em>model</em>, <em>net_params</em>, <em>sparsities</em>, <em>test_func</em>, <em>group</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/sensitivity.html#perform_sensitivity_analysis_sr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.sensitivity.perform_sensitivity_analysis_sr" title="永久链接至目标">¶</a></dt>
+<dd><p>Perform a sensitivity test for a model’s weights parameters.</p>
+<p>The model should be trained to maximum accuracy, because we aim to understand
+the behavior of the model’s performance in relation to pruning of a specific
+weights tensor.</p>
+<p>By default this function will test all of the model’s parameters.</p>
+<p>The return value is a complex sensitivities dictionary: the dictionary’s
+key is the name (string) of the weights tensor.  The value is another dictionary,
+where the tested sparsity-level is the key, and a (top1, top5, loss) tuple
+is the value.
+Below is an example of such a dictionary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>{‘features.module.6.weight’:    {0.0:  (56.518, 79.07,  1.9159),</dt>
+<dd><blockquote class="first">
+<div>0.05: (56.492, 79.1,   1.9161),
+0.10: (56.212, 78.854, 1.9315),
+0.15: (35.424, 60.3,   3.0866)},</div></blockquote>
+<dl class="last docutils">
+<dt>‘classifier.module.1.weight’:  {0.0:  (56.518, 79.07,  1.9159),</dt>
+<dd>0.05: (56.514, 79.07,  1.9159),
+0.10: (56.434, 79.074, 1.9138),
+0.15: (54.454, 77.854, 2.3127)} }</dd>
+</dl>
+</dd>
+</dl>
+<p>The test_func is expected to execute the model on a test/validation dataset,
+and return the results for top1 and top5 accuracies, and the loss value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_csv">
+<code class="descclassname">DL_ImageGen_bench.distiller.sensitivity.</code><code class="descname">sensitivities_to_csv</code><span class="sig-paren">(</span><em>sensitivities</em>, <em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/sensitivity.html#sensitivities_to_csv"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_csv" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a CSV file listing from the sensitivities dictionary.</p>
+<p>The ‘sensitivities’ argument is expected to have the dict-of-dict structure
+described in the documentation of perform_sensitivity_test.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_png">
+<code class="descclassname">DL_ImageGen_bench.distiller.sensitivity.</code><code class="descname">sensitivities_to_png</code><span class="sig-paren">(</span><em>sensitivities</em>, <em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/sensitivity.html#sensitivities_to_png"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.sensitivity.sensitivities_to_png" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a mulitplot of the sensitivities.</p>
+<p>The ‘sensitivities’ argument is expected to have the dict-of-dict structure
+described in the documentation of perform_sensitivity_test.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.thinning">
+<span id="dl-imagegen-bench-distiller-thinning-module"></span><h2>DL_ImageGen_bench.distiller.thinning module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.thinning" title="永久链接至标题">¶</a></h2>
+<p>Model thinning support.
+Thinning a model is the process of taking a dense network architecture with a parameter model that
+has structure-sparsity (filters or channels) in the weights tensors of convolution layers, and making changes
+in the network architecture and parameters, in order to completely remove the structures.
+The new architecture is smaller (condensed), with less channels and filters in some of the convolution layers.
+Linear and BatchNormalization layers are also adjusted as required.
+To perform thinning, we create a SummaryGraph (‘sgraph’) of our model.  We use the ‘sgraph’ to infer the
+data-dependency between the modules in the PyTorch network.  This entire process is not trivial and will be
+documented in a different place.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.thinning.ThinningRecipe">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">ThinningRecipe</code><span class="sig-paren">(</span><em>modules</em>, <em>parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.ThinningRecipe" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<p>A ThinningRecipe is composed of two sets of instructions.
+1. Instructions for setting module attributes (e.g. Conv2d.out_channels).  This set
+is called ‘ThinningRecipe.modules’.
+2. Information on how to select specific dimensions from parameter tensors.  This
+set is called ‘ThinningRecipe.parameters’.
+ThinningRecipe.modules is a dictionary keyed by the module names (strings).  Values
+are called ‘module-directives’, and are grouped in another dictionary, whose keys are
+the module attributes.  For example:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>features.module.19:</dt>
+<dd>in_channels: 231
+out_channels: 512</dd>
+<dt>classifier.0:</dt>
+<dd>in_channels: 22589</dd>
+</dl>
+</div></blockquote>
+<p>ThinningRecipe.parameters is a dictionary keyed by the parameter names (strings).
+Values are called ‘parameter directives’, and each directive is a list of tuples.
+These tuples can have 2 values, or 4 values.
+2-value tuples have the format: (dimension-to-change, indices-to-select)</p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.thinning.ThinningRecipe.modules">
+<code class="descname">modules</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.ThinningRecipe.modules" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.thinning.ThinningRecipe.parameters">
+<code class="descname">parameters</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.ThinningRecipe.parameters" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.resnet_cifar_remove_layers">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">resnet_cifar_remove_layers</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#resnet_cifar_remove_layers"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.resnet_cifar_remove_layers" title="永久链接至目标">¶</a></dt>
+<dd><p>Remove layers from ResNet-Cifar
+Search for convolution layers which have 100% sparse weight tensors and remove
+them from the model.  This ugly code is specific to ResNet for Cifar, using the
+layer gating mechanism that we added in order to remove layers from the network.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.thinning.ChannelRemover">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">ChannelRemover</code><span class="sig-paren">(</span><em>thinning_func_str</em>, <em>arch</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#ChannelRemover"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.ChannelRemover" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>A policy which applies a network thinning function</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thinning.ChannelRemover.on_epoch_end">
+<code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#ChannelRemover.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.ChannelRemover.on_epoch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The current epoch has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.remove_channels">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">remove_channels</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>arch</em>, <em>dataset</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#remove_channels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.remove_channels" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.thinning.FilterRemover">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">FilterRemover</code><span class="sig-paren">(</span><em>thinning_func_str</em>, <em>arch</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#FilterRemover"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.FilterRemover" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy" title="DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.policy.ScheduledTrainingPolicy</span></code></a></p>
+<p>A policy which applies a network thinning function</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thinning.FilterRemover.on_epoch_end">
+<code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>meta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#FilterRemover.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_epoch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The current epoch has ended</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_begin">
+<code class="descname">on_minibatch_begin</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#FilterRemover.on_minibatch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_begin" title="永久链接至目标">¶</a></dt>
+<dd><p>The forward-pass of a new mini-batch is about to begin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_end">
+<code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>zeros_mask_dict</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#FilterRemover.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.FilterRemover.on_minibatch_end" title="永久链接至目标">¶</a></dt>
+<dd><p>The mini-batch training pass has ended</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.remove_filters">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">remove_filters</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>arch</em>, <em>dataset</em>, <em>optimizer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#remove_filters"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.remove_filters" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.find_nonzero_channels">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">find_nonzero_channels</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#find_nonzero_channels"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.find_nonzero_channels" title="永久链接至目标">¶</a></dt>
+<dd><p>Count the number of non-zero channels in a weights tensor.
+Non-zero channels are channels that have at least one coefficient that is
+non-zero.  Counting non-zero channels involves some tensor acrobatics.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.find_nonzero_channels_list">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">find_nonzero_channels_list</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#find_nonzero_channels_list"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.find_nonzero_channels_list" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thinning.execute_thinning_recipes_list">
+<code class="descclassname">DL_ImageGen_bench.distiller.thinning.</code><code class="descname">execute_thinning_recipes_list</code><span class="sig-paren">(</span><em>model</em>, <em>zeros_mask_dict</em>, <em>recipe_list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thinning.html#execute_thinning_recipes_list"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thinning.execute_thinning_recipes_list" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.thresholding">
+<span id="dl-imagegen-bench-distiller-thresholding-module"></span><h2>DL_ImageGen_bench.distiller.thresholding module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.thresholding" title="永久链接至标题">¶</a></h2>
+<p>Tensor thresholding.</p>
+<p>The code below supports fine-grained tensor thresholding and group-wise thresholding.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.thresholding.</code><code class="descname">GroupThresholdMixin</code><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thresholding.html#GroupThresholdMixin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A mixin class to add group thresholding capabilities</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin.group_threshold_mask">
+<code class="descname">group_threshold_mask</code><span class="sig-paren">(</span><em>param</em>, <em>group_type</em>, <em>threshold</em>, <em>threshold_criteria</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thresholding.html#GroupThresholdMixin.group_threshold_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin.group_threshold_mask" title="永久链接至目标">¶</a></dt>
+<dd><p>Return a threshold mask for the provided parameter and group type.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">param: The parameter to mask
+group_type: The elements grouping type (structure).</p>
+<blockquote>
+<div>One of:2D, 3D, 4D, Channels, Row, Cols</div></blockquote>
+<p>threshold: The threshold
+threshold_criteria: The thresholding criteria.</p>
+<blockquote class="last">
+<div>‘Mean_Abs’ thresholds the entire element group using the mean of the
+absolute values of the tensor elements.
+‘Max’ thresholds the entire group using the magnitude of the largest
+element in the group.</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin.threshold_policy">
+<code class="descname">threshold_policy</code><span class="sig-paren">(</span><em>weights</em>, <em>thresholds</em>, <em>threshold_criteria</em>, <em>dim=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thresholding.html#GroupThresholdMixin.threshold_policy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thresholding.GroupThresholdMixin.threshold_policy" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.thresholding.threshold_mask">
+<code class="descclassname">DL_ImageGen_bench.distiller.thresholding.</code><code class="descname">threshold_mask</code><span class="sig-paren">(</span><em>weights</em>, <em>threshold</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/thresholding.html#threshold_mask"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.thresholding.threshold_mask" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a threshold mask for the provided parameter tensor using
+magnitude thresholding.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>weights: a parameter tensor which should be pruned.
+threshold: the pruning threshold.</dd>
+<dt>Returns:</dt>
+<dd>prune_mask: The pruning mask.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.utils">
+<span id="dl-imagegen-bench-distiller-utils-module"></span><h2>DL_ImageGen_bench.distiller.utils module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.utils" title="永久链接至标题">¶</a></h2>
+<p>A collection of useful utility functions.</p>
+<p>This module contains various tensor sparsity/density measurement functions, together
+with some random helper functions.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.utils.DoNothingModuleWrapper">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">DoNothingModuleWrapper</code><span class="sig-paren">(</span><em>module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#DoNothingModuleWrapper"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.DoNothingModuleWrapper" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Implement a nn.Module which wraps another nn.Module.</p>
+<p>The DoNothingModuleWrapper wrapper does nothing but forward
+to the wrapped module.
+One use-case for this class, is for replacing nn.DataParallel
+by a module that does nothing :-).  This is a trick we use
+to transform data-parallel to serialized models.</p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.utils.DoNothingModuleWrapper.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*inputs</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#DoNothingModuleWrapper.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.DoNothingModuleWrapper.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.denormalize_module_name">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">denormalize_module_name</code><span class="sig-paren">(</span><em>parallel_model</em>, <em>normalized_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#denormalize_module_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.denormalize_module_name" title="永久链接至目标">¶</a></dt>
+<dd><p>Convert back from the normalized form of the layer name, to PyTorch’s name
+which contains “artifacts” if DataParallel is used.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density" title="永久链接至目标">¶</a></dt>
+<dd><p>Computes the density of a tensor.</p>
+<p>Density is the fraction of non-zero elements in a tensor.
+If a tensor has a density of 1.0, then it has no zero elements.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>tensor: the tensor for which we compute the density.</dd>
+<dt>Returns:</dt>
+<dd>density (float)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density_2D">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density_2D</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density_2D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density_2D" title="永久链接至目标">¶</a></dt>
+<dd><p>Kernel-wise sparsity for 4D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density_3D">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density_3D</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density_3D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density_3D" title="永久链接至目标">¶</a></dt>
+<dd><p>Filter-wise density for 4D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density_ch">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density_ch</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density_ch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density_ch" title="永久链接至目标">¶</a></dt>
+<dd><p>Channel-wise density for 4D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density_cols">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density_cols</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density_cols"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density_cols" title="永久链接至目标">¶</a></dt>
+<dd><p>Column-wise density for 2D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.density_rows">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">density_rows</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#density_rows"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.density_rows" title="永久链接至目标">¶</a></dt>
+<dd><p>Row-wise density for 2D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.has_children">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">has_children</code><span class="sig-paren">(</span><em>module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#has_children"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.has_children" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.log_activation_sparsity">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">log_activation_sparsity</code><span class="sig-paren">(</span><em>epoch</em>, <em>loggers</em>, <em>collector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#log_activation_sparsity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.log_activation_sparsity" title="永久链接至目标">¶</a></dt>
+<dd><p>Log information about the sparsity of the activations</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.log_training_progress">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">log_training_progress</code><span class="sig-paren">(</span><em>stats_dict</em>, <em>params_dict</em>, <em>epoch</em>, <em>steps_completed</em>, <em>total_steps</em>, <em>log_freq</em>, <em>loggers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#log_training_progress"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.log_training_progress" title="永久链接至目标">¶</a></dt>
+<dd><p>Log information about the training progress, and the distribution of the weight tensors.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt>stats_dict: A tuple of (group_name, dict(var_to_log)).  Grouping statistics variables is useful for logger</dt>
+<dd><p class="first">backends such as TensorBoard.  The dictionary of var_to_log has string key, and float values.
+For example:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>stats = (‘Peformance/Validation/’,</dt>
+<dd><dl class="first last docutils">
+<dt>OrderedDict([(‘Loss’, vloss),</dt>
+<dd>(‘Top1’, top1),
+(‘Top5’, top5)]))</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+</dl>
+<p class="last">params_dict: A parameter dictionary, such as the one returned by model.named_parameters()
+epoch: The current epoch
+steps_completed: The current step in the epoch
+total_steps: The total number of training steps taken so far
+log_freq: The number of steps between logging records
+loggers: A list of loggers to send the log info to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.log_weights_sparsity">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">log_weights_sparsity</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em>, <em>loggers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#log_weights_sparsity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.log_weights_sparsity" title="永久链接至目标">¶</a></dt>
+<dd><p>Log information about the weights sparsity</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.make_non_parallel_copy">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">make_non_parallel_copy</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#make_non_parallel_copy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.make_non_parallel_copy" title="永久链接至目标">¶</a></dt>
+<dd><p>Make a non-data-parallel copy of the provided model.</p>
+<p>nn.DataParallel instances are replaced by DoNothingModuleWrapper
+instances.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.model_numel">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">model_numel</code><span class="sig-paren">(</span><em>model, param_dims=[2, 4]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#model_numel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.model_numel" title="永久链接至目标">¶</a></dt>
+<dd><p>Count the number elements in a model’s parameter tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.normalize_module_name">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">normalize_module_name</code><span class="sig-paren">(</span><em>layer_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#normalize_module_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.normalize_module_name" title="永久链接至目标">¶</a></dt>
+<dd><p>Normalize a module’s name.</p>
+<p>PyTorch let’s you parallelize the computation of a model, by wrapping a model with a
+DataParallel module.  Unfortunately, this changs the fully-qualified name of a module,
+even though the actual functionality of the module doesn’t change.
+Many time, when we search for modules by name, we are indifferent to the DataParallel
+module and want to use the same module name whether the module is parallel or not.
+We call this module name normalization, and this is implemented here.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.pretty_int">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">pretty_int</code><span class="sig-paren">(</span><em>i</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#pretty_int"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.pretty_int" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.size2str">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">size2str</code><span class="sig-paren">(</span><em>torch_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#size2str"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.size2str" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.size_to_str">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">size_to_str</code><span class="sig-paren">(</span><em>torch_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#size_to_str"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.size_to_str" title="永久链接至目标">¶</a></dt>
+<dd><p>Convert a pytorch Size object to a string</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity" title="永久链接至目标">¶</a></dt>
+<dd><p>Computes the sparsity of a tensor.</p>
+<p>Sparsity is the fraction of zero elements in a tensor.
+If a tensor has a density of 0.0, then it has all zero elements.
+Sparsity and density are complementary.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>tensor: the tensor for which we compute the density.</dd>
+<dt>Returns:</dt>
+<dd>sparsity (float)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity_2D">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity_2D</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity_2D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity_2D" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a list of sparsity levels for each channel in the tensor ‘t’</p>
+<p>For 4D weight tensors (convolution weights), we flatten each kernel (channel)
+so it becomes a row in a 3D tensor in which each channel is a filter.
+So if the original 4D weights tensor is:</p>
+<blockquote>
+<div>#OFMs x #IFMs x K x K</div></blockquote>
+<dl class="docutils">
+<dt>The flattened tensor is:</dt>
+<dd>#OFMS x #IFMs x K^2</dd>
+<dt>For 2D weight tensors (fully-connected weights), the tensors is shaped as</dt>
+<dd>#IFMs x #OFMs</dd>
+</dl>
+<p>so we don’t need to flatten anything.</p>
+<p>To measure 2D sparsity, we sum the absolute values of the elements in each row,
+and then count the number of rows having sum(abs(row values)) == 0.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity_3D">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity_3D</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity_3D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity_3D" title="永久链接至目标">¶</a></dt>
+<dd><p>Filter-wise sparsity for 4D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity_ch">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity_ch</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity_ch"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity_ch" title="永久链接至目标">¶</a></dt>
+<dd><p>Channel-wise sparsity for 4D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity_cols">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity_cols</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity_cols"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity_cols" title="永久链接至目标">¶</a></dt>
+<dd><p>Column-wise sparsity for 2D tensors</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.sparsity_rows">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">sparsity_rows</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#sparsity_rows"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.sparsity_rows" title="永久链接至目标">¶</a></dt>
+<dd><p>Row-wise sparsity for 2D matrices</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.to_np">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">to_np</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#to_np"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.to_np" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.to_var">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">to_var</code><span class="sig-paren">(</span><em>tensor</em>, <em>cuda=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#to_var"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.to_var" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.utils.volume">
+<code class="descclassname">DL_ImageGen_bench.distiller.utils.</code><code class="descname">volume</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/utils.html#volume"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.utils.volume" title="永久链接至目标">¶</a></dt>
+<dd><p>return the volume of a pytorch tensor</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.distiller" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_find_module">
+<code class="descclassname">DL_ImageGen_bench.distiller.</code><code class="descname">model_find_module</code><span class="sig-paren">(</span><em>model</em>, <em>module_to_find</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller.html#model_find_module"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_find_module" title="永久链接至目标">¶</a></dt>
+<dd><p>Given a module name, find the module in the provided model.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>model: the model to search
+module_to_find: the module whose name we want to look up</dd>
+<dt>Returns:</dt>
+<dd>The module or None, if the module was not found.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_find_module_name">
+<code class="descclassname">DL_ImageGen_bench.distiller.</code><code class="descname">model_find_module_name</code><span class="sig-paren">(</span><em>model</em>, <em>module_to_find</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller.html#model_find_module_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_find_module_name" title="永久链接至目标">¶</a></dt>
+<dd><p>Look up the name of a module in a model.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>model: the model to search
+module_to_find: the module whose name we want to look up</dd>
+<dt>Returns:</dt>
+<dd>The module name (string) or None, if the module was not found.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_find_param">
+<code class="descclassname">DL_ImageGen_bench.distiller.</code><code class="descname">model_find_param</code><span class="sig-paren">(</span><em>model</em>, <em>param_to_find_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller.html#model_find_param"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_find_param" title="永久链接至目标">¶</a></dt>
+<dd><p>Look a model parameter by its name</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>model: the model to search
+param_to_find_name: the name of the parameter that we are searching for</dd>
+<dt>Returns:</dt>
+<dd>The parameter or None, if the paramter name was not found.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.model_find_param_name">
+<code class="descclassname">DL_ImageGen_bench.distiller.</code><code class="descname">model_find_param_name</code><span class="sig-paren">(</span><em>model</em>, <em>param_to_find</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller.html#model_find_param_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.model_find_param_name" title="永久链接至目标">¶</a></dt>
+<dd><p>Look up the name of a model parameter.</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>model: the model to search
+param_to_find: the parameter whose name we want to look up</dd>
+<dt>Returns:</dt>
+<dd>The parameter name (string) or None, if the parameter was not found.</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.distiller.data_loggers.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.distiller.data_loggers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.data.Deblur_data.html" class="btn btn-neutral" title="DL_ImageGen_bench.data.Deblur_data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,971 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.models.Deblur package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.models.cifar10 package" href="DL_ImageGen_bench.models.cifar10.html" />
+    <link rel="prev" title="DL_ImageGen_bench.models.C2SRCNN package" href="DL_ImageGen_bench.models.C2SRCNN.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.models.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models.test_solver">DL_ImageGen_bench.models.test_solver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.models.Deblur package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.models.Deblur.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-models-deblur-package">
+<h1>DL_ImageGen_bench.models.Deblur package<a class="headerlink" href="#dl-imagegen-bench-models-deblur-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.base_model">
+<span id="dl-imagegen-bench-models-deblur-base-model-module"></span><h2>DL_ImageGen_bench.models.Deblur.base_model module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.base_model" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.base_model.</code><code class="descname">BaseModel</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.forward" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_current_errors">
+<code class="descname">get_current_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.get_current_errors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_current_errors" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_current_visuals">
+<code class="descname">get_current_visuals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.get_current_visuals"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_current_visuals" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_image_paths">
+<code class="descname">get_image_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.get_image_paths"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.get_image_paths" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.load_network">
+<code class="descname">load_network</code><span class="sig-paren">(</span><em>network</em>, <em>network_label</em>, <em>epoch_label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.load_network"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.load_network" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.optimize_parameters">
+<code class="descname">optimize_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.optimize_parameters"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.optimize_parameters" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.save" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.save_network">
+<code class="descname">save_network</code><span class="sig-paren">(</span><em>network</em>, <em>network_label</em>, <em>epoch_label</em>, <em>gpu_ids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.save_network"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.save_network" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.set_input">
+<code class="descname">set_input</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.set_input"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.set_input" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.test" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.base_model.BaseModel.update_learning_rate">
+<code class="descname">update_learning_rate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/base_model.html#BaseModel.update_learning_rate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.update_learning_rate" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.conditional_gan_model">
+<span id="dl-imagegen-bench-models-deblur-conditional-gan-model-module"></span><h2>DL_ImageGen_bench.models.Deblur.conditional_gan_model module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.conditional_gan_model" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.conditional_gan_model.</code><code class="descname">ConditionalGAN</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel" title="DL_ImageGen_bench.models.Deblur.base_model.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.models.Deblur.base_model.BaseModel</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_D">
+<code class="descname">backward_D</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.backward_D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_D" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G">
+<code class="descname">backward_G</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.backward_G"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G_func">
+<code class="descname">backward_G_func</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.backward_G_func"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G_func" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.forward" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_G_loss_func">
+<code class="descname">get_G_loss_func</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.get_G_loss_func"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_G_loss_func" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_errors">
+<code class="descname">get_current_errors</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.get_current_errors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_errors" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_visuals">
+<code class="descname">get_current_visuals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.get_current_visuals"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_visuals" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_image_paths">
+<code class="descname">get_image_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.get_image_paths"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_image_paths" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.optimize_parameters">
+<code class="descname">optimize_parameters</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.optimize_parameters"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.optimize_parameters" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>label</em>, <em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.save" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.set_input">
+<code class="descname">set_input</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.set_input"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.set_input" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.test" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.update_learning_rate">
+<code class="descname">update_learning_rate</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/conditional_gan_model.html#ConditionalGAN.update_learning_rate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.update_learning_rate" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.losses">
+<span id="dl-imagegen-bench-models-deblur-losses-module"></span><h2>DL_ImageGen_bench.models.Deblur.losses module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.losses" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.ContentLoss">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">ContentLoss</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#ContentLoss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.ContentLoss" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.ContentLoss.get_loss">
+<code class="descname">get_loss</code><span class="sig-paren">(</span><em>fakeIm</em>, <em>realIm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#ContentLoss.get_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.ContentLoss.get_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.ContentLoss.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>loss</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#ContentLoss.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.ContentLoss.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLoss">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">DiscLoss</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLoss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_g_loss">
+<code class="descname">get_g_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLoss.get_g_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_g_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_loss">
+<code class="descname">get_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em>, <em>realB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLoss.get_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLoss.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLoss.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLoss.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLoss.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">DiscLossLS</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossLS"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLoss" title="DL_ImageGen_bench.models.Deblur.losses.DiscLoss"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.models.Deblur.losses.DiscLoss</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_g_loss">
+<code class="descname">get_g_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossLS.get_g_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_g_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_loss">
+<code class="descname">get_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em>, <em>realB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossLS.get_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.get_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossLS.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossLS.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">DiscLossWGANGP</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossLS" title="DL_ImageGen_bench.models.Deblur.losses.DiscLossLS"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.models.Deblur.losses.DiscLossLS</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.calc_gradient_penalty">
+<code class="descname">calc_gradient_penalty</code><span class="sig-paren">(</span><em>netD</em>, <em>real_data</em>, <em>fake_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP.calc_gradient_penalty"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.calc_gradient_penalty" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_g_loss">
+<code class="descname">get_g_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP.get_g_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_g_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_loss">
+<code class="descname">get_loss</code><span class="sig-paren">(</span><em>net</em>, <em>realA</em>, <em>fakeB</em>, <em>realB</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP.get_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.get_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#DiscLossWGANGP.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.DiscLossWGANGP.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.GANLoss">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">GANLoss</code><span class="sig-paren">(</span><em>use_l1=True</em>, <em>target_real_label=1.0</em>, <em>target_fake_label=0.0</em>, <em>tensor=&lt;class 'torch.FloatTensor'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#GANLoss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.GANLoss" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.GANLoss.get_target_tensor">
+<code class="descname">get_target_tensor</code><span class="sig-paren">(</span><em>input</em>, <em>target_is_real</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#GANLoss.get_target_tensor"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.GANLoss.get_target_tensor" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">PerceptualLoss</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#PerceptualLoss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.contentFunc">
+<code class="descname">contentFunc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#PerceptualLoss.contentFunc"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.contentFunc" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_feature">
+<code class="descname">get_feature</code><span class="sig-paren">(</span><em>inIm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#PerceptualLoss.get_feature"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_feature" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_loss">
+<code class="descname">get_loss</code><span class="sig-paren">(</span><em>fakeIm</em>, <em>realIm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#PerceptualLoss.get_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>loss</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#PerceptualLoss.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.losses.init_loss">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.losses.</code><code class="descname">init_loss</code><span class="sig-paren">(</span><em>opt</em>, <em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/losses.html#init_loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.losses.init_loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.models">
+<span id="dl-imagegen-bench-models-deblur-models-module"></span><h2>DL_ImageGen_bench.models.Deblur.models module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.models" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.models.create_model">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.models.</code><code class="descname">create_model</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/models.html#create_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.models.create_model" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.networks">
+<span id="dl-imagegen-bench-models-deblur-networks-module"></span><h2>DL_ImageGen_bench.models.Deblur.networks module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.networks" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.NLayerDiscriminator">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">NLayerDiscriminator</code><span class="sig-paren">(</span><em>input_nc</em>, <em>ndf=64</em>, <em>n_layers=3</em>, <em>norm_layer=&lt;class 'torch.nn.modules.batchnorm.BatchNorm2d'&gt;</em>, <em>use_sigmoid=False</em>, <em>gpu_ids=[]</em>, <em>use_parallel=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#NLayerDiscriminator"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.NLayerDiscriminator" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.NLayerDiscriminator.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#NLayerDiscriminator.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.NLayerDiscriminator.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock.build_conv_block">
+<code class="descname">build_conv_block</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock.build_conv_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock.build_conv_block" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_DepthWise</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_DepthWise"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_DepthWise.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise_ShuffleNet">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_DepthWise_ShuffleNet</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_DepthWise_ShuffleNet"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise_ShuffleNet" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise_ShuffleNet.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_DepthWise_ShuffleNet.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_DepthWise_ShuffleNet.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation2</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2.build_conv_block">
+<code class="descname">build_conv_block</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2.build_conv_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2.build_conv_block" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation2_DepthWise</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_DepthWise"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_DepthWise.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise_ShuffleNet">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation2_DepthWise_ShuffleNet</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_DepthWise_ShuffleNet"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise_ShuffleNet" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise_ShuffleNet.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_DepthWise_ShuffleNet.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_DepthWise_ShuffleNet.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation2_Split</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_Split"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_Split.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>out = x + self.conv_block(x)
+return out</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split2">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation2_Split2</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_Split2"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split2" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split2.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation2_Split2.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation2_Split2.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>out = x + self.conv_block(x)
+return out</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation3</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation3"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3.build_conv_block">
+<code class="descname">build_conv_block</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation3.build_conv_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3.build_conv_block" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation3.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation3.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetBlock_Dilation4</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation4"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4.build_conv_block">
+<code class="descname">build_conv_block</code><span class="sig-paren">(</span><em>dim</em>, <em>padding_type</em>, <em>norm_layer</em>, <em>use_dropout</em>, <em>use_bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation4.build_conv_block"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4.build_conv_block" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetBlock_Dilation4.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetBlock_Dilation4.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetGenerator">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">ResnetGenerator</code><span class="sig-paren">(</span><em>input_nc</em>, <em>output_nc</em>, <em>ngf=64</em>, <em>norm_layer=&lt;class 'torch.nn.modules.batchnorm.BatchNorm2d'&gt;</em>, <em>use_dropout=False</em>, <em>n_blocks=6</em>, <em>gpu_ids=[]</em>, <em>use_parallel=True</em>, <em>learn_residual=False</em>, <em>rnn='WoRNN'</em>, <em>expend_ends_chnl='woExpend'</em>, <em>depth_wise='woDepthWise'</em>, <em>shuffle_net='woShuffleNet'</em>, <em>depth_wise_deconv='woDepthWiseDeConv'</em>, <em>deconv2upsampel='woDeConv2UpSample'</em>, <em>padding_type='zero'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetGenerator"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetGenerator" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.ResnetGenerator.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#ResnetGenerator.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.ResnetGenerator.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.UnetGenerator">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">UnetGenerator</code><span class="sig-paren">(</span><em>input_nc</em>, <em>output_nc</em>, <em>num_downs</em>, <em>ngf=64</em>, <em>norm_layer=&lt;class 'torch.nn.modules.batchnorm.BatchNorm2d'&gt;</em>, <em>use_dropout=False</em>, <em>gpu_ids=[]</em>, <em>use_parallel=True</em>, <em>learn_residual=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#UnetGenerator"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.UnetGenerator" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.UnetGenerator.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#UnetGenerator.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.UnetGenerator.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.UnetSkipConnectionBlock">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">UnetSkipConnectionBlock</code><span class="sig-paren">(</span><em>outer_nc</em>, <em>inner_nc</em>, <em>submodule=None</em>, <em>outermost=False</em>, <em>innermost=False</em>, <em>norm_layer=&lt;class 'torch.nn.modules.batchnorm.BatchNorm2d'&gt;</em>, <em>use_dropout=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#UnetSkipConnectionBlock"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.UnetSkipConnectionBlock" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.UnetSkipConnectionBlock.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#UnetSkipConnectionBlock.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.UnetSkipConnectionBlock.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.channel_shuffle">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">channel_shuffle</code><span class="sig-paren">(</span><em>x</em>, <em>groups</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#channel_shuffle"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.channel_shuffle" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.define_D">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">define_D</code><span class="sig-paren">(</span><em>input_nc</em>, <em>ndf</em>, <em>which_model_netD</em>, <em>n_layers_D=3</em>, <em>norm='batch'</em>, <em>use_sigmoid=False</em>, <em>gpu_ids=[]</em>, <em>use_parallel=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#define_D"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.define_D" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.define_G">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">define_G</code><span class="sig-paren">(</span><em>input_nc</em>, <em>output_nc</em>, <em>ngf</em>, <em>which_model_netG</em>, <em>norm='batch'</em>, <em>use_dropout=False</em>, <em>gpu_ids=[]</em>, <em>use_parallel=True</em>, <em>learn_residual=False</em>, <em>rnn='WoRNN'</em>, <em>expend_ends_chnl='woExpend'</em>, <em>depth_wise='woDepthWise'</em>, <em>shuffle_net='woShuffleNet'</em>, <em>depth_wise_deconv='woDepthWiseDeConv'</em>, <em>deconv2upsampel='woDeConv2UpSample'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#define_G"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.define_G" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.get_norm_layer">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">get_norm_layer</code><span class="sig-paren">(</span><em>norm_type='instance'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#get_norm_layer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.get_norm_layer" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.print_network">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">print_network</code><span class="sig-paren">(</span><em>net</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#print_network"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.print_network" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.models.Deblur.networks.weights_init">
+<code class="descclassname">DL_ImageGen_bench.models.Deblur.networks.</code><code class="descname">weights_init</code><span class="sig-paren">(</span><em>m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/networks.html#weights_init"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.networks.weights_init" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.solver">
+<span id="dl-imagegen-bench-models-deblur-solver-module"></span><h2>DL_ImageGen_bench.models.Deblur.solver module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.solver" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.solver.</code><code class="descname">DeblurGANTrainer</code><span class="sig-paren">(</span><em>config</em>, <em>training_loader</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/solver.html#DeblurGANTrainer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.build_model">
+<code class="descname">build_model</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/solver.html#DeblurGANTrainer.build_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.build_model" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/solver.html#DeblurGANTrainer.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.run" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/solver.html#DeblurGANTrainer.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.save" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>epoch</em>, <em>compression_scheduler</em>, <em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/solver.html#DeblurGANTrainer.train"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.solver.DeblurGANTrainer.train" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.test_model">
+<span id="dl-imagegen-bench-models-deblur-test-model-module"></span><h2>DL_ImageGen_bench.models.Deblur.test_model module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.test_model" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.test_model.</code><code class="descname">TestModel</code><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.models.Deblur.base_model.BaseModel" title="DL_ImageGen_bench.models.Deblur.base_model.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.models.Deblur.base_model.BaseModel</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_current_visuals">
+<code class="descname">get_current_visuals</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.get_current_visuals"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_current_visuals" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_image_paths">
+<code class="descname">get_image_paths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.get_image_paths"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_image_paths" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.initialize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.initialize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.name">
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.set_input">
+<code class="descname">set_input</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.set_input"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.set_input" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_model.TestModel.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_model.html#TestModel.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_model.TestModel.test" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur.test_solver">
+<span id="dl-imagegen-bench-models-deblur-test-solver-module"></span><h2>DL_ImageGen_bench.models.Deblur.test_solver module<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur.test_solver" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.Deblur.test_solver.</code><code class="descname">DeblurGANTester</code><span class="sig-paren">(</span><em>config</em>, <em>testing_loader</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_solver.html#DeblurGANTester"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.build_model">
+<code class="descname">build_model</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_solver.html#DeblurGANTester.build_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.build_model" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_solver.html#DeblurGANTester.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.run" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.test">
+<code class="descname">test</code><span class="sig-paren">(</span><em>model</em>, <em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/Deblur/test_solver.html#DeblurGANTester.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.Deblur.test_solver.DeblurGANTester.test" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.models.Deblur">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.models.Deblur" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.models.cifar10.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.models.cifar10 package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.models.C2SRCNN.html" class="btn btn-neutral" title="DL_ImageGen_bench.models.C2SRCNN package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

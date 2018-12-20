@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.models.Deblur.conditional_gan_model &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../../models.html">DL_ImageGen_bench.models</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.models.Deblur.conditional_gan_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.models.Deblur.conditional_gan_model 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="k">import</span> <span class="n">Variable</span>
+<span class="kn">import</span> <span class="nn">apputils.Deblur_apputils.util</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">apputils.Deblur_apputils.image_pool</span> <span class="k">import</span> <span class="n">ImagePool</span>
+<span class="kn">from</span> <span class="nn">.base_model</span> <span class="k">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">networks</span>
+<span class="kn">from</span> <span class="nn">.losses</span> <span class="k">import</span> <span class="n">init_loss</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">xrange</span>          <span class="c1"># Python2</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="n">xrange</span> <span class="o">=</span> <span class="nb">range</span>  <span class="c1"># Python 3</span>
+
+<div class="viewcode-block" id="ConditionalGAN"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN">[文档]</a><span class="k">class</span> <span class="nc">ConditionalGAN</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ConditionalGAN.name"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.name">[文档]</a>    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;ConditionalGANModel&#39;</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.initialize">[文档]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="n">BaseModel</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">isTrain</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">isTrain</span>
+        <span class="c1"># define tensors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">input_nc</span><span class="p">,</span>
+                                   <span class="n">opt</span><span class="o">.</span><span class="n">fineSize</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">fineSize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">output_nc</span><span class="p">,</span>
+                                   <span class="n">opt</span><span class="o">.</span><span class="n">fineSize</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">fineSize</span><span class="p">)</span>
+
+        <span class="c1"># load/define networks</span>
+        <span class="c1"># Temp Fix for nn.parallel as nn.parallel crashes oc calculating gradient penalty</span>
+        <span class="n">use_parallel</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span> <span class="o">==</span> <span class="s1">&#39;wgan-gp&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">netG</span> <span class="o">=</span> <span class="n">networks</span><span class="o">.</span><span class="n">define_G</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">input_nc</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">output_nc</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">ngf</span><span class="p">,</span>
+                                      <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netG</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="ow">not</span> <span class="n">opt</span><span class="o">.</span><span class="n">no_dropout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpu_ids</span><span class="p">,</span> <span class="n">use_parallel</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">learn_residual</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">rnn</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">expend_ends_chnl</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">depthwise</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">shufflenet</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">depthwisedeconv</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">deconv2upsample</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isTrain</span> <span class="ow">and</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="n">use_sigmoid</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">gan_type</span> <span class="o">==</span> <span class="s1">&#39;gan&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">netD</span> <span class="o">=</span> <span class="n">networks</span><span class="o">.</span><span class="n">define_D</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">output_nc</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">ndf</span><span class="p">,</span>
+                                          <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span><span class="p">,</span>
+                                          <span class="n">opt</span><span class="o">.</span><span class="n">n_layers_D</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">use_sigmoid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpu_ids</span><span class="p">,</span> <span class="n">use_parallel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">isTrain</span> <span class="ow">or</span> <span class="n">opt</span><span class="o">.</span><span class="n">continue_train</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netG</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_epoch</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isTrain</span> <span class="ow">and</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_epoch</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isTrain</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fake_AB_pool</span> <span class="o">=</span> <span class="n">ImagePool</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">pool_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">old_lr</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">lr</span>
+
+            <span class="c1"># initialize optimizers</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_G</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netG</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                                                <span class="n">lr</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">beta1</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_D</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+                                                    <span class="n">lr</span><span class="o">=</span><span class="n">opt</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">beta1</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">))</span>
+                                                
+            <span class="c1"># self.criticUpdates = 5 if opt.gan_type == &#39;wgan-gp&#39; else 1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">criticUpdates</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">Dloops</span>
+
+            <span class="c1"># define loss functions</span>
+            <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">discLoss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span> <span class="o">=</span> <span class="n">init_loss</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span> <span class="o">=</span> <span class="n">init_loss</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span></div>
+
+        <span class="c1"># print(&#39;---------- Networks initialized -------------&#39;)</span>
+        <span class="c1"># networks.print_network(self.netG)</span>
+        <span class="c1"># if self.isTrain and opt.which_model_netD != &#39;NoD&#39;:</span>
+        <span class="c1">#     networks.print_network(self.netD)</span>
+        <span class="c1"># print(&#39;-----------------------------------------------&#39;)</span>
+
+<div class="viewcode-block" id="ConditionalGAN.set_input"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.set_input">[文档]</a>    <span class="k">def</span> <span class="nf">set_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="n">AtoB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">which_direction</span> <span class="o">==</span> <span class="s1">&#39;AtoB&#39;</span>
+        <span class="n">input_A</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s1">&#39;A&#39;</span> <span class="k">if</span> <span class="n">AtoB</span> <span class="k">else</span> <span class="s1">&#39;B&#39;</span><span class="p">]</span>
+        <span class="n">input_B</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s1">&#39;B&#39;</span> <span class="k">if</span> <span class="n">AtoB</span> <span class="k">else</span> <span class="s1">&#39;A&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="o">.</span><span class="n">resize_</span><span class="p">(</span><span class="n">input_A</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">input_A</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_B</span><span class="o">.</span><span class="n">resize_</span><span class="p">(</span><span class="n">input_B</span><span class="o">.</span><span class="n">size</span><span class="p">())</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">input_B</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_paths</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s1">&#39;A_paths&#39;</span> <span class="k">if</span> <span class="n">AtoB</span> <span class="k">else</span> <span class="s1">&#39;B_paths&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.forward"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.forward">[文档]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_A</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netG</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_B</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_B</span><span class="p">)</span></div>
+
+    <span class="c1"># no backprop gradients</span>
+<div class="viewcode-block" id="ConditionalGAN.test"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.test">[文档]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_A</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_A</span><span class="p">,</span> <span class="n">volatile</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">netG</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_B</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_B</span><span class="p">,</span> <span class="n">volatile</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="c1"># get image paths</span>
+<div class="viewcode-block" id="ConditionalGAN.get_image_paths"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_image_paths">[文档]</a>    <span class="k">def</span> <span class="nf">get_image_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_paths</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.backward_D"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_D">[文档]</a>    <span class="k">def</span> <span class="nf">backward_D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discLoss</span><span class="o">.</span><span class="n">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">retain_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.backward_G"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G">[文档]</a>    <span class="k">def</span> <span class="nf">backward_G</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discLoss</span><span class="o">.</span><span class="n">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Second, G(A) = B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span><span class="o">.</span><span class="n">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">lambda_A</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">featureMap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span><span class="o">.</span><span class="n">get_feature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="p">)</span></div>
+
+    <span class="c1"># split backward_G() to get_G_loss_func() &amp; backward_G_func() 2018-10-16 17:36:10 CKH</span>
+<div class="viewcode-block" id="ConditionalGAN.get_G_loss_func"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_G_loss_func">[文档]</a>    <span class="k">def</span> <span class="nf">get_G_loss_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discLoss</span><span class="o">.</span><span class="n">get_g_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Second, G(A) = B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span><span class="o">.</span><span class="n">get_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">lambda_A</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.backward_G_func"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.backward_G_func">[文档]</a>    <span class="k">def</span> <span class="nf">backward_G_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_G</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">featureMap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">contentLoss</span><span class="o">.</span><span class="n">get_feature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.optimize_parameters"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.optimize_parameters">[文档]</a>    <span class="k">def</span> <span class="nf">optimize_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="k">for</span> <span class="n">iter_d</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">criticUpdates</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_D</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">backward_D</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_D</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_G</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backward_G</span><span class="p">(</span><span class="n">opt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_G</span><span class="o">.</span><span class="n">step</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.get_current_errors"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_errors">[文档]</a>    <span class="k">def</span> <span class="nf">get_current_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="c1"># fix the warning invalida index of a 0-dim tensor 2018-10-16 17:36:10 CKH</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s2">&quot;NoD&quot;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;G_GAN&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_GAN</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s1">&#39;G_L1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s1">&#39;D_real+fake&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_D</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                                <span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;G_GAN&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s1">&#39;G_L1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_G_Content</span><span class="o">.</span><span class="n">data</span><span class="p">),</span>
+                                <span class="p">(</span><span class="s1">&#39;D_real+fake&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                                <span class="p">])</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.get_current_visuals"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.get_current_visuals">[文档]</a>    <span class="k">def</span> <span class="nf">get_current_visuals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">real_A</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">tensor2im</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_A</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">fake_B</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">tensor2im</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fake_B</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">real_B</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">tensor2im</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_B</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;Blurred_Train&#39;</span><span class="p">,</span> <span class="n">real_A</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Restored_Train&#39;</span><span class="p">,</span> <span class="n">fake_B</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sharp_Train&#39;</span><span class="p">,</span> <span class="n">real_B</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.save"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.save">[文档]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netG</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpu_ids</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by Kai Kang, add option &quot;NoD&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save_network</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">netD</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gpu_ids</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConditionalGAN.update_learning_rate"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.update_learning_rate">[文档]</a>    <span class="k">def</span> <span class="nf">update_learning_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="n">lrd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">lr</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">niter_decay</span>
+        <span class="n">lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">old_lr</span> <span class="o">-</span> <span class="n">lrd</span>
+        <span class="k">if</span> <span class="n">opt</span><span class="o">.</span><span class="n">which_model_netD</span> <span class="o">!=</span> <span class="s1">&#39;NoD&#39;</span><span class="p">:</span>  <span class="c1"># modified by KaiKang, add option &quot;NoD&quot;</span>
+            <span class="k">for</span> <span class="n">param_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_D</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
+                <span class="n">param_group</span><span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="k">for</span> <span class="n">param_group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer_G</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
+            <span class="n">param_group</span><span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;update learning rate: </span><span class="si">%f</span><span class="s1"> -&gt; </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_lr</span><span class="p">,</span> <span class="n">lr</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old_lr</span> <span class="o">=</span> <span class="n">lr</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

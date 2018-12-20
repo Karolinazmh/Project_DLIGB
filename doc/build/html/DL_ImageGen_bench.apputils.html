@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.apputils package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.apputils.Deblur_apputils package" href="DL_ImageGen_bench.apputils.Deblur_apputils.html" />
+    <link rel="prev" title="DL_ImageGen_bench package" href="DL_ImageGen_bench.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DL_ImageGen_bench.apputils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.apputils.execution_env">DL_ImageGen_bench.apputils.execution_env module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.apputils.model_summaries">DL_ImageGen_bench.apputils.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.apputils.platform_summaries">DL_ImageGen_bench.apputils.platform_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.apputils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.apputils package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.apputils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-apputils-package">
+<h1>DL_ImageGen_bench.apputils package<a class="headerlink" href="#dl-imagegen-bench-apputils-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html">DL_ImageGen_bench.apputils.Deblur_apputils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.get_data">DL_ImageGen_bench.apputils.Deblur_apputils.get_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.html">DL_ImageGen_bench.apputils.Deblur_apputils.html module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.image_pool">DL_ImageGen_bench.apputils.Deblur_apputils.image_pool module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.metrics">DL_ImageGen_bench.apputils.Deblur_apputils.metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.png">DL_ImageGen_bench.apputils.Deblur_apputils.png module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.util">DL_ImageGen_bench.apputils.Deblur_apputils.util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils.visualizer">DL_ImageGen_bench.apputils.Deblur_apputils.visualizer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.apputils.Deblur_apputils.html#module-DL_ImageGen_bench.apputils.Deblur_apputils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.execution_env">
+<span id="dl-imagegen-bench-apputils-execution-env-module"></span><h2>DL_ImageGen_bench.apputils.execution_env module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.execution_env" title="永久链接至标题">¶</a></h2>
+<p>Log information regarding the execution environment.</p>
+<p>This is helpful if you want to recreate an experiment at a later time, or if
+you want to understand the environment in which you execute the training.</p>
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.execution_env.config_pylogger">
+<code class="descclassname">DL_ImageGen_bench.apputils.execution_env.</code><code class="descname">config_pylogger</code><span class="sig-paren">(</span><em>log_cfg_file</em>, <em>experiment_name</em>, <em>output_dir='logs'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/execution_env.html#config_pylogger"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.execution_env.config_pylogger" title="永久链接至目标">¶</a></dt>
+<dd><p>Configure the Python logger.</p>
+<p>For each execution of the application, we’d like to create a unique log directory.
+By default this library is named using the date and time of day, to that directories
+can be sorted by recency.  You can also name yor experiments and prefix the log
+directory with this name.  This can be useful when accessing experiment data from
+TensorBoard, for example.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.execution_env.log_execution_env_state">
+<code class="descclassname">DL_ImageGen_bench.apputils.execution_env.</code><code class="descname">log_execution_env_state</code><span class="sig-paren">(</span><em>app_args</em>, <em>gitroot='.'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/execution_env.html#log_execution_env_state"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.execution_env.log_execution_env_state" title="永久链接至目标">¶</a></dt>
+<dd><p>Log information about the execution environment.</p>
+<p>It is recommeneded to log this information so it can be used for referencing
+at a later time.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>app_args (dict): the command line arguments passed to the application
+git_root: the path to the .git root directory</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.model_summaries">
+<span id="dl-imagegen-bench-apputils-model-summaries-module"></span><h2>DL_ImageGen_bench.apputils.model_summaries module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.model_summaries" title="永久链接至标题">¶</a></h2>
+<p>This module provides various model summary information.</p>
+<p>This code is proven to work on CNN image classification models using PyTorch 04.
+RNNs are currently not working well.</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">SummaryGraph</code><span class="sig-paren">(</span><em>model</em>, <em>dummy_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>We use Pytorch’s JIT tracer to run a forward pass and generate a trace graph, which
+is an internal representation of the model.  We then use ONNX to “clean” this
+representation.  After builiding a new representation of the graph, we can print
+it to a table, a PNG, add information to nodes, etc.</p>
+<p>The trace is a C++ component and the API is not documented, so we need to dig into some
+Pytorch internals code to understand how to get the info we need.
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/master/torch/onnx/__init__.py">https://github.com/pytorch/pytorch/blob/master/torch/onnx/__init__.py</a>
+<a class="reference external" href="https://github.com/pytorch/pytorch/blob/master/torch/onnx/symbolic.py">https://github.com/pytorch/pytorch/blob/master/torch/onnx/symbolic.py</a></p>
+<p>We think that using the trace output to generate a representation of the graph, is
+the best method available in Pytorch, due to the module’s dynamic nature.
+Pytorch’s module API naturally ignores layers/operations which are implemented as
+torch.autograd.Function, without an nn.Module.  For example:</p>
+<blockquote>
+<div>out = F.relu(self.bn1(self.conv1(x)))</div></blockquote>
+<p>Another case where traversing the nn.Module API is not sufficient to create a
+representation of the graph, is the same nn.Module is used several times in the
+graph.  For example:</p>
+<blockquote>
+<div><p>out = self.conv1(x)
+out = self.bn1(out)
+out = self.relu(out)    &lt;=== First use of self.relu</p>
+<p>out = self.conv2(out)
+out = self.bn2(out)
+out = self.relu(out)    &lt;=== Second use of self.relu</p>
+</div></blockquote>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge">
+<em class="property">class </em><code class="descname">Edge</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge.dst">
+<code class="descname">dst</code><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge.dst" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge.src">
+<code class="descname">src</code><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge.src" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_arithmetic_intensity_attr">
+<code class="descname">add_arithmetic_intensity_attr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.add_arithmetic_intensity_attr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_arithmetic_intensity_attr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_footprint_attr">
+<code class="descname">add_footprint_attr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.add_footprint_attr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_footprint_attr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_macs_attr">
+<code class="descname">add_macs_attr</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.add_macs_attr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.add_macs_attr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_op">
+<code class="descname">find_op</code><span class="sig-paren">(</span><em>lost_op_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.find_op"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_op" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_param">
+<code class="descname">find_param</code><span class="sig-paren">(</span><em>data_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.find_param"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.find_param" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_attr">
+<code class="descname">get_attr</code><span class="sig-paren">(</span><em>attr</em>, <em>f=&lt;function SummaryGraph.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.get_attr"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_attr" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_ops">
+<code class="descname">get_ops</code><span class="sig-paren">(</span><em>attr</em>, <em>f=&lt;function SummaryGraph.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.get_ops"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.get_ops" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_shape">
+<code class="descname">param_shape</code><span class="sig-paren">(</span><em>param_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.param_shape"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_shape" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_volume">
+<code class="descname">param_volume</code><span class="sig-paren">(</span><em>param_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.param_volume"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.param_volume" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors">
+<code class="descname">predecessors</code><span class="sig-paren">(</span><em>op</em>, <em>depth</em>, <em>done_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.predecessors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns a list of &lt;op&gt;’s predecessors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors_f">
+<code class="descname">predecessors_f</code><span class="sig-paren">(</span><em>node_name</em>, <em>predecessors_types</em>, <em>done_list=None</em>, <em>logging=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.predecessors_f"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.predecessors_f" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns a list of &lt;op&gt;’s predecessors, if they match the &lt;predecessors_types&gt; criteria.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors">
+<code class="descname">successors</code><span class="sig-paren">(</span><em>node</em>, <em>depth</em>, <em>done_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.successors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns a list of &lt;op&gt;’s successors</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors_f">
+<code class="descname">successors_f</code><span class="sig-paren">(</span><em>node_name</em>, <em>successors_types</em>, <em>done_list=None</em>, <em>logging=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.successors_f"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.successors_f" title="永久链接至目标">¶</a></dt>
+<dd><p>Returns a list of &lt;op&gt;’s successors, if they match the &lt;successors_types&gt; criteria.</p>
+<p>Traverse the graph, starting at node &lt;node_name&gt;, and search for successor
+nodes, that have one of the node types listed in &lt;successors_types&gt;.
+If none is found, then return an empty list.</p>
+<p>&lt;node_name&gt; and the returned list of successors are strings, because</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.volume">
+<em class="property">static </em><code class="descname">volume</code><span class="sig-paren">(</span><em>dims</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#SummaryGraph.volume"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.volume" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.attributes_summary">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">attributes_summary</code><span class="sig-paren">(</span><em>sgraph</em>, <em>ignore_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#attributes_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.attributes_summary" title="永久链接至目标">¶</a></dt>
+<dd><p>Generate a summary of a graph’s attributes.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>sgraph: a SummaryGraph instance
+ignore_attrs: a list of attributes to ignore in the output datafraem</dd>
+<dt>Output:</dt>
+<dd>A Pandas dataframe</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.attributes_summary_tbl">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">attributes_summary_tbl</code><span class="sig-paren">(</span><em>sgraph</em>, <em>ignore_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#attributes_summary_tbl"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.attributes_summary_tbl" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.connectivity_summary">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">connectivity_summary</code><span class="sig-paren">(</span><em>sgraph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#connectivity_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.connectivity_summary" title="永久链接至目标">¶</a></dt>
+<dd><p>Generate a summary of each node’s connectivity.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>sgraph: a SummaryGraph instance</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.connectivity_summary_verbose">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">connectivity_summary_verbose</code><span class="sig-paren">(</span><em>sgraph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#connectivity_summary_verbose"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.connectivity_summary_verbose" title="永久链接至目标">¶</a></dt>
+<dd><p>Generate a summary of each node’s connectivity, with details
+about the parameters.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>sgraph: a SummaryGraph instance</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.connectivity_tbl_summary">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">connectivity_tbl_summary</code><span class="sig-paren">(</span><em>sgraph</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#connectivity_tbl_summary"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.connectivity_tbl_summary" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.create_png">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">create_png</code><span class="sig-paren">(</span><em>sgraph</em>, <em>display_param_nodes=False</em>, <em>rankdir='TB'</em>, <em>styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#create_png"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.create_png" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a PNG object containing a graphiz-dot graph of the network,
+as represented by SummaryGraph ‘sgraph’.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.
+display_param_nodes (boolean): if True, draw the parameter nodes
+rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
+<blockquote>
+<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
+<dl class="last docutils">
+<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
+<dd><p class="first">a legal pydot style dictionary.  For example:
+styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<blockquote class="last">
+<div>‘fillcolor’: ‘gray’,
+‘style’: ‘rounded, filled’}</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.create_pydot_graph">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">create_pydot_graph</code><span class="sig-paren">(</span><em>op_nodes</em>, <em>data_nodes</em>, <em>param_nodes</em>, <em>edges</em>, <em>rankdir='TB'</em>, <em>styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#create_pydot_graph"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.create_pydot_graph" title="永久链接至目标">¶</a></dt>
+<dd><p>Low-level API to create a PyDot graph (dot formatted).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.data_node_has_parent">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">data_node_has_parent</code><span class="sig-paren">(</span><em>g</em>, <em>id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#data_node_has_parent"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.data_node_has_parent" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.draw_img_classifier_to_file">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">draw_img_classifier_to_file</code><span class="sig-paren">(</span><em>model</em>, <em>png_fname</em>, <em>dataset</em>, <em>display_param_nodes=False</em>, <em>rankdir='TB'</em>, <em>styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#draw_img_classifier_to_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.draw_img_classifier_to_file" title="永久链接至目标">¶</a></dt>
+<dd><p>Draw a PyTorch image classifier to a PNG file.  This a helper function that
+simplifies the interface of draw_model_to_file().</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">model: PyTorch model instance
+png_fname (string): PNG file name
+dataset (string): one of ‘imagenet’ or ‘cifar10’.  This is required in order to</p>
+<blockquote>
+<div>create a dummy input of the correct shape.</div></blockquote>
+<p>display_param_nodes (boolean): if True, draw the parameter nodes
+rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
+<blockquote>
+<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
+<dl class="last docutils">
+<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
+<dd><p class="first">a legal pydot style dictionary.  For example:
+styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<blockquote class="last">
+<div>‘fillcolor’: ‘gray’,
+‘style’: ‘rounded, filled’}</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.draw_model_to_file">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">draw_model_to_file</code><span class="sig-paren">(</span><em>sgraph</em>, <em>png_fname</em>, <em>display_param_nodes=False</em>, <em>rankdir='TB'</em>, <em>styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#draw_model_to_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.draw_model_to_file" title="永久链接至目标">¶</a></dt>
+<dd><p>Create a PNG file, containing a graphiz-dot graph of the netowrk represented
+by SummaryGraph ‘sgraph’</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.
+png_fname (string): PNG file name
+display_param_nodes (boolean): if True, draw the parameter nodes
+rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
+<blockquote>
+<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
+<dl class="last docutils">
+<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
+<dd><p class="first">a legal pydot style dictionary.  For example:
+styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<blockquote class="last">
+<div>‘fillcolor’: ‘gray’,
+‘style’: ‘rounded, filled’}</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.model_summaries.onnx_name_2_pytorch_name">
+<code class="descclassname">DL_ImageGen_bench.apputils.model_summaries.</code><code class="descname">onnx_name_2_pytorch_name</code><span class="sig-paren">(</span><em>name</em>, <em>op_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/model_summaries.html#onnx_name_2_pytorch_name"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.model_summaries.onnx_name_2_pytorch_name" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.platform_summaries">
+<span id="dl-imagegen-bench-apputils-platform-summaries-module"></span><h2>DL_ImageGen_bench.apputils.platform_summaries module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.platform_summaries" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.ClippedOnly">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">ClippedOnly</code><span class="sig-paren">(</span><em>num_bits</em>, <em>clip_val</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#ClippedOnly"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.ClippedOnly" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.ClippedOnly.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#ClippedOnly.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.ClippedOnly.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.draw_model_to_file">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">draw_model_to_file</code><span class="sig-paren">(</span><em>model</em>, <em>png_fname</em>, <em>dummy_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#draw_model_to_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.draw_model_to_file" title="永久链接至目标">¶</a></dt>
+<dd><p>Draw a language model graph to a PNG file.</p>
+<p>Caveat: the PNG that is produced has some problems, which we suspect are due to
+PyTorch issues related to RNN ONNX export.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.macs_display">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">macs_display</code><span class="sig-paren">(</span><em>model</em>, <em>macs_file</em>, <em>dummy_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#macs_display"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.macs_display" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.replace_quantize_module">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">replace_quantize_module</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#replace_quantize_module"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.replace_quantize_module" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.sensitivity_analysis">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">sensitivity_analysis</code><span class="sig-paren">(</span><em>model</em>, <em>sensitivity_file</em>, <em>test_func</em>, <em>sense_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#sensitivity_analysis"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.sensitivity_analysis" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.sparsity_display">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">sparsity_display</code><span class="sig-paren">(</span><em>model</em>, <em>sparsity_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#sparsity_display"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.sparsity_display" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.platform_summaries.transform_to_onnx">
+<code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">transform_to_onnx</code><span class="sig-paren">(</span><em>model</em>, <em>onnx_file</em>, <em>dummy_input</em>, <em>quantize_flag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#transform_to_onnx"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.transform_to_onnx" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.apputils" title="永久链接至标题">¶</a></h2>
+<p>This package contains Python code and classes that are meant to make your life easier,
+when working with distiller.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.apputils.Deblur_apputils.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.apputils.Deblur_apputils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.html" class="btn btn-neutral" title="DL_ImageGen_bench package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

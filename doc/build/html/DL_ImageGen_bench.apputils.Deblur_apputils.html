@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.apputils.Deblur_apputils package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.data package" href="DL_ImageGen_bench.data.html" />
+    <link rel="prev" title="DL_ImageGen_bench.apputils package" href="DL_ImageGen_bench.apputils.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.execution_env">DL_ImageGen_bench.apputils.execution_env module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.model_summaries">DL_ImageGen_bench.apputils.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils.platform_summaries">DL_ImageGen_bench.apputils.platform_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.apputils.html#module-DL_ImageGen_bench.apputils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.apputils.Deblur_apputils package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.apputils.Deblur_apputils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-apputils-deblur-apputils-package">
+<h1>DL_ImageGen_bench.apputils.Deblur_apputils package<a class="headerlink" href="#dl-imagegen-bench-apputils-deblur-apputils-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.get_data">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-get-data-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.get_data module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.get_data" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.get_data.GetData">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.get_data.</code><code class="descname">GetData</code><span class="sig-paren">(</span><em>technique='cyclegan'</em>, <em>verbose=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/get_data.html#GetData"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.get_data.GetData" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Download CycleGAN or Pix2Pix Data.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>technique <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>One of: ‘cyclegan’ or ‘pix2pix’.中文显示</dd>
+<dt>verbose <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd>If True, print additional information.</dd>
+</dl>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">util.get_data</span> <span class="k">import</span> <span class="n">GetData</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gd</span> <span class="o">=</span> <span class="n">GetData</span><span class="p">(</span><span class="n">technique</span><span class="o">=</span><span class="s1">&#39;cyclegan&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_data_path</span> <span class="o">=</span> <span class="n">gd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./datasets&#39;</span><span class="p">)</span>  <span class="c1"># options will be displayed.</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.get_data.GetData.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>save_path</em>, <em>dataset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/get_data.html#GetData.get"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.get_data.GetData.get" title="永久链接至目标">¶</a></dt>
+<dd><p>Download a dataset.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>save_path <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>A directory to save the data to.</dd>
+<dt>dataset <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span></dt>
+<dd>A specific dataset to download.
+Note: this must include the file extension.
+If None, options will be presented for you
+to choose from.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>save_path_full <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd>The absolute path to the downloaded data.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.html">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-html-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.html module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.html" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.html.</code><code class="descname">HTML</code><span class="sig-paren">(</span><em>web_dir</em>, <em>title</em>, <em>reflesh=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_header">
+<code class="descname">add_header</code><span class="sig-paren">(</span><em>str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML.add_header"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_header" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_images">
+<code class="descname">add_images</code><span class="sig-paren">(</span><em>ims</em>, <em>txts</em>, <em>links</em>, <em>width=400</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML.add_images"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_images" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_table">
+<code class="descname">add_table</code><span class="sig-paren">(</span><em>border=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML.add_table"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.add_table" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.get_image_dir">
+<code class="descname">get_image_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML.get_image_dir"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.get_image_dir" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/html.html#HTML.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.html.HTML.save" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.image_pool">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-image-pool-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.image_pool module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.image_pool" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.image_pool.ImagePool">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.image_pool.</code><code class="descname">ImagePool</code><span class="sig-paren">(</span><em>pool_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/image_pool.html#ImagePool"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.image_pool.ImagePool" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.image_pool.ImagePool.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>images</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/image_pool.html#ImagePool.query"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.image_pool.ImagePool.query" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.metrics">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-metrics-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.metrics module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.metrics" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.metrics.PSNR">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.metrics.</code><code class="descname">PSNR</code><span class="sig-paren">(</span><em>img1</em>, <em>img2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/metrics.html#PSNR"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.metrics.PSNR" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.metrics.SSIM">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.metrics.</code><code class="descname">SSIM</code><span class="sig-paren">(</span><em>img1</em>, <em>img2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/metrics.html#SSIM"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.metrics.SSIM" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.metrics.create_window">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.metrics.</code><code class="descname">create_window</code><span class="sig-paren">(</span><em>window_size</em>, <em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/metrics.html#create_window"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.metrics.create_window" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.metrics.gaussian">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.metrics.</code><code class="descname">gaussian</code><span class="sig-paren">(</span><em>window_size</em>, <em>sigma</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/metrics.html#gaussian"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.metrics.gaussian" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.png">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-png-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.png module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.png" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.png.encode">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.png.</code><code class="descname">encode</code><span class="sig-paren">(</span><em>buf</em>, <em>width</em>, <em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/png.html#encode"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.png.encode" title="永久链接至目标">¶</a></dt>
+<dd><p>buf: must be bytes or a bytearray in py3, a regular string in py2. formatted RGBRGB…</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.util">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-util-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.util module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.util" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.diagnose_network">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">diagnose_network</code><span class="sig-paren">(</span><em>net</em>, <em>name='network'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#diagnose_network"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.diagnose_network" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.info">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">info</code><span class="sig-paren">(</span><em>object</em>, <em>spacing=10</em>, <em>collapse=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#info"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.info" title="永久链接至目标">¶</a></dt>
+<dd><p>Print methods and doc strings.
+Takes module, class, list, dictionary, or string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.mkdir">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">mkdir</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#mkdir"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.mkdir" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.mkdirs">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">mkdirs</code><span class="sig-paren">(</span><em>paths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#mkdirs"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.mkdirs" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.print_numpy">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">print_numpy</code><span class="sig-paren">(</span><em>x</em>, <em>val=True</em>, <em>shp=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#print_numpy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.print_numpy" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.save_image">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">save_image</code><span class="sig-paren">(</span><em>image_numpy</em>, <em>image_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#save_image"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.save_image" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.tensor2im">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">tensor2im</code><span class="sig-paren">(</span><em>image_tensor</em>, <em>imtype=&lt;class 'numpy.uint8'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#tensor2im"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.tensor2im" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.util.varname">
+<code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.util.</code><code class="descname">varname</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/util.html#varname"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.util.varname" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils.visualizer">
+<span id="dl-imagegen-bench-apputils-deblur-apputils-visualizer-module"></span><h2>DL_ImageGen_bench.apputils.Deblur_apputils.visualizer module<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils.visualizer" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.</code><code class="descname">Visualizer</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/visualizer.html#Visualizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.display_current_results">
+<code class="descname">display_current_results</code><span class="sig-paren">(</span><em>visuals</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/visualizer.html#Visualizer.display_current_results"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.display_current_results" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.plot_current_errors">
+<code class="descname">plot_current_errors</code><span class="sig-paren">(</span><em>epoch</em>, <em>counter_ratio</em>, <em>opt</em>, <em>errors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/visualizer.html#Visualizer.plot_current_errors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.plot_current_errors" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.print_current_errors">
+<code class="descname">print_current_errors</code><span class="sig-paren">(</span><em>epoch</em>, <em>i</em>, <em>errors</em>, <em>t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/visualizer.html#Visualizer.print_current_errors"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.print_current_errors" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.save_images">
+<code class="descname">save_images</code><span class="sig-paren">(</span><em>webpage</em>, <em>visuals</em>, <em>image_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/Deblur_apputils/visualizer.html#Visualizer.save_images"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.save_images" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.apputils.Deblur_apputils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.apputils.Deblur_apputils" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.data.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.data package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.apputils.html" class="btn btn-neutral" title="DL_ImageGen_bench.apputils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

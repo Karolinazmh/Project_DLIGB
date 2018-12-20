@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.data package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.data.Deblur_data package" href="DL_ImageGen_bench.data.Deblur_data.html" />
+    <link rel="prev" title="DL_ImageGen_bench.apputils.Deblur_apputils package" href="DL_ImageGen_bench.apputils.Deblur_apputils.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DL_ImageGen_bench.data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.data.data">DL_ImageGen_bench.data.data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.data.dataset">DL_ImageGen_bench.data.dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-DL_ImageGen_bench.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.data package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-data-package">
+<h1>DL_ImageGen_bench.data package<a class="headerlink" href="#dl-imagegen-bench-data-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="永久链接至标题">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html">DL_ImageGen_bench.data.Deblur_data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.aligned_dataset">DL_ImageGen_bench.data.Deblur_data.aligned_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.base_data_loader">DL_ImageGen_bench.data.Deblur_data.base_data_loader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.base_dataset">DL_ImageGen_bench.data.Deblur_data.base_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.custom_dataset_data_loader">DL_ImageGen_bench.data.Deblur_data.custom_dataset_data_loader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.data_loader">DL_ImageGen_bench.data.Deblur_data.data_loader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.image_folder">DL_ImageGen_bench.data.Deblur_data.image_folder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.single_dataset">DL_ImageGen_bench.data.Deblur_data.single_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data.unaligned_dataset">DL_ImageGen_bench.data.Deblur_data.unaligned_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.data.Deblur_data.html#module-DL_ImageGen_bench.data.Deblur_data">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.data.data">
+<span id="dl-imagegen-bench-data-data-module"></span><h2>DL_ImageGen_bench.data.data module<a class="headerlink" href="#module-DL_ImageGen_bench.data.data" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.calculate_valid_crop_size">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">calculate_valid_crop_size</code><span class="sig-paren">(</span><em>crop_size</em>, <em>upscale_factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#calculate_valid_crop_size"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.calculate_valid_crop_size" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.download_bsd300">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">download_bsd300</code><span class="sig-paren">(</span><em>dest='./dataset'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#download_bsd300"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.download_bsd300" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.full_feature_transform">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">full_feature_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#full_feature_transform"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.full_feature_transform" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.get_eva_set">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_eva_set</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_eva_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_eva_set" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Evaluation dataset</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>opt (dict): 参数列表</dd>
+<dt>Returns:</dt>
+<dd>dataset (class DatasetFromFolder): 测试数据库</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.get_test_set">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_test_set</code><span class="sig-paren">(</span><em>upscale_factor</em>, <em>test_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_test_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_test_set" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Validataion dataset (在train的过程中supervise模型性能的数据库)</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">upscale_factor (int): SR 图像的scale倍率</p>
+<p class="last">test_dir (str): 验证库的位置</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dataset (class DatasetFromFolder): 验证数据库</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.get_training_set">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_training_set</code><span class="sig-paren">(</span><em>upscale_factor</em>, <em>train_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_training_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_training_set" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Training dataset</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">upscale_factor (int): SR 图像的scale倍率</p>
+<p class="last">train_dir (str): 训练库的位置</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dataset (class DatasetFromFolder): 训练数据库</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.input_transform">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">input_transform</code><span class="sig-paren">(</span><em>crop_size</em>, <em>upscale_factor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#input_transform"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.input_transform" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.target_transform">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">target_transform</code><span class="sig-paren">(</span><em>crop_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#target_transform"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.target_transform" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.data.dataset">
+<span id="dl-imagegen-bench-data-dataset-module"></span><h2>DL_ImageGen_bench.data.dataset module<a class="headerlink" href="#module-DL_ImageGen_bench.data.dataset" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.data.dataset.DatasetFromEvaFolder">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">DatasetFromEvaFolder</code><span class="sig-paren">(</span><em>image_dir</em>, <em>input_transform=None</em>, <em>target_transform=None</em>, <em>opt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#DatasetFromEvaFolder"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.DatasetFromEvaFolder" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.data.dataset.DatasetFromFolder">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">DatasetFromFolder</code><span class="sig-paren">(</span><em>image_dir</em>, <em>input_transform=None</em>, <em>target_transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#DatasetFromFolder"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.DatasetFromFolder" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.dataset.is_image_file">
+<code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">is_image_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#is_image_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.is_image_file" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.dataset.load_img">
+<code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">load_img</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#load_img"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.load_img" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.dataset.load_y_img">
+<code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">load_y_img</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#load_y_img"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.load_y_img" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.data" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.data.Deblur_data.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.data.Deblur_data package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.apputils.Deblur_apputils.html" class="btn btn-neutral" title="DL_ImageGen_bench.apputils.Deblur_apputils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

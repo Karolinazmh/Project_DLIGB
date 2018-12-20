@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.quantization package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.distiller.regularization package" href="DL_ImageGen_bench.distiller.regularization.html" />
+    <link rel="prev" title="DL_ImageGen_bench.distiller.pruning package" href="DL_ImageGen_bench.distiller.pruning.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.config">DL_ImageGen_bench.distiller.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.directives">DL_ImageGen_bench.distiller.directives module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.knowledge_distillation">DL_ImageGen_bench.distiller.knowledge_distillation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.learning_rate">DL_ImageGen_bench.distiller.learning_rate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.model_summaries">DL_ImageGen_bench.distiller.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.policy">DL_ImageGen_bench.distiller.policy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.scheduler">DL_ImageGen_bench.distiller.scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.sensitivity">DL_ImageGen_bench.distiller.sensitivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thinning">DL_ImageGen_bench.distiller.thinning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thresholding">DL_ImageGen_bench.distiller.thresholding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.quantization package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.distiller.quantization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-distiller-quantization-package">
+<h1>DL_ImageGen_bench.distiller.quantization package<a class="headerlink" href="#dl-imagegen-bench-distiller-quantization-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.quantization.clipped_linear">
+<span id="dl-imagegen-bench-distiller-quantization-clipped-linear-module"></span><h2>DL_ImageGen_bench.distiller.quantization.clipped_linear module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.quantization.clipped_linear" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.ClippedLinearQuantization">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">ClippedLinearQuantization</code><span class="sig-paren">(</span><em>num_bits</em>, <em>clip_val</em>, <em>dequantize=True</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#ClippedLinearQuantization"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.ClippedLinearQuantization" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.ClippedLinearQuantization.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#ClippedLinearQuantization.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.ClippedLinearQuantization.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.DorefaQuantizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">DorefaQuantizer</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>bits_activations=32</em>, <em>bits_weights=32</em>, <em>bits_overrides={}</em>, <em>quantize_bias=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#DorefaQuantizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.DorefaQuantizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer" title="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer</span></code></a></p>
+<p>Quantizer using the DoReFa scheme, as defined in:
+Zhou et al., DoReFa-Net: Training Low Bitwidth Convolutional Neural Networks with Low Bitwidth Gradients
+(<a class="reference external" href="https://arxiv.org/abs/1606.06160">https://arxiv.org/abs/1606.06160</a>)</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd><ol class="first last arabic simple">
+<li>Gradients quantization not supported yet</li>
+<li>The paper defines special handling for 1-bit weights which isn’t supported here yet</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantization">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">LearnedClippedLinearQuantization</code><span class="sig-paren">(</span><em>num_bits</em>, <em>init_act_clip_val</em>, <em>dequantize=True</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LearnedClippedLinearQuantization"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantization" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantization.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LearnedClippedLinearQuantization.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantization.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">LearnedClippedLinearQuantizeSTE</code><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LearnedClippedLinearQuantizeSTE"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.backward">
+<em class="property">static </em><code class="descname">backward</code><span class="sig-paren">(</span><em>ctx</em>, <em>grad_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LearnedClippedLinearQuantizeSTE.backward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.backward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines a formula for differentiating the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by as many
+outputs did <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> return, and it should return as many
+tensors, as there were inputs to <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a>. Each argument is the
+gradient w.r.t the given output, and each returned value should be the
+gradient w.r.t. the corresponding input.</p>
+<p>The context can be used to retrieve tensors saved during the forward
+pass.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward">
+<em class="property">static </em><code class="descname">forward</code><span class="sig-paren">(</span><em>ctx</em>, <em>input</em>, <em>clip_val</em>, <em>num_bits</em>, <em>dequantize</em>, <em>inplace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LearnedClippedLinearQuantizeSTE.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LearnedClippedLinearQuantizeSTE.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Performs the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by any
+number of arguments (tensors or other types).</p>
+<p>The context can be used to store tensors that can be then retrieved
+during the backward pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">LinearQuantizeSTE</code><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LinearQuantizeSTE"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.backward">
+<em class="property">static </em><code class="descname">backward</code><span class="sig-paren">(</span><em>ctx</em>, <em>grad_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LinearQuantizeSTE.backward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.backward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines a formula for differentiating the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by as many
+outputs did <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> return, and it should return as many
+tensors, as there were inputs to <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a>. Each argument is the
+gradient w.r.t the given output, and each returned value should be the
+gradient w.r.t. the corresponding input.</p>
+<p>The context can be used to retrieve tensors saved during the forward
+pass.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward">
+<em class="property">static </em><code class="descname">forward</code><span class="sig-paren">(</span><em>ctx</em>, <em>input</em>, <em>scale_factor</em>, <em>dequantize</em>, <em>inplace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#LinearQuantizeSTE.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.LinearQuantizeSTE.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Performs the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by any
+number of arguments (tensors or other types).</p>
+<p>The context can be used to store tensors that can be then retrieved
+during the backward pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PACTQuantizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">PACTQuantizer</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>bits_activations=32</em>, <em>bits_weights=32</em>, <em>bits_overrides={}</em>, <em>quantize_bias=False</em>, <em>act_clip_init_val=8.0</em>, <em>act_clip_decay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PACTQuantizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PACTQuantizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer" title="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer</span></code></a></p>
+<p>Quantizer using the PACT quantization scheme, as defined in:
+Choi et al., PACT: Parameterized Clipping Activation for Quantized Neural Networks
+(<a class="reference external" href="https://arxiv.org/abs/1805.06085">https://arxiv.org/abs/1805.06085</a>)</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>act_clip_init_val (float): Initial clipping value for activations, referred to as “alpha” in the paper</dt>
+<dd>(default: 8.0)</dd>
+<dt>act_clip_decay (float): L2 penalty applied to the clipping values, referred to as “lambda_alpha” in the paper.</dt>
+<dd>If None then the optimizer’s default weight decay value is used (default: None)</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantization">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">PReLULearnedClippedLinearQuantization</code><span class="sig-paren">(</span><em>pr_weight</em>, <em>num_bits</em>, <em>init_act_clip_val</em>, <em>dequantize=True</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLULearnedClippedLinearQuantization"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantization" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantization.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLULearnedClippedLinearQuantization.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantization.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">PReLULearnedClippedLinearQuantizeSTE</code><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLULearnedClippedLinearQuantizeSTE"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.autograd.function.Function</span></code></p>
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.backward">
+<em class="property">static </em><code class="descname">backward</code><span class="sig-paren">(</span><em>ctx</em>, <em>grad_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLULearnedClippedLinearQuantizeSTE.backward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.backward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines a formula for differentiating the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by as many
+outputs did <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a> return, and it should return as many
+tensors, as there were inputs to <a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward" title="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward"><code class="xref py py-func docutils literal notranslate"><span class="pre">forward()</span></code></a>. Each argument is the
+gradient w.r.t the given output, and each returned value should be the
+gradient w.r.t. the corresponding input.</p>
+<p>The context can be used to retrieve tensors saved during the forward
+pass.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward">
+<em class="property">static </em><code class="descname">forward</code><span class="sig-paren">(</span><em>ctx</em>, <em>input</em>, <em>clip_val</em>, <em>num_bits</em>, <em>dequantize</em>, <em>inplace</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLULearnedClippedLinearQuantizeSTE.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLULearnedClippedLinearQuantizeSTE.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Performs the operation.</p>
+<p>This function is to be overridden by all subclasses.</p>
+<p>It must accept a context ctx as the first argument, followed by any
+number of arguments (tensors or other types).</p>
+<p>The context can be used to store tensors that can be then retrieved
+during the backward pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLUQuantization">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">PReLUQuantization</code><span class="sig-paren">(</span><em>num_bits</em>, <em>clip_val</em>, <em>num_parameters=1</em>, <em>init=0.25</em>, <em>dequantize=True</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLUQuantization"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLUQuantization" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLUQuantization.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#PReLUQuantization.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.PReLUQuantization.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.WRPNQuantizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">WRPNQuantizer</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>bits_activations=32</em>, <em>bits_weights=32</em>, <em>bits_overrides={}</em>, <em>quantize_bias=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#WRPNQuantizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.WRPNQuantizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer" title="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer</span></code></a></p>
+<p>Quantizer using the WRPN quantization scheme, as defined in:
+Mishra et al., WRPN: Wide Reduced-Precision Networks (<a class="reference external" href="https://arxiv.org/abs/1709.01134">https://arxiv.org/abs/1709.01134</a>)</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd><ol class="first last arabic simple">
+<li>This class does not take care of layer widening as described in the paper</li>
+<li>The paper defines special handling for 1-bit weights which isn’t supported here yet</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.clipped_linear.dorefa_quantize_param">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.clipped_linear.</code><code class="descname">dorefa_quantize_param</code><span class="sig-paren">(</span><em>param_fp</em>, <em>num_bits</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/clipped_linear.html#dorefa_quantize_param"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.clipped_linear.dorefa_quantize_param" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.quantization.q_utils">
+<span id="dl-imagegen-bench-distiller-quantization-q-utils-module"></span><h2>DL_ImageGen_bench.distiller.quantization.q_utils module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.quantization.q_utils" title="永久链接至标题">¶</a></h2>
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.asymmetric_linear_quantization_scale_factor">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">asymmetric_linear_quantization_scale_factor</code><span class="sig-paren">(</span><em>num_bits</em>, <em>saturation_min</em>, <em>saturation_max</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#asymmetric_linear_quantization_scale_factor"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.asymmetric_linear_quantization_scale_factor" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.clamp">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">clamp</code><span class="sig-paren">(</span><em>input</em>, <em>min</em>, <em>max</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#clamp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.clamp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.get_quantized_range">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">get_quantized_range</code><span class="sig-paren">(</span><em>num_bits</em>, <em>signed=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#get_quantized_range"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.get_quantized_range" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.get_tensor_max_abs">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">get_tensor_max_abs</code><span class="sig-paren">(</span><em>tensor</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#get_tensor_max_abs"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.get_tensor_max_abs" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.linear_dequantize">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">linear_dequantize</code><span class="sig-paren">(</span><em>input</em>, <em>scale_factor</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#linear_dequantize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.linear_dequantize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.linear_quantize">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">linear_quantize</code><span class="sig-paren">(</span><em>input</em>, <em>scale_factor</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#linear_quantize"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.linear_quantize" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.linear_quantize_clamp">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">linear_quantize_clamp</code><span class="sig-paren">(</span><em>input</em>, <em>scale_factor</em>, <em>clamp_min</em>, <em>clamp_max</em>, <em>inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#linear_quantize_clamp"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.linear_quantize_clamp" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.q_utils.symmetric_linear_quantization_scale_factor">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.q_utils.</code><code class="descname">symmetric_linear_quantization_scale_factor</code><span class="sig-paren">(</span><em>num_bits</em>, <em>saturation_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/q_utils.html#symmetric_linear_quantization_scale_factor"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.q_utils.symmetric_linear_quantization_scale_factor" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.quantization.quantizer">
+<span id="dl-imagegen-bench-distiller-quantization-quantizer-module"></span><h2>DL_ImageGen_bench.distiller.quantization.quantizer module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.quantization.quantizer" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.QBits">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.quantizer.</code><code class="descname">QBits</code><span class="sig-paren">(</span><em>acts</em>, <em>wts</em><span class="sig-paren">)</span><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.QBits" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></p>
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.QBits.acts">
+<code class="descname">acts</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.QBits.acts" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.QBits.wts">
+<code class="descname">wts</code><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.QBits.wts" title="永久链接至目标">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.quantizer.</code><code class="descname">Quantizer</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer=None</em>, <em>bits_activations=None</em>, <em>bits_weights=None</em>, <em>bits_overrides={}</em>, <em>quantize_bias=False</em>, <em>train_with_fp_copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/quantizer.html#Quantizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for quantizers.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">model (torch.nn.Module): The model to be quantized
+optimizer (torch.optim.Optimizer): An optimizer instance, required in cases where the quantizer is going</p>
+<blockquote>
+<div>to perform changes to existing model parameters and/or add new ones.
+Specifically, when train_with_fp_copy is True, this cannot be None.</div></blockquote>
+<dl class="docutils">
+<dt>bits_activations/weights (int): Default number of bits to use when quantizing each tensor type.</dt>
+<dd>Value of None means do not quantize.</dd>
+<dt>bits_overrides (OrderedDict): Dictionary mapping regular expressions of layer name patterns to dictionary with</dt>
+<dd>values for ‘acts’ and/or ‘wts’ to override the default values.
+OrderedDict is used to enable handling of overlapping name patterns. So, for example, one could define
+certain override parameters for a group of layers, e.g. ‘conv*’, but also define different parameters for
+specific layers in that group, e.g. ‘conv1’.
+The patterns are evaluated eagerly - the first match wins. Therefore, the more specific patterns must
+come before the broad patterns.</dd>
+</dl>
+<p>quantize_bias (bool): Flag indicating whether to quantize bias (w. same number of bits as weights) or not.
+train_with_fp_copy (bool): If true, will modify layers with weights to keep both a quantized and</p>
+<blockquote class="last">
+<div><p>floating-point copy, such that the following flow occurs in each training iteration:
+1. q_weights = quantize(fp_weights)
+2. Forward through network using q_weights
+3. In back-prop:</p>
+<blockquote>
+<div>3.1 Gradients calculated with respect to q_weights
+3.2 We also back-prop through the ‘quantize’ operation from step 1</div></blockquote>
+<ol class="arabic simple" start="4">
+<li>Update fp_weights with gradients calculated in step 3.2</li>
+</ol>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.prepare_model">
+<code class="descname">prepare_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/quantizer.html#Quantizer.prepare_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.prepare_model" title="永久链接至目标">¶</a></dt>
+<dd><p>Iterates over the model and replaces modules with their quantized counterparts as defined by
+self.replacement_factory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.quantize_params">
+<code class="descname">quantize_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/quantizer.html#Quantizer.quantize_params"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.quantize_params" title="永久链接至目标">¶</a></dt>
+<dd><p>Quantize all parameters using the parameters using self.param_quantization_fn (using the defined number
+of bits for each parameter)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.hack_float_backup_parameter">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.quantizer.</code><code class="descname">hack_float_backup_parameter</code><span class="sig-paren">(</span><em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/quantizer.html#hack_float_backup_parameter"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.hack_float_backup_parameter" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.distiller.quantization.quantizer.has_bias">
+<code class="descclassname">DL_ImageGen_bench.distiller.quantization.quantizer.</code><code class="descname">has_bias</code><span class="sig-paren">(</span><em>module</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/quantizer.html#has_bias"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.quantizer.has_bias" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.quantization.range_linear">
+<span id="dl-imagegen-bench-distiller-quantization-range-linear-module"></span><h2>DL_ImageGen_bench.distiller.quantization.range_linear module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.quantization.range_linear" title="永久链接至标题">¶</a></h2>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.range_linear.</code><code class="descname">RangeLinearQuantParamLayerWrapper</code><span class="sig-paren">(</span><em>wrapped_module</em>, <em>num_bits_acts</em>, <em>num_bits_params</em>, <em>num_bits_accum=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantParamLayerWrapper"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper" title="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper</span></code></a></p>
+<p>Linear range-based quantization wrappers for layers with weights and bias (namely torch.nn.ConvNd and
+torch.nn.Linear)</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>wrapped_module (torch.nn.Module): Module to be wrapped
+num_bits_acts (int): Number of bits used for inputs and output quantization
+num_bits_acts (int): Number of bits used for parameters (weights and bias) quantization
+num_bits_accum (int): Number of bits allocated for the accumulator of intermediate integer results</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper.post_quantized_forward">
+<code class="descname">post_quantized_forward</code><span class="sig-paren">(</span><em>accumulator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantParamLayerWrapper.post_quantized_forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper.post_quantized_forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Calculate re-quantization scale factor (for converting the intermediate integer accumulator to output range),
+and output scale factor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>accumulator</strong> – Tensor with accumulator values</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">Tuple of (re-quantization scale factor, output scale factor)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper.pre_quantized_forward">
+<code class="descname">pre_quantized_forward</code><span class="sig-paren">(</span><em>input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantParamLayerWrapper.pre_quantized_forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantParamLayerWrapper.pre_quantized_forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Calculate input scale factors and perform any action required before quantization of inputs.</p>
+<p>Should be overridden by all subclasses</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>inputs</strong> – Current input tensors passed to forward method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">List of scale factors per input</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.range_linear.</code><code class="descname">RangeLinearQuantWrapper</code><span class="sig-paren">(</span><em>wrapped_module</em>, <em>num_bits_acts</em>, <em>num_bits_accum=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantWrapper"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Base class for module which wraps an existing module with linear range-base quantization functionality</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>wrapped_module (torch.nn.Module): Module to be wrapped
+num_bits_acts (int): Number of bits used for inputs and output quantization
+num_bits_accum (int): Number of bits allocated for the accumulator of intermediate integer results</dd>
+</dl>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><em>*inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantWrapper.forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.post_quantized_forward">
+<code class="descname">post_quantized_forward</code><span class="sig-paren">(</span><em>accumulator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantWrapper.post_quantized_forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.post_quantized_forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Calculate re-quantization scale factor (for converting the intermediate integer accumulator to output range),
+and output scale factor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>accumulator</strong> – Tensor with accumulator values</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">Tuple of (re-quantization scale factor, output scale factor)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.pre_quantized_forward">
+<code class="descname">pre_quantized_forward</code><span class="sig-paren">(</span><em>*inputs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#RangeLinearQuantWrapper.pre_quantized_forward"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.RangeLinearQuantWrapper.pre_quantized_forward" title="永久链接至目标">¶</a></dt>
+<dd><p>Calculate input scale factors and perform any action required before quantization of inputs.</p>
+<p>Should be overridden by all subclasses</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>inputs</strong> – Current input tensors passed to forward method</td>
+</tr>
+<tr class="field-even field"><th class="field-name">返回:</th><td class="field-body">List of scale factors per input</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.quantization.range_linear.SymmetricLinearQuantizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.quantization.range_linear.</code><code class="descname">SymmetricLinearQuantizer</code><span class="sig-paren">(</span><em>model</em>, <em>bits_activations=8</em>, <em>bits_parameters=8</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/quantization/range_linear.html#SymmetricLinearQuantizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.quantization.range_linear.SymmetricLinearQuantizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<a class="reference internal" href="#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer" title="DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer</span></code></a></p>
+<p>Applies symmetric, range-based linear quantization to a model.
+Currently, the following Modules are supported: torch.nn.Conv2d, torch.nn.Linear</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>model (torch.nn.Module): Model to be quantized
+bits_activations/parameters: Number of bits to be used when quantizing each tensor type</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.quantization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.quantization" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.distiller.regularization.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.distiller.regularization package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.distiller.pruning.html" class="btn btn-neutral" title="DL_ImageGen_bench.distiller.pruning package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

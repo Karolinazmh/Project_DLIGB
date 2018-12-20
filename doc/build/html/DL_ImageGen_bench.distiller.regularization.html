@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.regularization package &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="DL_ImageGen_bench.models package" href="DL_ImageGen_bench.models.html" />
+    <link rel="prev" title="DL_ImageGen_bench.distiller.quantization package" href="DL_ImageGen_bench.distiller.quantization.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="DL_ImageGen_bench.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.apputils.html">DL_ImageGen_bench.apputils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.data.html">DL_ImageGen_bench.data package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.config">DL_ImageGen_bench.distiller.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.directives">DL_ImageGen_bench.distiller.directives module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.knowledge_distillation">DL_ImageGen_bench.distiller.knowledge_distillation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.learning_rate">DL_ImageGen_bench.distiller.learning_rate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.model_summaries">DL_ImageGen_bench.distiller.model_summaries module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.policy">DL_ImageGen_bench.distiller.policy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.scheduler">DL_ImageGen_bench.distiller.scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.sensitivity">DL_ImageGen_bench.distiller.sensitivity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thinning">DL_ImageGen_bench.distiller.thinning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.thresholding">DL_ImageGen_bench.distiller.thresholding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.models.html">DL_ImageGen_bench.models package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DL_ImageGen_bench.options.html">DL_ImageGen_bench.options package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.html">DL_ImageGen_bench package</a> &raquo;</li>
+        
+          <li><a href="DL_ImageGen_bench.distiller.html">DL_ImageGen_bench.distiller package</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.regularization package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/DL_ImageGen_bench.distiller.regularization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dl-imagegen-bench-distiller-regularization-package">
+<h1>DL_ImageGen_bench.distiller.regularization package<a class="headerlink" href="#dl-imagegen-bench-distiller-regularization-package" title="永久链接至标题">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.regularization.group_regularizer">
+<span id="dl-imagegen-bench-distiller-regularization-group-regularizer-module"></span><h2>DL_ImageGen_bench.distiller.regularization.group_regularizer module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.regularization.group_regularizer" title="永久链接至标题">¶</a></h2>
+<p>Group Lasso regularization.</p>
+<p>Group sparsity regularization (also referred to as structured sparsity regularization) penalizes
+entire element groups (structures) in order to create blocks of zero elements, so that CPUs
+and other inference acceleration hardware can perform computations more efficiently.
+This is in contrast to element-wise regularization which “pushes” individual elements towards zero.</p>
+<p>Group norms are calculated as Group Lasso terms (see [1]]).  This is fine for non-overlapping
+groups (e.g. ‘Channels’), but not so good for overlapping groups (e.g. ‘Rows+Cols’).</p>
+<p>You can set the weight-decay of your Pytorch optimizer to a non-zero value to achieve Sparse
+Group Lasso.  As discussed in [3], “this penalty yields solutions that are sparse at both the
+group and individual feature levels”</p>
+<dl class="docutils">
+<dt>[1] Yuan, M.; Lin, Y. (2006). “Model selection and estimation in regression with grouped variables”.</dt>
+<dd><ol class="first last upperalpha simple" start="10">
+<li><ol class="first upperalpha" start="18">
+<li>Stat. Soc. B. 68 (1): 49–67. doi:10.1111/j.1467-9868.2005.00532.x</li>
+</ol>
+</li>
+</ol>
+</dd>
+<dt>[2] Jenatton, Rodolphe; Audibert, Jean-Yves; Bach, Francis (2009). “Structured Variable Selection with</dt>
+<dd>Sparsity-Inducing Norms”. Journal of Machine Learning Research. 12 (2011): 2777–2824. arXiv:0904.3523</dd>
+<dt>[3] J. Friedman, T. Hastie, and R. Tibshirani, “A note on the group lassoand a sparse group lasso,”</dt>
+<dd>arXiv preprint arXiv:1001.0736, 2010</dd>
+</dl>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.regularization.group_regularizer.</code><code class="descname">GroupLassoRegularizer</code><span class="sig-paren">(</span><em>name</em>, <em>model</em>, <em>reg_regims</em>, <em>threshold_criteria=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/group_regularizer.html#GroupLassoRegularizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">distiller.thresholding.GroupThresholdMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.regularization.regularizer._Regularizer</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.loss">
+<code class="descname">loss</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>regularizer_loss</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/group_regularizer.html#GroupLassoRegularizer.loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.threshold">
+<code class="descname">threshold</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/group_regularizer.html#GroupLassoRegularizer.threshold"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.threshold" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.regularization.l1_regularizer">
+<span id="dl-imagegen-bench-distiller-regularization-l1-regularizer-module"></span><h2>DL_ImageGen_bench.distiller.regularization.l1_regularizer module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.regularization.l1_regularizer" title="永久链接至标题">¶</a></h2>
+<p>L1-norm regularization</p>
+<dl class="class">
+<dt id="DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer">
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.regularization.l1_regularizer.</code><code class="descname">L1Regularizer</code><span class="sig-paren">(</span><em>name</em>, <em>model</em>, <em>reg_regims</em>, <em>threshold_criteria=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/l1_regularizer.html#L1Regularizer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer" title="永久链接至目标">¶</a></dt>
+<dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">DL_ImageGen_bench.distiller.regularization.regularizer._Regularizer</span></code></p>
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer.loss">
+<code class="descname">loss</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>regularizer_loss</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/l1_regularizer.html#L1Regularizer.loss"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer.loss" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer.threshold">
+<code class="descname">threshold</code><span class="sig-paren">(</span><em>param</em>, <em>param_name</em>, <em>zeros_mask_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/regularization/l1_regularizer.html#L1Regularizer.threshold"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.regularization.l1_regularizer.L1Regularizer.threshold" title="永久链接至目标">¶</a></dt>
+<dd><p>Soft threshold for L1-norm regularizer</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.regularization.regularizer">
+<span id="dl-imagegen-bench-distiller-regularization-regularizer-module"></span><h2>DL_ImageGen_bench.distiller.regularization.regularizer module<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.regularization.regularizer" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="module-DL_ImageGen_bench.distiller.regularization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DL_ImageGen_bench.distiller.regularization" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="DL_ImageGen_bench.models.html" class="btn btn-neutral float-right" title="DL_ImageGen_bench.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="DL_ImageGen_bench.distiller.quantization.html" class="btn btn-neutral" title="DL_ImageGen_bench.distiller.quantization package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

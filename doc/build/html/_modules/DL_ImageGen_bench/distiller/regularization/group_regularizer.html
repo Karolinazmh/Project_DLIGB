@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.regularization.group_regularizer &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.regularization.group_regularizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.regularization.group_regularizer 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;Group Lasso regularization.</span>
+
+<span class="sd">Group sparsity regularization (also referred to as structured sparsity regularization) penalizes</span>
+<span class="sd">entire element groups (structures) in order to create blocks of zero elements, so that CPUs</span>
+<span class="sd">and other inference acceleration hardware can perform computations more efficiently.</span>
+<span class="sd">This is in contrast to element-wise regularization which &quot;pushes&quot; individual elements towards zero.</span>
+
+<span class="sd">Group norms are calculated as Group Lasso terms (see [1]]).  This is fine for non-overlapping</span>
+<span class="sd">groups (e.g. &#39;Channels&#39;), but not so good for overlapping groups (e.g. &#39;Rows+Cols&#39;).</span>
+
+<span class="sd">You can set the weight-decay of your Pytorch optimizer to a non-zero value to achieve Sparse</span>
+<span class="sd">Group Lasso.  As discussed in [3], &quot;this penalty yields solutions that are sparse at both the</span>
+<span class="sd">group and individual feature levels&quot;</span>
+
+
+<span class="sd">[1] Yuan, M.; Lin, Y. (2006). &quot;Model selection and estimation in regression with grouped variables&quot;.</span>
+<span class="sd">    J. R. Stat. Soc. B. 68 (1): 49–67. doi:10.1111/j.1467-9868.2005.00532.x</span>
+
+<span class="sd">[2] Jenatton, Rodolphe; Audibert, Jean-Yves; Bach, Francis (2009). &quot;Structured Variable Selection with</span>
+<span class="sd">    Sparsity-Inducing Norms&quot;. Journal of Machine Learning Research. 12 (2011): 2777–2824. arXiv:0904.3523</span>
+
+<span class="sd">[3] J. Friedman, T. Hastie, and R. Tibshirani, “A note on the group lassoand a sparse group lasso,”</span>
+<span class="sd">    arXiv preprint arXiv:1001.0736, 2010</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.regularizer</span> <span class="k">import</span> <span class="n">_Regularizer</span><span class="p">,</span> <span class="n">EPSILON</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+
+<div class="viewcode-block" id="GroupLassoRegularizer"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.regularization.html#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer">[文档]</a><span class="k">class</span> <span class="nc">GroupLassoRegularizer</span><span class="p">(</span><span class="n">distiller</span><span class="o">.</span><span class="n">GroupThresholdMixin</span><span class="p">,</span> <span class="n">_Regularizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">reg_regims</span><span class="p">,</span> <span class="n">threshold_criteria</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            reg_regims: regularization regiment.  A dictionary of</span>
+<span class="sd">                        reg_regims[&lt;param-name&gt;] = [ lambda, structure-type]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GroupLassoRegularizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">reg_regims</span><span class="p">,</span> <span class="n">threshold_criteria</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">threshold_criteria</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="s2">&quot;Mean_Abs&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="GroupLassoRegularizer.loss"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.regularization.html#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.loss">[文档]</a>    <span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">regularizer_loss</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">param_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">group_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="p">[</span><span class="n">param_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="p">[</span><span class="n">param_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;2D&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__2d_kernelwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;Rows&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__2d_rowwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;Cols&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__2d_colwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Rows+Cols&#39;</span><span class="p">,</span> <span class="s1">&#39;Cols+Rows&#39;</span><span class="p">]:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__2d_rowwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__2d_colwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;Channels&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__3d_channelwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;3D&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__3d_filterwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="o">==</span> <span class="s1">&#39;4D&#39;</span><span class="p">:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__4d_layerwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">group_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Channels+4D&#39;</span><span class="p">,</span> <span class="s1">&#39;4D+Channels&#39;</span><span class="p">]:</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__3d_channelwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+                <span class="n">regularizer_loss</span> <span class="o">+=</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__4d_layerwise_reg</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">strength</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FATAL ERROR: Unknown parameter grouping: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">group_type</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">regularizer_loss</span></div>
+
+<div class="viewcode-block" id="GroupLassoRegularizer.threshold"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.regularization.html#DL_ImageGen_bench.distiller.regularization.group_regularizer.GroupLassoRegularizer.threshold">[文档]</a>    <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold_criteria</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">param_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">group_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="p">[</span><span class="n">param_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_regims</span><span class="p">[</span><span class="n">param_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">zeros_mask_dict</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_threshold_mask</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">group_type</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold_criteria</span><span class="p">)</span>
+        <span class="n">zeros_mask_dict</span><span class="p">[</span><span class="n">param_name</span><span class="p">]</span><span class="o">.</span><span class="n">is_regularization_mask</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__grouplasso_reg</span><span class="p">(</span><span class="n">groups</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># We only have single group</span>
+            <span class="k">return</span> <span class="n">groups</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">strength</span>
+        <span class="k">return</span> <span class="n">groups</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">EPSILON</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">strength</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__4d_layerwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Group Lasso with group = 4D weights layer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 4D weights&quot;</span>
+        <span class="k">return</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__grouplasso_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__3d_filterwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Group Lasso with group = 3D weights filter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 4D weights&quot;</span>
+
+        <span class="c1"># create a filter structure</span>
+        <span class="n">filters_view</span> <span class="o">=</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__grouplasso_reg</span><span class="p">(</span><span class="n">filters_view</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__2d_rowwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 2D weights&quot;</span>
+        <span class="k">return</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__grouplasso_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__2d_colwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 2D weights&quot;</span>
+        <span class="k">return</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__grouplasso_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__2d_kernelwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Group Lasso with one of:</span>
+<span class="sd">            - group = 2D weights kernel (convolution)</span>
+<span class="sd">            - group = 2D columns (fully connected)</span>
+<span class="sd">            - group = 2D rows (fully connected)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 4D weights&quot;</span>
+        <span class="n">view_2d</span> <span class="o">=</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">GroupLassoRegularizer</span><span class="o">.</span><span class="n">__grouplasso_reg</span><span class="p">(</span><span class="n">view_2d</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__3d_channelwise_reg</span><span class="p">(</span><span class="n">layer_weights</span><span class="p">,</span> <span class="n">strength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Group Lasso with one of:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;This regularization is only supported for 4D weights&quot;</span>
+
+        <span class="c1"># Now, for each group, we want to select a specific channel from all of the filters</span>
+        <span class="n">num_filters</span> <span class="o">=</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">num_kernels_per_filter</span> <span class="o">=</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># First, reshape the weights tensor such that each channel (kernel) in the original</span>
+        <span class="c1"># tensor, is now a row in the 2D tensor.</span>
+        <span class="n">view_2d</span> <span class="o">=</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">layer_weights</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="c1"># Next, compute the sum of the squares (of the elements in each row/kernel)</span>
+        <span class="n">k_sq_sums</span> <span class="o">=</span> <span class="n">view_2d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Now we have a long vector in which the first num_kernels_per_filter elements</span>
+        <span class="c1"># hold the sum-of-squares of channels 1..num_kernels_per_filter of the 1st filter,</span>
+        <span class="c1"># the second num_kernels_per_filter hold the sum-of-squares of channels</span>
+        <span class="c1"># 1..num_kernels_per_filter of the 2nd filter, and so on.</span>
+        <span class="c1"># Let&#39;s reshape this vector into a matrix, in which each row holds</span>
+        <span class="c1"># the sum-of-squares of the channels of some filter</span>
+        <span class="n">k_sq_sums_mat</span> <span class="o">=</span> <span class="n">k_sq_sums</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">num_filters</span><span class="p">,</span> <span class="n">num_kernels_per_filter</span><span class="p">)</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+
+        <span class="c1"># Now it&#39;s easy, just do Group Lasso on groups=rows</span>
+        <span class="c1">#groups_loss = k_sq_sums_mat.sum(dim=0).add(EPSILON).pow(1/2.).sum().mul_(strength)</span>
+        <span class="n">groups_loss</span> <span class="o">=</span> <span class="n">k_sq_sums_mat</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">EPSILON</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">mul_</span><span class="p">(</span><span class="n">strength</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">groups_loss</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

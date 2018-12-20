@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.knowledge_distillation &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.knowledge_distillation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.knowledge_distillation 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">from</span> <span class="nn">.policy</span> <span class="k">import</span> <span class="n">ScheduledTrainingPolicy</span><span class="p">,</span> <span class="n">PolicyLoss</span><span class="p">,</span> <span class="n">LossComponent</span>
+
+<span class="n">DistillationLossWeights</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DistillationLossWeights&#39;</span><span class="p">,</span>
+                                     <span class="p">[</span><span class="s1">&#39;distill&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">,</span> <span class="s1">&#39;teacher&#39;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="add_distillation_args"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.add_distillation_args">[文档]</a><span class="k">def</span> <span class="nf">add_distillation_args</span><span class="p">(</span><span class="n">argparser</span><span class="p">,</span> <span class="n">arch_choices</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">enable_pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to make it easier to add command line arguments for knowledge distillation to any script</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        argparser (argparse.ArgumentParser): Existing parser to which to add the arguments</span>
+<span class="sd">        arch_choices: Optional list of choices to be enforced by the parser for model selection</span>
+<span class="sd">        enable_pretrained (bool): Flag to enable/disable argument for &quot;pre-trained&quot; models.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">argparser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Knowledge Distillation Training Arguments&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-teacher&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">arch_choices</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;ARCH&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model architecture for teacher model&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_pretrained</span><span class="p">:</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-pretrained&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Use pre-trained model for teacher&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-resume&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to checkpoint from which to load teacher weights&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;--kd-temp&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;kd_temp&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;TEMP&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Knowledge distillation softmax temperature&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-distill-wt&#39;</span><span class="p">,</span> <span class="s1">&#39;--kd-dw&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;WEIGHT&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Weight for distillation loss (student vs. teacher soft targets)&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-student-wt&#39;</span><span class="p">,</span> <span class="s1">&#39;--kd-sw&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;WEIGHT&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Weight for student vs. labels loss&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-teacher-wt&#39;</span><span class="p">,</span> <span class="s1">&#39;--kd-tw&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;WEIGHT&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Weight for teacher vs. labels loss&#39;</span><span class="p">)</span>
+    <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--kd-start-epoch&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;EPOCH_NUM&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Epoch from which to enable distillation&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KnowledgeDistillationPolicy"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy">[文档]</a><span class="k">class</span> <span class="nc">KnowledgeDistillationPolicy</span><span class="p">(</span><span class="n">ScheduledTrainingPolicy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Policy which enables knowledge distillation from a teacher model to a student model, as presented in [1].</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        1. In addition to the standard policy callbacks, this class also provides a &#39;forward&#39; function that must</span>
+<span class="sd">           be called instead of calling the student model directly as is usually done. This is needed to facilitate</span>
+<span class="sd">           running the teacher model in addition to the student, and for caching the logits for loss calculation.</span>
+<span class="sd">        2. [TO BE ENABLED IN THE NEAR FUTURE] Option to train the teacher model in parallel with the student model,</span>
+<span class="sd">           described as &quot;scheme A&quot; in [2]. This can be achieved by passing teacher loss weight &gt; 0.</span>
+<span class="sd">        3. [1] proposes a weighted average between the different losses. We allow arbitrary weights to be assigned</span>
+<span class="sd">           to each loss.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        student_model (nn.Module): The student model, that is - the main model being trained. If only initialized with</span>
+<span class="sd">            random weights, this matches &quot;scheme B&quot; in [2]. If it has been bootstrapped with trained FP32 weights,</span>
+<span class="sd">            this matches &quot;scheme C&quot;.</span>
+<span class="sd">        teacher_model (nn.Module): The teacher model from which soft targets are generated for knowledge distillation.</span>
+<span class="sd">            Usually this is a pre-trained model, however in the future it will be possible to train this model as well</span>
+<span class="sd">            (see Note 1 above)</span>
+<span class="sd">        temperature (float): Temperature value used when calculating soft targets and logits (see [1]).</span>
+<span class="sd">        loss_weights (DistillationLossWeights): Named tuple with 3 loss weights</span>
+<span class="sd">            (a) &#39;distill&#39; for student predictions (default: 0.5) vs. teacher soft-targets</span>
+<span class="sd">            (b) &#39;student&#39; for student predictions vs. true labels (default: 0.5)</span>
+<span class="sd">            (c) &#39;teacher&#39; for teacher predictions vs. true labels (default: 0). Currently this is just a placeholder,</span>
+<span class="sd">                and cannot be set to a non-zero value.</span>
+
+<span class="sd">    [1] Hinton et al., Distilling the Knowledge in a Neural Network (https://arxiv.org/abs/1503.02531)</span>
+<span class="sd">    [2] Mishra and Marr, Apprentice: Using Knowledge Distillation Techniques To Improve Low-Precision Network Accuracy</span>
+<span class="sd">        (https://arxiv.org/abs/1711.05852)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_model</span><span class="p">,</span> <span class="n">teacher_model</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">loss_weights</span><span class="o">=</span><span class="n">DistillationLossWeights</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">KnowledgeDistillationPolicy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">loss_weights</span><span class="o">.</span><span class="n">teacher</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Using teacher vs. labels loss is not supported yet, &#39;</span>
+                                      <span class="s1">&#39;for now teacher loss weight must be set to 0&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">student</span> <span class="o">=</span> <span class="n">student_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span> <span class="o">=</span> <span class="n">teacher_model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_wts</span> <span class="o">=</span> <span class="n">loss_weights</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_students_logits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_teacher_logits</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="KnowledgeDistillationPolicy.forward"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.forward">[文档]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs forward propagation through both student and teached models and caches the logits.</span>
+<span class="sd">        This function MUST be used instead of calling the student model directly.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The student model&#39;s returned output, to be consistent with what a script using this would expect</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_wts</span><span class="o">.</span><span class="n">teacher</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_teacher_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_teacher_logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">teacher</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">student</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_students_logits</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">new_tensor</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+    <span class="c1"># Since the &quot;forward&quot; function isn&#39;t a policy callback, we use the epoch callbacks to toggle the</span>
+    <span class="c1"># activation of distillation according the schedule defined by the user</span>
+<div class="viewcode-block" id="KnowledgeDistillationPolicy.on_epoch_begin"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_begin">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="KnowledgeDistillationPolicy.on_epoch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.on_epoch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">meta</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="KnowledgeDistillationPolicy.before_backward_pass"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.knowledge_distillation.KnowledgeDistillationPolicy.before_backward_pass">[文档]</a>    <span class="k">def</span> <span class="nf">before_backward_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">zeros_mask_dict</span><span class="p">,</span>
+                             <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># TODO: Consider adding &#39;labels&#39; as an argument to this callback, so we can support teacher vs. labels loss</span>
+        <span class="c1"># (Otherwise we can&#39;t do it with a sub-class of ScheduledTrainingPolicy)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_teacher_logits</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_students_logits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;KnowledgeDistillationPolicy: Student and or teacher logits were not cached. &quot;</span>
+                               <span class="s2">&quot;Make sure to call KnowledgeDistillationPolicy.forward() in your script instead of &quot;</span>
+                               <span class="s2">&quot;calling the model directly.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Calculate distillation loss</span>
+        <span class="n">soft_log_probs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_students_logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># soft_targets = F.softmax(self.cached_teacher_logits[minibatch_id] / self.temperature)</span>
+        <span class="n">soft_targets</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_teacher_logits</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># The averaging used in PyTorch KL Div implementation is wrong, so we work around as suggested in</span>
+        <span class="c1"># https://pytorch.org/docs/stable/nn.html#kldivloss</span>
+        <span class="c1"># (Also see https://github.com/pytorch/pytorch/issues/6622, https://github.com/pytorch/pytorch/issues/2259)</span>
+        <span class="n">distillation_loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">kl_div</span><span class="p">(</span><span class="n">soft_log_probs</span><span class="p">,</span> <span class="n">soft_targets</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">size_average</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">/</span> <span class="n">soft_targets</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># The loss passed to the callback is the student&#39;s loss vs. the true labels, so we can use it directly, no</span>
+        <span class="c1"># need to calculate again</span>
+
+        <span class="n">overall_loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_wts</span><span class="o">.</span><span class="n">student</span> <span class="o">*</span> <span class="n">loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_wts</span><span class="o">.</span><span class="n">distill</span> <span class="o">*</span> <span class="n">distillation_loss</span>
+        <span class="k">return</span> <span class="n">PolicyLoss</span><span class="p">(</span><span class="n">overall_loss</span><span class="p">,</span>
+                          <span class="p">[</span><span class="n">LossComponent</span><span class="p">(</span><span class="s1">&#39;Distill Loss&#39;</span><span class="p">,</span> <span class="n">distillation_loss</span><span class="p">)])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

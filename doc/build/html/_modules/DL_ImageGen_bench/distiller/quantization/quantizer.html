@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.quantization.quantizer &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.quantization.quantizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.quantization.quantizer 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span><span class="p">,</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+<span class="n">QBits</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;QBits&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;acts&#39;</span><span class="p">,</span> <span class="s1">&#39;wts&#39;</span><span class="p">])</span>
+
+<span class="n">FP_BKP_PREFIX</span> <span class="o">=</span> <span class="s1">&#39;float_&#39;</span>
+
+
+<div class="viewcode-block" id="has_bias"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.quantizer.has_bias">[文档]</a><span class="k">def</span> <span class="nf">has_bias</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;bias&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">module</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="hack_float_backup_parameter"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.quantizer.hack_float_backup_parameter">[文档]</a><span class="k">def</span> <span class="nf">hack_float_backup_parameter</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">())[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Module has no Parameter named &#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="n">FP_BKP_PREFIX</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="nb">delattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">module</span><span class="o">.</span><span class="n">register_buffer</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
+
+
+<span class="k">class</span> <span class="nc">_ParamToQuant</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">fp_attr_name</span><span class="p">,</span> <span class="n">q_attr_name</span><span class="p">,</span> <span class="n">num_bits</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_name</span> <span class="o">=</span> <span class="n">module_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fp_attr_name</span> <span class="o">=</span> <span class="n">fp_attr_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_attr_name</span> <span class="o">=</span> <span class="n">q_attr_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_bits</span> <span class="o">=</span> <span class="n">num_bits</span>
+
+
+<div class="viewcode-block" id="Quantizer"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer">[文档]</a><span class="k">class</span> <span class="nc">Quantizer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for quantizers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (torch.nn.Module): The model to be quantized</span>
+<span class="sd">        optimizer (torch.optim.Optimizer): An optimizer instance, required in cases where the quantizer is going</span>
+<span class="sd">            to perform changes to existing model parameters and/or add new ones.</span>
+<span class="sd">            Specifically, when train_with_fp_copy is True, this cannot be None.</span>
+<span class="sd">        bits_activations/weights (int): Default number of bits to use when quantizing each tensor type.</span>
+<span class="sd">            Value of None means do not quantize.</span>
+<span class="sd">        bits_overrides (OrderedDict): Dictionary mapping regular expressions of layer name patterns to dictionary with</span>
+<span class="sd">            values for &#39;acts&#39; and/or &#39;wts&#39; to override the default values.</span>
+<span class="sd">            OrderedDict is used to enable handling of overlapping name patterns. So, for example, one could define</span>
+<span class="sd">            certain override parameters for a group of layers, e.g. &#39;conv*&#39;, but also define different parameters for</span>
+<span class="sd">            specific layers in that group, e.g. &#39;conv1&#39;.</span>
+<span class="sd">            The patterns are evaluated eagerly - the first match wins. Therefore, the more specific patterns must</span>
+<span class="sd">            come before the broad patterns.</span>
+<span class="sd">        quantize_bias (bool): Flag indicating whether to quantize bias (w. same number of bits as weights) or not.</span>
+<span class="sd">        train_with_fp_copy (bool): If true, will modify layers with weights to keep both a quantized and</span>
+<span class="sd">            floating-point copy, such that the following flow occurs in each training iteration:</span>
+<span class="sd">            1. q_weights = quantize(fp_weights)</span>
+<span class="sd">            2. Forward through network using q_weights</span>
+<span class="sd">            3. In back-prop:</span>
+<span class="sd">                3.1 Gradients calculated with respect to q_weights</span>
+<span class="sd">                3.2 We also back-prop through the &#39;quantize&#39; operation from step 1</span>
+<span class="sd">            4. Update fp_weights with gradients calculated in step 3.2</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bits_activations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bits_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bits_overrides</span><span class="o">=</span><span class="n">OrderedDict</span><span class="p">(),</span>
+                 <span class="n">quantize_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">train_with_fp_copy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bits_overrides</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;bits_overrides must be an instance of collections.OrderedDict&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">train_with_fp_copy</span> <span class="ow">and</span> <span class="n">optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;optimizer cannot be None when train_with_fp_copy is True&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_qbits</span> <span class="o">=</span> <span class="n">QBits</span><span class="p">(</span><span class="n">acts</span><span class="o">=</span><span class="n">bits_activations</span><span class="p">,</span> <span class="n">wts</span><span class="o">=</span><span class="n">bits_weights</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantize_bias</span> <span class="o">=</span> <span class="n">quantize_bias</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+
+        <span class="c1"># Stash some quantizer data in the model so we can re-apply the quantizer on a resuming model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">quantizer_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                                         <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;bits_activations&#39;</span><span class="p">:</span> <span class="n">bits_activations</span><span class="p">,</span>
+                                                    <span class="s1">&#39;bits_weights&#39;</span><span class="p">:</span> <span class="n">bits_weights</span><span class="p">,</span>
+                                                    <span class="s1">&#39;bits_overrides&#39;</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bits_overrides</span><span class="p">),</span>
+                                                    <span class="s1">&#39;quantize_bias&#39;</span><span class="p">:</span> <span class="n">quantize_bias</span><span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bits_overrides</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">qbits</span> <span class="o">=</span> <span class="n">QBits</span><span class="p">(</span><span class="n">acts</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acts&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_qbits</span><span class="o">.</span><span class="n">acts</span><span class="p">),</span> <span class="n">wts</span><span class="o">=</span><span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wts&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_qbits</span><span class="o">.</span><span class="n">wts</span><span class="p">))</span>
+            <span class="n">bits_overrides</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">qbits</span>
+
+        <span class="c1"># Prepare explicit mapping from each layer to QBits based on default + overrides</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">bits_overrides</span><span class="p">:</span>
+            <span class="n">patterns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bits_overrides</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">regex_str</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;(^</span><span class="si">{0}</span><span class="s1">$)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">])</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">regex_str</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">module_full_name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+            <span class="n">qbits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_qbits</span>
+            <span class="k">if</span> <span class="n">regex</span><span class="p">:</span>
+                <span class="c1"># Need to account for scenario where model is parallelized with DataParallel, which wraps the original</span>
+                <span class="c1"># module with a wrapper module called &#39;module&#39; :)</span>
+                <span class="n">name_to_match</span> <span class="o">=</span> <span class="n">module_full_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;module.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name_to_match</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
+                    <span class="n">group_idx</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">groups</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+                    <span class="k">while</span> <span class="n">groups</span><span class="p">[</span><span class="n">group_idx</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">group_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">qbits</span> <span class="o">=</span> <span class="n">bits_overrides</span><span class="p">[</span><span class="n">patterns</span><span class="p">[</span><span class="n">group_idx</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_qbits_entry</span><span class="p">(</span><span class="n">module_full_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="n">qbits</span><span class="p">)</span>
+
+        <span class="c1"># Mapping from module type to function generating a replacement module suited for quantization</span>
+        <span class="c1"># To be populated by child classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacement_factory</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Pointer to parameters quantization function, triggered during training process</span>
+        <span class="c1"># To be populated by child classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_quantization_fn</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_with_fp_copy</span> <span class="o">=</span> <span class="n">train_with_fp_copy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_to_quantize</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">_add_qbits_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module_type</span><span class="p">,</span> <span class="n">qbits</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">module_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">PReLU</span><span class="p">]:</span>
+            <span class="c1"># For now we support weights quantization only for Conv and FC layers (so, for example, we don&#39;t</span>
+            <span class="c1"># support quantization of batch norm scale parameters)</span>
+            <span class="n">qbits</span> <span class="o">=</span> <span class="n">QBits</span><span class="p">(</span><span class="n">acts</span><span class="o">=</span><span class="n">qbits</span><span class="o">.</span><span class="n">acts</span><span class="p">,</span> <span class="n">wts</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">qbits</span>
+
+<div class="viewcode-block" id="Quantizer.prepare_model"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.prepare_model">[文档]</a>    <span class="k">def</span> <span class="nf">prepare_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iterates over the model and replaces modules with their quantized counterparts as defined by</span>
+<span class="sd">        self.replacement_factory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Preparing model for quantization using </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process_container</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+            <span class="n">qbits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">qbits</span><span class="o">.</span><span class="n">wts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">curr_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">curr_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">param_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;bias&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize_bias</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">fp_attr_name</span> <span class="o">=</span> <span class="n">param_name</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_with_fp_copy</span><span class="p">:</span>
+                    <span class="n">hack_float_backup_parameter</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
+                    <span class="n">fp_attr_name</span> <span class="o">=</span> <span class="n">FP_BKP_PREFIX</span> <span class="o">+</span> <span class="n">param_name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params_to_quantize</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ParamToQuant</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">fp_attr_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">qbits</span><span class="o">.</span><span class="n">wts</span><span class="p">))</span>
+
+                <span class="n">param_full_name</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">module_name</span><span class="p">,</span> <span class="n">param_name</span><span class="p">])</span>
+                <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;Parameter &#39;</span><span class="si">{0}</span><span class="s2">&#39; will be quantized to </span><span class="si">{1}</span><span class="s2"> bits&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">param_full_name</span><span class="p">,</span> <span class="n">qbits</span><span class="o">.</span><span class="n">wts</span><span class="p">))</span>
+
+        <span class="c1"># If an optimizer was passed, assume we need to update it</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">:</span>
+            <span class="n">optimizer_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
+            <span class="n">new_optimizer</span> <span class="o">=</span> <span class="n">optimizer_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_updated_optimizer_params_groups</span><span class="p">(),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">({</span><span class="s1">&#39;param_groups&#39;</span><span class="p">:</span> <span class="n">new_optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">})</span>
+
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Quantized model:</span><span class="se">\n\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_pre_process_container</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="c1"># Iterate through model, insetypert quantization functions as appropriate</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">container</span><span class="o">.</span><span class="n">named_children</span><span class="p">():</span>
+            <span class="n">full_name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">name</span>
+            <span class="n">current_qbits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">current_qbits</span><span class="o">.</span><span class="n">acts</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">current_qbits</span><span class="o">.</span><span class="n">wts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">new_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_factory</span><span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">)](</span><span class="n">module</span><span class="p">,</span> <span class="n">full_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span><span class="p">)</span>
+                <span class="n">msglogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Module </span><span class="si">{0}</span><span class="s1">: Replacing </span><span class="se">\n</span><span class="si">{1}</span><span class="s1"> with </span><span class="se">\n</span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">new_module</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">container</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_module</span><span class="p">)</span>
+
+                <span class="c1"># If a &quot;leaf&quot; module was replaced by a container, add the new layers to the QBits mapping</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">distiller</span><span class="o">.</span><span class="n">has_children</span><span class="p">(</span><span class="n">module</span><span class="p">)</span> <span class="ow">and</span> <span class="n">distiller</span><span class="o">.</span><span class="n">has_children</span><span class="p">(</span><span class="n">new_module</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">sub_module_name</span><span class="p">,</span> <span class="n">sub_module</span> <span class="ow">in</span> <span class="n">new_module</span><span class="o">.</span><span class="n">named_modules</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_qbits_entry</span><span class="p">(</span><span class="n">full_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">sub_module_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub_module</span><span class="p">),</span> <span class="n">current_qbits</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">module_qbits_map</span><span class="p">[</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">QBits</span><span class="p">(</span><span class="n">acts</span><span class="o">=</span><span class="n">current_qbits</span><span class="o">.</span><span class="n">acts</span><span class="p">,</span> <span class="n">wts</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">distiller</span><span class="o">.</span><span class="n">has_children</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+                <span class="c1"># For container we call recursively</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_pre_process_container</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">full_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_updated_optimizer_params_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of model parameter groups and optimizer hyper-parameter overrides,</span>
+<span class="sd">        as expected by the __init__ function of torch.optim.Optimizer.</span>
+<span class="sd">        This is called after all model changes were made in prepare_model, in case an Optimizer instance was</span>
+<span class="sd">        passed to __init__.</span>
+
+<span class="sd">        Subclasses which add parameters to the model should override as needed.</span>
+
+<span class="sd">        :return: List of parameter groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Default implementation - just return all model parameters as one group</span>
+        <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()}]</span>
+
+<div class="viewcode-block" id="Quantizer.quantize_params"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.quantizer.Quantizer.quantize_params">[文档]</a>    <span class="k">def</span> <span class="nf">quantize_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Quantize all parameters using the parameters using self.param_quantization_fn (using the defined number</span>
+<span class="sd">        of bits for each parameter)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ptq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_to_quantize</span><span class="p">:</span>
+            <span class="n">q_param</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_quantization_fn</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ptq</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">ptq</span><span class="o">.</span><span class="n">fp_attr_name</span><span class="p">),</span> <span class="n">ptq</span><span class="o">.</span><span class="n">num_bits</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_with_fp_copy</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">ptq</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">ptq</span><span class="o">.</span><span class="n">q_attr_name</span><span class="p">,</span> <span class="n">q_param</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="n">ptq</span><span class="o">.</span><span class="n">module</span><span class="p">,</span> <span class="n">ptq</span><span class="o">.</span><span class="n">q_attr_name</span><span class="p">)</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">q_param</span><span class="o">.</span><span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

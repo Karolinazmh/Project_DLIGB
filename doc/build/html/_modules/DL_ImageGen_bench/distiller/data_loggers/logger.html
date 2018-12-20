@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.distiller.data_loggers.logger &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+          <li><a href="../../distiller.html">DL_ImageGen_bench.distiller</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.distiller.data_loggers.logger</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.distiller.data_loggers.logger 源代码</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 Intel Corporation</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#      http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;Loggers frontends and backends.</span>
+
+<span class="sd">- DataLogger is the generic logger interface.</span>
+<span class="sd">- PythonLogger logs using the Python logger.</span>
+<span class="sd">- TensorBoardLogger logs to files that can be read by Google&#39;s TensorBoard.</span>
+<span class="sd">- CsvLogger logs to CSV files.</span>
+
+<span class="sd">Note that not all loggers implement all logging methods.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tabulate</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">from</span> <span class="nn">distiller.utils</span> <span class="k">import</span> <span class="n">density</span><span class="p">,</span> <span class="n">sparsity</span><span class="p">,</span> <span class="n">sparsity_2D</span><span class="p">,</span> <span class="n">size_to_str</span><span class="p">,</span> <span class="n">to_np</span>
+<span class="c1"># TensorBoard logger</span>
+<span class="kn">from</span> <span class="nn">.tbbackend</span> <span class="k">import</span> <span class="n">TBBackend</span>
+<span class="c1"># Visdom logger</span>
+<span class="kn">from</span> <span class="nn">torchnet.logger</span> <span class="k">import</span> <span class="n">VisdomPlotLogger</span><span class="p">,</span> <span class="n">VisdomLogger</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">msglogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PythonLogger&#39;</span><span class="p">,</span> <span class="s1">&#39;TensorBoardLogger&#39;</span><span class="p">,</span> <span class="s1">&#39;CsvLogger&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">DataLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is an abstract interface for data loggers</span>
+
+<span class="sd">    Data loggers log the progress of the training process to some backend.</span>
+<span class="sd">    This backend can be a file, a web service, or some other means to collect and/or</span>
+<span class="sd">    display the training</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">log_training_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">set_size</span><span class="p">,</span> <span class="n">batch_time</span><span class="p">,</span> <span class="n">data_time</span><span class="p">,</span> <span class="n">classerr</span><span class="p">,</span> <span class="n">losses</span><span class="p">,</span> <span class="n">print_freq</span><span class="p">,</span> <span class="n">collectors</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">log_activation_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activation_sparsity</span><span class="p">,</span> <span class="n">logcontext</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">log_weights_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">log_weights_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_params</span><span class="p">,</span> <span class="n">steps_completed</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PythonLogger"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.PythonLogger">[文档]</a><span class="k">class</span> <span class="nc">PythonLogger</span><span class="p">(</span><span class="n">DataLogger</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PythonLogger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pylogger</span> <span class="o">=</span> <span class="n">logger</span>
+
+<div class="viewcode-block" id="PythonLogger.log_training_progress"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.PythonLogger.log_training_progress">[文档]</a>    <span class="k">def</span> <span class="nf">log_training_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_dict</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">completed</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="s1">&#39;Epoch: [</span><span class="si">{}</span><span class="s1">][</span><span class="si">{:5d}</span><span class="s1">/</span><span class="si">{:5d}</span><span class="s1">]    &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">completed</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">total</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span> <span class="o">=</span> <span class="s1">&#39;Test: [</span><span class="si">{:5d}</span><span class="s1">/</span><span class="si">{:5d}</span><span class="s1">]    &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">completed</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">total</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">stats_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">log</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1"> </span><span class="si">{val}</span><span class="s1">    &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">distiller</span><span class="o">.</span><span class="n">pretty_int</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">log</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1"> </span><span class="si">{val:.6f}</span><span class="s1">    &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pylogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PythonLogger.log_activation_sparsity"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.PythonLogger.log_activation_sparsity">[文档]</a>    <span class="k">def</span> <span class="nf">log_activation_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activation_sparsity</span><span class="p">,</span> <span class="n">logcontext</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer</span><span class="p">,</span> <span class="n">sparsity</span> <span class="ow">in</span> <span class="n">activation_sparsity</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">layer</span><span class="p">,</span> <span class="n">sparsity</span><span class="o">*</span><span class="mi">100</span><span class="p">])</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">tabulate</span><span class="o">.</span><span class="n">tabulate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Layer&#39;</span><span class="p">,</span> <span class="s1">&#39;sparsity (%)&#39;</span><span class="p">],</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s1">&#39;psql&#39;</span><span class="p">,</span> <span class="n">floatfmt</span><span class="o">=</span><span class="s2">&quot;.1f&quot;</span><span class="p">)</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">t</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PythonLogger.log_weights_sparsity"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.PythonLogger.log_weights_sparsity">[文档]</a>    <span class="k">def</span> <span class="nf">log_weights_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="n">t</span><span class="p">,</span> <span class="n">total</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">weights_sparsity_tbl_summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">return_total_sparsity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Parameters:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Total sparsity: </span><span class="si">{:0.2f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">total</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="TensorBoardLogger"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger">[文档]</a><span class="k">class</span> <span class="nc">TensorBoardLogger</span><span class="p">(</span><span class="n">DataLogger</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logdir</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TensorBoardLogger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Set the tensorboard logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span> <span class="o">=</span> <span class="n">TBBackend</span><span class="p">(</span><span class="n">logdir</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">--------------------------------------------------------&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Logging to TensorBoard - remember to execute the server:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&gt; tensorboard --logdir=</span><span class="se">\&#39;</span><span class="s1">./logs</span><span class="se">\&#39;\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Hard-code these preferences for now</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_gradients</span> <span class="o">=</span> <span class="kc">False</span>      <span class="c1"># True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logged_params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="c1"># [&#39;weight&#39;, &#39;bias&#39;]</span>
+
+<div class="viewcode-block" id="TensorBoardLogger.log_training_progress"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger.log_training_progress">[文档]</a>    <span class="k">def</span> <span class="nf">log_training_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_dict</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">completed</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">total_steps</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">total</span><span class="o">*</span><span class="n">epoch</span> <span class="o">+</span> <span class="n">completed</span>
+
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">stats_dict</span> <span class="o">=</span> <span class="n">stats_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">stats_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">scalar_summary</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="n">tag</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">total_steps</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">completed</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">sync_to_file</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TensorBoardLogger.log_activation_sparsity"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger.log_activation_sparsity">[文档]</a>    <span class="k">def</span> <span class="nf">log_activation_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activation_sparsity</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="s1">&#39;sparsity/activations/&#39;</span>
+        <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">activation_sparsity</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">scalar_summary</span><span class="p">(</span><span class="n">group</span><span class="o">+</span><span class="n">tag</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">sync_to_file</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TensorBoardLogger.log_weights_sparsity"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger.log_weights_sparsity">[文档]</a>    <span class="k">def</span> <span class="nf">log_weights_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="n">params_size</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sparse_params_size</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                <span class="n">_density</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                <span class="n">params_size</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">numel</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                <span class="n">sparse_params_size</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">_density</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">scalar_summary</span><span class="p">(</span><span class="s1">&#39;sparsity/weights/&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+                                             <span class="n">sparsity</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">scalar_summary</span><span class="p">(</span><span class="s1">&#39;sparsity-2D/weights/&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">,</span>
+                                             <span class="n">sparsity_2D</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">scalar_summary</span><span class="p">(</span><span class="s2">&quot;sprasity/weights/total&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sparse_params_size</span><span class="o">/</span><span class="n">params_size</span><span class="p">),</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">sync_to_file</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TensorBoardLogger.log_weights_distribution"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger.log_weights_distribution">[文档]</a>    <span class="k">def</span> <span class="nf">log_weights_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">named_params</span><span class="p">,</span> <span class="n">steps_completed</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">named_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">for</span> <span class="n">tag</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">named_params</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">substring</span> <span class="ow">in</span> <span class="n">tag</span> <span class="k">for</span> <span class="n">substring</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logged_params</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">histogram_summary</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">to_np</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">steps_completed</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_gradients</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">histogram_summary</span><span class="p">(</span><span class="n">tag</span><span class="o">+</span><span class="s1">&#39;/grad&#39;</span><span class="p">,</span> <span class="n">to_np</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">grad</span><span class="p">),</span> <span class="n">steps_completed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tblogger</span><span class="o">.</span><span class="n">sync_to_file</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="CsvLogger"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.CsvLogger">[文档]</a><span class="k">class</span> <span class="nc">CsvLogger</span><span class="p">(</span><span class="n">DataLogger</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CsvLogger</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span>
+
+<div class="viewcode-block" id="CsvLogger.log_weights_sparsity"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.CsvLogger.log_weights_sparsity">[文档]</a>    <span class="k">def</span> <span class="nf">log_weights_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csv_file</span><span class="p">:</span>
+            <span class="n">params_size</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">sparse_params_size</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+            <span class="c1"># write the header</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="s1">&#39;volume&#39;</span><span class="p">,</span> <span class="s1">&#39;sparse volume&#39;</span><span class="p">,</span> <span class="s1">&#39;sparsity level&#39;</span><span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+                    <span class="n">_density</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                    <span class="n">params_size</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">numel</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                    <span class="n">sparse_params_size</span> <span class="o">+=</span> <span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">*</span> <span class="n">_density</span>
+                    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">size_to_str</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">size</span><span class="p">()),</span>
+                                       <span class="n">torch</span><span class="o">.</span><span class="n">numel</span><span class="p">(</span><span class="n">param</span><span class="p">),</span>
+                                       <span class="nb">int</span><span class="p">(</span><span class="n">_density</span> <span class="o">*</span> <span class="n">param</span><span class="o">.</span><span class="n">numel</span><span class="p">()),</span>
+                                       <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">_density</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

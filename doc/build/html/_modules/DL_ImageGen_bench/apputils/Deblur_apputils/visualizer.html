@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-cn" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-cn" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DL_ImageGen_bench.apputils.Deblur_apputils.visualizer &mdash; DL ImageGen Bench 1.0.0 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> DL ImageGen Bench
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../DL_ImageGen_bench.html">DL_ImageGen_bench package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DL ImageGen Bench</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">模块代码</a> &raquo;</li>
+        
+      <li>DL_ImageGen_bench.apputils.Deblur_apputils.visualizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>DL_ImageGen_bench.apputils.Deblur_apputils.visualizer 源代码</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">ntpath</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">util</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">html</span>
+
+<div class="viewcode-block" id="Visualizer"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer">[文档]</a><span class="k">class</span> <span class="nc">Visualizer</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="c1"># self.opt = opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">display_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_html</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">isTrain</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">opt</span><span class="o">.</span><span class="n">no_html</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">win_size</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">display_winsize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">visdom</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vis</span> <span class="o">=</span> <span class="n">visdom</span><span class="o">.</span><span class="n">Visdom</span><span class="p">(</span><span class="n">port</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">display_port</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display_single_pane_ncols</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">display_single_pane_ncols</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_html</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">web_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">checkpoints_dir</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;web&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">img_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_dir</span><span class="p">,</span> <span class="s1">&#39;images&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;create web directory </span><span class="si">%s</span><span class="s1">...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">web_dir</span><span class="p">)</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">mkdirs</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">web_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_dir</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">checkpoints_dir</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;loss_log.txt&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%c</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;================ Training Loss (</span><span class="si">%s</span><span class="s1">) ================</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">now</span><span class="p">)</span>
+
+    <span class="c1"># |visuals|: dictionary of images to display or save</span>
+<div class="viewcode-block" id="Visualizer.display_current_results"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.display_current_results">[文档]</a>    <span class="k">def</span> <span class="nf">display_current_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visuals</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># show images in the browser</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_single_pane_ncols</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">visuals</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">table_css</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;style&gt;</span>
+<span class="s2">    table {border-collapse: separate; border-spacing:4px; white-space:nowrap; text-align:center}</span>
+<span class="s2">    table td {width: </span><span class="si">%d</span><span class="s2">px; height: </span><span class="si">%d</span><span class="s2">px; padding: 4px; outline: 4px solid black}</span>
+<span class="s2">&lt;/style&gt;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+                <span class="n">ncols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_single_pane_ncols</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">label_html</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">label_html_row</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">nrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">/</span> <span class="n">ncols</span><span class="p">))</span>
+                <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">image_numpy</span> <span class="ow">in</span> <span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">label_html_row</span> <span class="o">+=</span> <span class="s1">&#39;&lt;td&gt;</span><span class="si">%s</span><span class="s1">&lt;/td&gt;&#39;</span> <span class="o">%</span> <span class="n">label</span>
+                    <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">idx</span> <span class="o">%</span> <span class="n">ncols</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">label_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tr&gt;</span><span class="si">%s</span><span class="s1">&lt;/tr&gt;&#39;</span> <span class="o">%</span> <span class="n">label_html_row</span>
+                        <span class="n">label_html_row</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">white_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">image_numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span><span class="o">*</span><span class="mi">255</span>
+                <span class="k">while</span> <span class="n">idx</span> <span class="o">%</span> <span class="n">ncols</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">white_image</span><span class="p">)</span>
+                    <span class="n">label_html_row</span> <span class="o">+=</span> <span class="s1">&#39;&lt;td&gt;&lt;/td&gt;&#39;</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">label_html_row</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">label_html</span> <span class="o">+=</span> <span class="s1">&#39;&lt;tr&gt;</span><span class="si">%s</span><span class="s1">&lt;/tr&gt;&#39;</span> <span class="o">%</span> <span class="n">label_html_row</span>
+                <span class="c1"># pane col = image row</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vis</span><span class="o">.</span><span class="n">images</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">nrow</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span> <span class="n">win</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span> <span class="o">+</span> <span class="s1">&#39; images&#39;</span><span class="p">))</span>
+                <span class="n">label_html</span> <span class="o">=</span> <span class="s1">&#39;&lt;table&gt;</span><span class="si">%s</span><span class="s1">&lt;/table&gt;&#39;</span> <span class="o">%</span> <span class="n">label_html</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vis</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">table_css</span> <span class="o">+</span> <span class="n">label_html</span><span class="p">,</span> <span class="n">win</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+                              <span class="n">opts</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span> <span class="o">+</span> <span class="s1">&#39; labels&#39;</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">image_numpy</span> <span class="ow">in</span> <span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="c1">#image_numpy = np.flipud(image_numpy)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vis</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">image_numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">opts</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">label</span><span class="p">),</span>
+                                       <span class="n">win</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">display_id</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_html</span><span class="p">:</span> <span class="c1"># save images to a html file</span>
+            <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">image_numpy</span> <span class="ow">in</span> <span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_dir</span><span class="p">,</span> <span class="s1">&#39;epoch</span><span class="si">%.3d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span>
+                <span class="n">util</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="n">image_numpy</span><span class="p">,</span> <span class="n">img_path</span><span class="p">)</span>
+            <span class="c1"># update website</span>
+            <span class="n">webpage</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">web_dir</span><span class="p">,</span> <span class="s1">&#39;Experiment name = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">reflesh</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">webpage</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="s1">&#39;Results of Epoch [</span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">)</span>
+                <span class="n">ims</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">txts</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">image_numpy</span> <span class="ow">in</span> <span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">img_path</span> <span class="o">=</span> <span class="s1">&#39;epoch</span><span class="si">%.3d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+                    <span class="n">ims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+                    <span class="n">txts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+                <span class="n">webpage</span><span class="o">.</span><span class="n">add_images</span><span class="p">(</span><span class="n">ims</span><span class="p">,</span> <span class="n">txts</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">win_size</span><span class="p">)</span>
+            <span class="n">webpage</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+    <span class="c1"># errors: dictionary of error labels and values</span>
+<div class="viewcode-block" id="Visualizer.plot_current_errors"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.plot_current_errors">[文档]</a>    <span class="k">def</span> <span class="nf">plot_current_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">counter_ratio</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">errors</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;plot_data&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:[],</span><span class="s1">&#39;Y&#39;</span><span class="p">:[],</span> <span class="s1">&#39;legend&#39;</span><span class="p">:</span><span class="nb">list</span><span class="p">(</span><span class="n">errors</span><span class="o">.</span><span class="n">keys</span><span class="p">())}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="n">counter_ratio</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">errors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;legend&#39;</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vis</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;legend&#39;</span><span class="p">]),</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">Y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]),</span>
+            <span class="n">opts</span><span class="o">=</span><span class="p">{</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39; loss over time&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">&#39;legend&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;xlabel&#39;</span><span class="p">:</span> <span class="s1">&#39;epoch&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;ylabel&#39;</span><span class="p">:</span> <span class="s1">&#39;loss&#39;</span><span class="p">},</span>
+            <span class="n">win</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">display_id</span><span class="p">)</span></div>
+
+    <span class="c1"># errors: same format as |errors| of plotCurrentErrors</span>
+<div class="viewcode-block" id="Visualizer.print_current_errors"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.print_current_errors">[文档]</a>    <span class="k">def</span> <span class="nf">print_current_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">errors</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;(epoch: </span><span class="si">%d</span><span class="s1">, iters: </span><span class="si">%d</span><span class="s1">, time: </span><span class="si">%.3f</span><span class="s1">) &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">errors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%.3f</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_name</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">log_file</span><span class="p">:</span>
+            <span class="n">log_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">message</span><span class="p">)</span></div>
+
+    <span class="c1"># save image to the disk</span>
+<div class="viewcode-block" id="Visualizer.save_images"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.visualizer.Visualizer.save_images">[文档]</a>    <span class="k">def</span> <span class="nf">save_images</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">webpage</span><span class="p">,</span> <span class="n">visuals</span><span class="p">,</span> <span class="n">image_path</span><span class="p">):</span>
+        <span class="n">image_dir</span> <span class="o">=</span> <span class="n">webpage</span><span class="o">.</span><span class="n">get_image_dir</span><span class="p">()</span>
+        <span class="n">short_path</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">image_path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">short_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">webpage</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ims</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">txts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">image_numpy</span> <span class="ow">in</span> <span class="n">visuals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">image_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="n">save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">image_name</span><span class="p">)</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="n">image_numpy</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
+
+            <span class="n">ims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+            <span class="n">txts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+            <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image_name</span><span class="p">)</span>
+        <span class="n">webpage</span><span class="o">.</span><span class="n">add_images</span><span class="p">(</span><span class="n">ims</span><span class="p">,</span> <span class="n">txts</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">win_size</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, CKH
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'1.0.0',
+              LANGUAGE:'zh_cn',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
