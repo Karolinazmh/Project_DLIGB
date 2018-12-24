@@ -97,7 +97,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -211,28 +211,14 @@
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="DL_ImageGen_bench.data.data.get_eva_set">
-<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_eva_set</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_eva_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_eva_set" title="永久链接至目标">¶</a></dt>
-<dd><p>获取Evaluation dataset</p>
+<dt id="DL_ImageGen_bench.data.data.get_testing_set">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_testing_set</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_testing_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_testing_set" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Testing dataset</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
 <dd>opt (dict): 参数列表</dd>
 <dt>Returns:</dt>
 <dd>dataset (class DatasetFromFolder): 测试数据库</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="DL_ImageGen_bench.data.data.get_test_set">
-<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_test_set</code><span class="sig-paren">(</span><em>upscale_factor</em>, <em>test_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_test_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_test_set" title="永久链接至目标">¶</a></dt>
-<dd><p>获取Validataion dataset (在train的过程中supervise模型性能的数据库)</p>
-<dl class="docutils">
-<dt>Arguments:</dt>
-<dd><p class="first">upscale_factor (int): SR 图像的scale倍率</p>
-<p class="last">test_dir (str): 验证库的位置</p>
-</dd>
-<dt>Returns:</dt>
-<dd>dataset (class DatasetFromFolder): 验证数据库</dd>
 </dl>
 </dd></dl>
 
@@ -247,6 +233,20 @@
 </dd>
 <dt>Returns:</dt>
 <dd>dataset (class DatasetFromFolder): 训练数据库</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="DL_ImageGen_bench.data.data.get_validation_set">
+<code class="descclassname">DL_ImageGen_bench.data.data.</code><code class="descname">get_validation_set</code><span class="sig-paren">(</span><em>upscale_factor</em>, <em>test_dir</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/data.html#get_validation_set"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.data.get_validation_set" title="永久链接至目标">¶</a></dt>
+<dd><p>获取Validataion dataset (在train的过程中supervise模型performance的数据库)</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">upscale_factor (int): SR 图像的scale倍率</p>
+<p class="last">test_dir (str): 验证库的位置</p>
+</dd>
+<dt>Returns:</dt>
+<dd>dataset (class DatasetFromFolder): 验证数据库</dd>
 </dl>
 </dd></dl>
 
@@ -267,12 +267,28 @@
 <dt id="DL_ImageGen_bench.data.dataset.DatasetFromEvaFolder">
 <em class="property">class </em><code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">DatasetFromEvaFolder</code><span class="sig-paren">(</span><em>image_dir</em>, <em>input_transform=None</em>, <em>target_transform=None</em>, <em>opt=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#DatasetFromEvaFolder"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.DatasetFromEvaFolder" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>从Folder获取dataset(Testing Phase)</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">image_dir (str): 数据文件夹的位置</p>
+<p>input_transform (func): 输入图像的前处理操作(crop/resize, 转换为tensor类型)</p>
+<p class="last">target_transform (func): 目标图像的前处理操作(crop/resize, 转换为tensor类型)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="class">
 <dt id="DL_ImageGen_bench.data.dataset.DatasetFromFolder">
 <em class="property">class </em><code class="descclassname">DL_ImageGen_bench.data.dataset.</code><code class="descname">DatasetFromFolder</code><span class="sig-paren">(</span><em>image_dir</em>, <em>input_transform=None</em>, <em>target_transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/data/dataset.html#DatasetFromFolder"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.data.dataset.DatasetFromFolder" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.dataset.Dataset</span></code></p>
+<p>从Folder获取dataset(Training Phase)</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">image_dir (str): 数据文件夹的位置</p>
+<p>input_transform (func): 输入图像的前处理操作(crop/resize, 转换为tensor类型)</p>
+<p class="last">target_transform (func): 目标图像的前处理操作(crop/resize, 转换为tensor类型)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">

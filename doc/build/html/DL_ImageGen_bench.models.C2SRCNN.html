@@ -96,7 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -206,38 +206,131 @@ registered hooks while the latter silently ignores them.</p>
 <span id="dl-imagegen-bench-models-c2srcnn-solver-module"></span><h2>DL_ImageGen_bench.models.C2SRCNN.solver module<a class="headerlink" href="#module-DL_ImageGen_bench.models.C2SRCNN.solver" title="永久链接至标题">¶</a></h2>
 <dl class="class">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer">
-<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.C2SRCNN.solver.</code><code class="descname">C2SRCNNTrainer</code><span class="sig-paren">(</span><em>config</em>, <em>training_loader</em>, <em>testing_loader</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer" title="永久链接至目标">¶</a></dt>
+<em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.C2SRCNN.solver.</code><code class="descname">C2SRCNNTrainer</code><span class="sig-paren">(</span><em>config</em>, <em>training_loader</em>, <em>validation_loader</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<blockquote>
+<div>SR 神经网络训练过程(C2SRCNN, SRCNN的变体)</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">config (dict): 参数列表</p>
+<p>training_loader (class DataLoader): 训练集DataLoader</p>
+<p class="last">validation_loader (class DataLoader): 验证集DataLoader</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">models.C2SRCNN.solver</span> <span class="k">import</span> <span class="n">C2SRCNNTrainer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">C2SRCNNTrainer</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">training_data_loader</span><span class="p">,</span> <span class="n">validation_loader</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.build_model">
 <code class="descname">build_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.build_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.build_model" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>构建模型, 不只是构建模型结构, 还包括定义loss计算的方式, 优化方式(optimizeer), 还有learning rate策略</div></blockquote>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">models.C2SRCNN.model</span> <span class="k">import</span> <span class="n">Net</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Net</span><span class="p">(</span><span class="n">num_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">upscale_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># 定义模型结构</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span> <span class="c1"># 定义loss计算方式</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span> <span class="c1"># 定义优化方式</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">lr_scheduler</span><span class="o">.</span><span class="n">MultiStepLR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">milestones</span><span class="o">=</span><span class="p">[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">],</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="c1"># 定义lr策略</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.img_preprocess">
 <code class="descname">img_preprocess</code><span class="sig-paren">(</span><em>data</em>, <em>interpolation='bicubic'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.img_preprocess"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.img_preprocess" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>图像进入神经网络前的处理, SRCNN模型进入网络前要进行cheap scale up</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">data (tensor): training_loader送进来的样本</p>
+<p class="last">interpolation (str): upscale的方式(one of bicubic/bilinear/nearest)</p>
+</dd>
+<dt>Returns:</dt>
+<dd>processed_data (tensor): 经过处理后的神经网络输入</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.run" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Trainer的主函数, 控制training的主流程</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">build_model</span><span class="p">()</span>                                                                                <span class="c1"># 构建模型</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span> <span class="o">=</span> <span class="n">distiller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">file_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress</span><span class="p">)</span>   <span class="c1"># 构建compression scheduler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span><span class="o">.</span><span class="n">on_epoch_begin</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">compression_scheduler</span><span class="p">)</span>   <span class="c1"># Train Process</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>               <span class="c1"># Validation Process</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span><span class="o">.</span><span class="n">on_epoch_end</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.save">
 <code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.save"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.save" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.test">
-<code class="descname">test</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.test" title="永久链接至目标">¶</a></dt>
-<dd><p>data: [torch.cuda.FloatTensor], 10 batches: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]</p>
+<dd><blockquote>
+<div>保存模型</div></blockquote>
+<p>用的是torch.save()方式保存模型, inference时只用torch.load()就可以还原模型, 不用重新构建模型结构</p>
+<p>但是要注意, 在inference时, 定义模型结构的model.py文件要保留在trainging phase时相同的位置</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">model_out_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.train">
 <code class="descname">train</code><span class="sig-paren">(</span><em>epoch</em>, <em>compression_scheduler</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.train"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.train" title="永久链接至目标">¶</a></dt>
-<dd><p>data: [torch.cuda.FloatTensor], 4 batches: [64, 64, 64, 8]</p>
+<dd><p>Train Process</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int): epoch id, 当前是training过程的第几个epoch</p>
+<p class="last">compression_scheduler (class CompressionScheduler): 由compression schedule定义文件***.yaml构建的CompressionScheduler对象</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span><span class="o">.</span><span class="n">on_minibatch_begin</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                <span class="c1"># 模型inferecne</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>    <span class="c1"># 计算loss</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span><span class="o">.</span><span class="n">before_backward_pass</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                          <span class="c1"># 反向计算梯度</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>                    <span class="c1"># 根据梯度优化权重</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compression_scheduler</span><span class="o">.</span><span class="n">on_minibatch_end</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>       
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>model</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/C2SRCNN/solver.html#C2SRCNNTrainer.validate"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.validate" title="永久链接至目标">¶</a></dt>
+<dd><p>Validation Process，在训练阶段利用验证集来supervise模型性能的过程</p>
+<p>这个过程不是训练必须的</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net): 训练模型</p>
+<p class="last">epoch (int): epoch id, 当前是training过程的第几个epoch</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                <span class="c1"># 模型inferecne</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="c1"># 验证集计算模型loss    </span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

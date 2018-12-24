@@ -145,26 +145,24 @@
             
   <h1>DL_ImageGen_bench.models.test_solver 源代码</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">log10</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
-
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
 
-<span class="c1"># Distiller imports</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
+<span class="kn">from</span> <span class="nn">apputils.platform_summaries</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">distiller.data_loggers</span> <span class="k">import</span> <span class="n">PythonLogger</span><span class="p">,</span> <span class="n">TensorBoardLogger</span>
+
 <span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 <span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
 <span class="k">if</span> <span class="n">module_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">distiller.data_loggers</span> <span class="k">import</span> <span class="n">TensorBoardLogger</span><span class="p">,</span> <span class="n">PythonLogger</span>
-<span class="kn">from</span> <span class="nn">apputils.platform_summaries</span> <span class="k">import</span> <span class="o">*</span>
-
 
 <span class="n">INPUT_CHANNELS</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">INPUT_SIZE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">540</span><span class="p">,</span> <span class="mi">960</span><span class="p">]</span>   <span class="c1"># [channel, height, width]</span>
@@ -180,6 +178,18 @@
 
 
 <div class="viewcode-block" id="XSRCNNTester"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester">[文档]</a><span class="k">class</span> <span class="nc">XSRCNNTester</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	    SR 神经网络测试过程(C2SRCNN, SRCNN的变体)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            config (dict): 参数列表 \n</span>
+<span class="sd">            testing_loader (class DataLoader): 测试集DataLoader</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from models.test_solver import XSRCNNTester</span>
+<span class="sd">            &gt;&gt;&gt; model = XSRCNNTester(args, test_data_loader)</span>
+<span class="sd">            &gt;&gt;&gt; model.run(args)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">testing_loader</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">XSRCNNTester</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">GPU_IN_USE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
@@ -210,6 +220,14 @@
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;-------------- End ----------------&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="XSRCNNTester.build_model"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester.build_model">[文档]</a>    <span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        构建模型, 从已经存储的权重文件.pth还原模型, 并定义评估metric(比如l2 loss)</span>
+<span class="sd">            SR 应用目前不支持load_dict()方式还原模型, 如有需要, 可以参考models.Deblur.test_solver.build_model</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; self.model = torch.load(model_file.pth)    # 从权重文件还原模型</span>
+<span class="sd">                &gt;&gt;&gt; self.criterion = nn.MSELoss()              # 定义评估metric</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -222,6 +240,16 @@
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Raw model:</span><span class="se">\n\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="XSRCNNTester.img_preprocess"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester.img_preprocess">[文档]</a>    <span class="k">def</span> <span class="nf">img_preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        图像进入神经网络前的处理, SRCNN模型进入网络前要进行cheap scale up</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                data (tensor): training_loader送进来的样本 \n</span>
+<span class="sd">                interpolation (str): upscale的方式(one of bicubic/bilinear/nearest) </span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                processed_data (tensor): 经过处理后的神经网络输入</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">interpolation</span> <span class="o">==</span> <span class="s1">&#39;bicubic&#39;</span><span class="p">:</span>
             <span class="n">interpolation</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span>
         <span class="k">elif</span> <span class="n">interpolation</span> <span class="o">==</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">:</span>
@@ -253,6 +281,13 @@
             <span class="k">return</span> <span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="XSRCNNTester.save_tensor2img"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester.save_tensor2img">[文档]</a>    <span class="k">def</span> <span class="nf">save_tensor2img</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">,</span> <span class="n">img_save_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        将神经网络输出的tensor数据存储到图像文件</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                tensor (tensor): 神经网络的输出tensor \n</span>
+<span class="sd">                img_save_path (str): 保存图像文件的位置 </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out_img</span> <span class="o">=</span> <span class="n">tensor</span><span class="o">.</span><span class="n">cpu</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">out_img</span> <span class="o">*=</span> <span class="mf">255.0</span>
         <span class="n">out_img</span> <span class="o">=</span> <span class="n">out_img</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
@@ -263,6 +298,17 @@
         <span class="k">del</span> <span class="n">out_img</span></div>
 
 <div class="viewcode-block" id="XSRCNNTester.test"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester.test">[文档]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        Test Process, 测试过程</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                model (class Net): 已训练好的模型 </span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; output = self.model(data)                       # 模型inferecne</span>
+<span class="sd">                &gt;&gt;&gt; mse = self.criterion(prediction, target)        # 测试集计算模型loss  </span>
+<span class="sd">                &gt;&gt;&gt; self.save_tensor2img(output, output_save_path)  # 将模型输出存储为图像文件</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">avg_psnr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">save_path</span> <span class="o">=</span> <span class="s1">&#39;./results/</span><span class="si">%s</span><span class="s1">/test_image&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_path</span><span class="p">):</span>
@@ -311,6 +357,22 @@
         <span class="k">return</span> <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="XSRCNNTester.run"><a class="viewcode-back" href="../../../DL_ImageGen_bench.models.html#DL_ImageGen_bench.models.test_solver.XSRCNNTester.run">[文档]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Tester的主函数, 控制test的主流程</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                opt (dict): 参数列表</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; from apputils.platform_summaries import *</span>
+<span class="sd">                &gt;&gt;&gt; self.build_model()          # 构建模型</span>
+<span class="sd">                &gt;&gt;&gt; self.test(self.model)       # 测试模型</span>
+<span class="sd">                &gt;&gt;&gt; draw_model_to_file(model, &#39;arch.png&#39;, torch.FloatTensor(1, 3, 128, 128))          # 画模型结构</span>
+<span class="sd">                &gt;&gt;&gt; sensitivity_analysis(model, &#39;sense_file.xlsx&#39;, test_func, &#39;element&#39;)              # 权重敏感度分析</span>
+<span class="sd">                &gt;&gt;&gt; sparsity_display(model, &#39;spars_file.xlsx&#39;)                                        # 权重稀疏性分析</span>
+<span class="sd">                &gt;&gt;&gt; macs_display(model, &#39;macs_file.xlsx&#39;， torch.FloatTensor(1, 3, 128, 128))         # 模型计算量估计</span>
+<span class="sd">                &gt;&gt;&gt; transform_to_onnx(model, &#39;model.onnx&#39;， torch.FloatTensor(1, 3, 128, 128), False) # 将模型和权重存为onnx格式文件</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">build_model</span><span class="p">()</span>
 
         <span class="n">resolution</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">INPUT_SIZE</span><span class="p">)</span>

@@ -148,7 +148,7 @@
 <div class="viewcode-block" id="TestOptions"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.options.Normal_options.html#DL_ImageGen_bench.options.Normal_options.test_options.TestOptions">[文档]</a><span class="k">class</span> <span class="nc">TestOptions</span><span class="p">():</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	</span>
-<span class="sd">	从命令行获取Evaluation Phase的参数列表</span>
+<span class="sd">	从命令行获取Testing Phase的参数列表</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -159,7 +159,7 @@
 <div class="viewcode-block" id="TestOptions.initialize"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.options.Normal_options.html#DL_ImageGen_bench.options.Normal_options.test_options.TestOptions.initialize">[文档]</a>	<span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="c1"># hyper-parameters</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-			<span class="s1">&#39;--evadata&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./dataset/Test/Set29/MR_4x&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;evaluation set&#39;</span><span class="p">)</span>
+			<span class="s1">&#39;--testdata&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./dataset/Test/Set29/MR_4x&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;tesing set&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--upscale_factor&#39;</span><span class="p">,</span> <span class="s1">&#39;-uf&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;super resolution upscale factor&quot;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
 			<span class="s1">&#39;--resume&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path to latest checkpoint (default: none)&#39;</span><span class="p">)</span>
@@ -178,14 +178,13 @@
 			<span class="s1">&#39;--sense&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;sensitivity&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;element&#39;</span><span class="p">,</span> <span class="s1">&#39;filter&#39;</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">],</span>
 			<span class="n">help</span><span class="o">=</span><span class="s1">&#39;test the sensitivity of layers to pruning&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--sensefile&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;sensitivity analysis file&#39;</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--macs&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Macs evaluation file to save&#39;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--macs&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Macs estimate file to save&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--sparsity&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sparsity of model&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--toonnx&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;transform onnx file to save&#39;</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--quantize_flag&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;is model have benn quantized?&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestOptions.parse"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.options.Normal_options.html#DL_ImageGen_bench.options.Normal_options.test_options.TestOptions.parse">[文档]</a>	<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-
 <span class="sd">		命令行参数解析</span>
 
 <span class="sd"> 		Returns:</span>
@@ -194,7 +193,6 @@
 <span class="sd">		Examples:</span>
 <span class="sd">			&gt;&gt;&gt; from options.Normal_options.test_options import TestOptions as NormTestOptions</span>
 <span class="sd">			&gt;&gt;&gt; args = NormTestOptions().parse()</span>
-
 <span class="sd">		&quot;&quot;&quot;</span>
 
 		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialized</span><span class="p">:</span>

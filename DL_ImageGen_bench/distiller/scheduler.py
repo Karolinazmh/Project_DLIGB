@@ -64,8 +64,10 @@ def create_model_masks_dict(model):
 
 
 class CompressionScheduler(object):
-    """Responsible for scheduling pruning and masking parameters.
-
+    """
+        compression scheduler对象, 定义network compression的过程
+        由scheduler定义文件生成, 需要在Train Process的不同位置加入不同的操作
+        Responsible for scheduling pruning and masking parameters.
     """
     def __init__(self, model, device=torch.device("cuda")):
         self.model = model
@@ -101,6 +103,15 @@ class CompressionScheduler(object):
                                        'frequency': frequency}
 
     def on_epoch_begin(self, epoch, optimizer=None):
+        """
+            在一个epoch开始的时候进行的compression schedule操作, 依compression的方法不同而不同
+
+            Arguments:
+                epoch (int):                  epoch id, 当前是training过程的第几个epoch \n
+                optimizer (class Optimizer)：   训练时的优化器
+
+            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()
+        """
         if epoch in self.policies:
             for policy in self.policies[epoch]:
                 meta = self.sched_metadata[policy]
@@ -108,6 +119,17 @@ class CompressionScheduler(object):
                 policy.on_epoch_begin(self.model, self.zeros_mask_dict, meta)
 
     def on_minibatch_begin(self, epoch, minibatch_id, minibatches_per_epoch, optimizer=None):
+        """
+            在一个batch开始的时候进行的compression schedule操作, 依compression的方法不同而不同
+
+            Arguments:
+                epoch (int):                  epoch id, 当前是training过程的第几个epoch \n
+                minibatch_id (int):           batch id, 当前是某个epoch中的第几个batch \n
+                minibatches_per_epoch (int):  一个epoch中的batch数量
+                optimizer (class Optimizer):  训练时的优化器
+
+            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()
+        """
         if epoch in self.policies:
             for policy in self.policies[epoch]:
                 policy.on_minibatch_begin(self.model, epoch, minibatch_id, minibatches_per_epoch,
@@ -115,6 +137,23 @@ class CompressionScheduler(object):
 
     def before_backward_pass(self, epoch, minibatch_id, minibatches_per_epoch, loss, optimizer=None,
                              return_loss_components=False):
+        """
+            在计算loss之后进行的compression schedule操作, 依compression的方法不同而不同
+            因为做了network compression之后, loss会变化, 用这个操作去更新loss的值
+
+            Arguments:
+                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n
+                minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch \n
+                minibatches_per_epoch (int):   一个epoch中的batch数量
+                loss (float):                  未compression之前的loss值
+                optimizer (class Optimizer):   训练时的优化器
+                return_loss_components (bool): 是否将compression前后的loss都显示出来
+
+            Returns:
+                overall_loss: 经过compression之后的总体loss 
+
+            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()
+        """
         # We pass the loss to the policies, which may override it
         overall_loss = loss
         loss_components = []
@@ -133,6 +172,17 @@ class CompressionScheduler(object):
         return overall_loss
 
     def on_minibatch_end(self, epoch, minibatch_id, minibatches_per_epoch, optimizer=None):
+        """
+            在一个batch结束时进行的compression schedule操作, 依compression的方法不同而不同
+
+            Arguments:
+                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n
+                minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch \n
+                minibatches_per_epoch (int):   一个epoch中的batch数量
+                optimizer (class Optimizer):   训练时的优化器
+
+            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()
+        """
         # When we get to this point, the weights are no longer maksed.  This is because during the backward
         # pass, the weights are updated.  So we choose to lazily apply the pruning mask, only if some
         # component is being called-back.
@@ -147,6 +197,15 @@ class CompressionScheduler(object):
                                         self.zeros_mask_dict, optimizer)
 
     def on_epoch_end(self, epoch, optimizer=None):
+        """
+            在一个epoch结束时进行的compression schedule操作, 依compression的方法不同而不同
+
+            Arguments:
+                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n
+                optimizer (class Optimizer):   训练时的优化器
+
+            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()
+        """
         if epoch in self.policies:
             for policy in self.policies[epoch]:
                 meta = self.sched_metadata[policy]

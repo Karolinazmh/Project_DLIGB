@@ -141,7 +141,21 @@ def add_policy_to_scheduler(policy, policy_def, schedule):
 
 
 def file_config(model, optimizer, filename):
-    """Read the schedule from file"""
+    """
+        Read the compression schedule from file
+
+        Arguments:
+            model (class Net):            模型结构 \n
+            optimizer (class Optimizer)   训练时的优化器 \n
+            filename (str)                定义comprerssion schedule的.yaml文件名
+
+        Returns:
+            compression_scheduler(class distiller.scheduler.CompressionSceduler) Network CompressionScheduller对象
+
+        Examples:
+            >>> import distiller
+            >>> distiller.config.file_config(model, optimizer, './models/C2SRCNN/agp_prune.yaml')
+    """
     with open(filename, 'r') as stream:
         msglogger.info('Reading compression schedule from: %s', filename)
         try:

@@ -1,31 +1,30 @@
 from __future__ import print_function
-from math import log10
 
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import torchvision.transforms as transforms
-import torch.backends.cudnn as cudnn
-import torchnet.meter as tnt
-
-from models.C2SRCNN.model import Net
-from PIL import Image
-from functools import reduce
-from functools import partial
-import time
-import numpy as np
-
-# Distiller imports
 import os
 import sys
+import time
+from collections import OrderedDict
+from functools import partial, reduce
+from math import log10
+
+import numpy as np
+import torch
+import torch.backends.cudnn as cudnn
+import torch.nn as nn
+import torch.optim as optim
+import torchnet.meter as tnt
+from PIL import Image
+
+import apputils
+import distiller
+import torchvision.transforms as transforms
+from distiller.data_loggers import PythonLogger, TensorBoardLogger
+from models.C2SRCNN.model import Net
+
 script_dir = os.path.dirname(__file__)
 module_path = os.path.abspath(os.path.join(script_dir, '..', '..'))
 if module_path not in sys.path:
     sys.path.append(module_path)
-import distiller
-import apputils
-from distiller.data_loggers import TensorBoardLogger, PythonLogger
-from collections import OrderedDict
 
 INPUT_CHANNELS = 1
 INPUT_SIZE = [1, 224, 224]
@@ -47,15 +46,15 @@ class C2SRCNNTrainer(object):
         Arguments:
             config (dict): 参数列表 \n
             training_loader (class DataLoader): 训练集DataLoader \n
-            testing_loader (class DataLoader): 验证集DataLoader
+            validation_loader (class DataLoader): 验证集DataLoader
 
         Examples:
-        >>> from models.C2SRCNN.solver import C2SRCNNTrainer
-        >>> model = C2SRCNNTrainer(args, training_data_loader, testing_data_loader)
-        >>> model.run()
+            >>> from models.C2SRCNN.solver import C2SRCNNTrainer
+            >>> model = C2SRCNNTrainer(args, training_data_loader, validation_loader)
+            >>> model.run()
     """
 
-    def __init__(self, config, training_loader, testing_loader):
+    def __init__(self, config, training_loader, validation_loader):
         super(C2SRCNNTrainer, self).__init__()
         self.GPU_IN_USE = torch.cuda.is_available()
         self.device = torch.device('cuda' if self.GPU_IN_USE else 'cpu')
@@ -69,7 +68,7 @@ class C2SRCNNTrainer(object):
         self.seed = config.seed
         self.upscale_factor = config.upscale_factor
         self.training_loader = training_loader
-        self.testing_loader = testing_loader
+        self.validation_loader = validation_loader
         self.savefile = config.save
         self.freq = config.print_freq
         self.trainOn = config.trainOn
@@ -89,11 +88,11 @@ class C2SRCNNTrainer(object):
 	        构建模型, 不只是构建模型结构, 还包括定义loss计算的方式, 优化方式(optimizeer), 还有learning rate策略
 
             Examples:
-            >>> from models.C2SRCNN.model import Net
-            >>> self.model = Net(num_channels=1, upscale_factor=self.upscale_factor).to(self.device)  # 定义模型结构
-            >>> self.criterion = nn.MSELoss() # 定义loss计算方式
-            >>> self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr) # 定义优化方式
-            >>> self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[500, 1000, 1500, 2000], gamma=0.5) # 定义lr策略
+                >>> from models.C2SRCNN.model import Net
+                >>> self.model = Net(num_channels=1, upscale_factor=self.upscale_factor).to(self.device)  # 定义模型结构
+                >>> self.criterion = nn.MSELoss() # 定义loss计算方式
+                >>> self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr) # 定义优化方式
+                >>> self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[500, 1000, 1500, 2000], gamma=0.5) # 定义lr策略
         """
 
         if self.resume:
@@ -162,11 +161,11 @@ class C2SRCNNTrainer(object):
         """
 	        保存模型
 
-            用的是torch.save()方式保存模型, inference时只用torch.load()就可以还原模型, 不用重新构建模型结构
+            用的是torch.save()方式保存模型, inference时只用torch.load()就可以还原模型, 不用重新构建模型结构 \n
             但是要注意, 在inference时, 定义模型结构的model.py文件要保留在trainging phase时相同的位置
 
             Examples:
-            >>> torch.save(self.model, model_out_path)
+                >>> torch.save(self.model, model_out_path)
         """
 
         model_out_path = self.savefile
@@ -175,7 +174,20 @@ class C2SRCNNTrainer(object):
 
     def train(self, epoch, compression_scheduler):
         """
-        data: [torch.cuda.FloatTensor], 4 batches: [64, 64, 64, 8]
+            Train Process
+
+            Arguments:
+                epoch (int): epoch id, 当前是training过程的第几个epoch \n
+                compression_scheduler (class CompressionScheduler): 由compression schedule定义文件***.yaml构建的CompressionScheduler对象
+
+            Examples:
+                >>> compression_scheduler.on_minibatch_begin(epoch)
+                >>> output = self.model(data)                # 模型inferecne
+                >>> loss = self.criterion(output, target)    # 计算loss
+                >>> compression_scheduler.before_backward_pass(epoch)
+                >>> loss.backward()                          # 反向计算梯度
+                >>> self.optimizer.step()                    # 根据梯度优化权重
+                >>> compression_scheduler.on_minibatch_end(epoch)       
         """
         losses = OrderedDict([(OVERALL_LOSS_KEY, tnt.AverageValueMeter()),
                               (OBJECTIVE_LOSS_KEY, tnt.AverageValueMeter())])
@@ -263,16 +275,26 @@ class C2SRCNNTrainer(object):
         # print("    Average Loss: {:.4f}".format(train_loss / len(self.training_loader)))
         # write.add_scalar('Train/Loss', train_loss / len(self.training_loader), epoch)
 
-    def test(self, model, epoch):
+    def validate(self, model, epoch):
         """
-        data: [torch.cuda.FloatTensor], 10 batches: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
+            Validation Process，在训练阶段利用验证集来supervise模型性能的过程
+            
+            这个过程不是训练必须的
+
+            Arguments:
+                model (class Net): 训练模型 \n
+                epoch (int): epoch id, 当前是training过程的第几个epoch
+
+            Examples:
+                >>> output = self.model(data)                # 模型inferecne
+                >>> mse = self.criterion(prediction, target) # 验证集计算模型loss    
         """
         model.eval()
         avg_psnr = 0
         start_time = time.time()
 
         with torch.no_grad():
-            for batch_num, (data, target) in enumerate(self.testing_loader):
+            for batch_num, (data, target) in enumerate(self.validation_loader):
                 data = self.img_preprocess(data)  # resize input image size
                 data, target = data.to(self.device), target.to(self.device)
                 prediction = model(data)
@@ -286,16 +308,27 @@ class C2SRCNNTrainer(object):
 
         msglogger.info('-' * 89)
         msglogger.info('| end of epoch {:3d} | time: {:5.2f}s | valid psnr {:5.3f} | '
-                       .format(epoch, (time.time() - start_time), avg_psnr / len(self.testing_loader)))
+                       .format(epoch, (time.time() - start_time), avg_psnr / len(self.validation_loader)))
         msglogger.info('-' * 89)
 
         stats = ('Performance/Validation/',
-                 OrderedDict([('PSNR',  avg_psnr / len(self.testing_loader))]))
+                 OrderedDict([('PSNR',  avg_psnr / len(self.validation_loader))]))
         tflogger.log_training_progress(stats, epoch, 0, total=1, freq=1)
 
-        return avg_psnr / len(self.testing_loader)
+        return avg_psnr / len(self.validation_loader)
 
     def run(self):
+        """
+            Trainer的主函数, 控制training的主流程
+
+            Examples:
+                >>> self.build_model()                                                                                # 构建模型
+                >>> compression_scheduler = distiller.config.file_config(self.model, self.optimizer, self.compress)   # 构建compression scheduler
+                >>> compression_scheduler.on_epoch_begin(epoch)
+                >>> self.train(epoch, compression_scheduler)   # Train Process
+                >>> self.validate(self.model, epoch)               # Validation Process
+                >>> compression_scheduler.on_epoch_end(epoch)
+        """
         self.build_model()
 
         if not self.trainOn:
@@ -320,7 +353,7 @@ class C2SRCNNTrainer(object):
                 # distiller.log_weights_sparsity(self.model, epoch, loggers=[tflogger, pylogger])
                 self.train(epoch, compression_scheduler)
 
-                self.test(self.model, epoch)
+                self.validate(self.model, epoch)
 
                 # sparsity logger
                 distiller.log_weights_sparsity(self.model, epoch, loggers=[tflogger, pylogger])

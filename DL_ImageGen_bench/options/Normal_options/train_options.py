@@ -15,7 +15,7 @@ class TrainOptions():
 	def initialize(self):
 		# hyper-parameters
 		self.parser.add_argument('--batchSize', type=int, default=32, help='training batch size')
-		self.parser.add_argument('--testBatchSize', type=int, default=1, help='testing batch size')
+		self.parser.add_argument('--valiBatchSize', type=int, default=1, help='validation batch size')
 		self.parser.add_argument('--nEpochs', type=int, default=20, help='number of epochs to train for')
 		self.parser.add_argument('--lr', type=float, default=0.0001, help='Learning Rate. Default=0.01')
 		self.parser.add_argument('--seed', type=int, default=123, help='random seed to use. Default=123')
@@ -23,7 +23,7 @@ class TrainOptions():
 		self.parser.add_argument(
 			'--traindata', type=str, default='./dataset/BSDS300/images/train_aug', help='training dataset path')
 		self.parser.add_argument(
-			'--testdata', type=str, default='./dataset/BSDS300/images/test', help='training dataset path')
+			'--validata', type=str, default='./dataset/BSDS300/images/test', help='validation dataset path')
 
 		# model configuration
 		self.parser.add_argument('--upscale_factor', '-uf', type=int, default=4, help="super resolution upscale factor")

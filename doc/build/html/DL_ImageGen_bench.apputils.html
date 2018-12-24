@@ -98,7 +98,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -250,12 +250,12 @@ torch.autograd.Function, without an nn.Module.  For example:</p>
 representation of the graph, is the same nn.Module is used several times in the
 graph.  For example:</p>
 <blockquote>
-<div><p>out = self.conv1(x)
-out = self.bn1(out)
-out = self.relu(out)    &lt;=== First use of self.relu</p>
-<p>out = self.conv2(out)
-out = self.bn2(out)
-out = self.relu(out)    &lt;=== Second use of self.relu</p>
+<div><p>out = self.conv1(x)</p>
+<p>out = self.bn1(out)</p>
+<p>out = self.relu(out)    &lt;=== First use of self.relu</p>
+<p>out = self.conv2(out)</p>
+<p>out = self.bn2(out)</p>
+<p>out = self.relu(out)    &lt;=== Second use of self.relu</p>
 </div></blockquote>
 <dl class="class">
 <dt id="DL_ImageGen_bench.apputils.model_summaries.SummaryGraph.Edge">
@@ -406,20 +406,12 @@ about the parameters.</p>
 as represented by SummaryGraph ‘sgraph’.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.
-display_param_nodes (boolean): if True, draw the parameter nodes
-rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
-<blockquote>
-<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
-<dl class="last docutils">
-<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
-<dd><p class="first">a legal pydot style dictionary.  For example:
-styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.</p>
+<p>display_param_nodes (boolean): if True, draw the parameter nodes</p>
+<p>rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top ‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</p>
+<p>styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example:</p>
 <blockquote class="last">
-<div>‘fillcolor’: ‘gray’,
-‘style’: ‘rounded, filled’}</div></blockquote>
-</dd>
-</dl>
+<div>styles[‘conv1’] = {‘shape’: ‘oval’, ‘fillcolor’: ‘gray’, ‘style’: ‘rounded, filled’}</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -442,24 +434,14 @@ styles[‘conv1’] = {‘shape’: ‘oval’,</p>
 simplifies the interface of draw_model_to_file().</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd><p class="first">model: PyTorch model instance
-png_fname (string): PNG file name
-dataset (string): one of ‘imagenet’ or ‘cifar10’.  This is required in order to</p>
-<blockquote>
-<div>create a dummy input of the correct shape.</div></blockquote>
-<p>display_param_nodes (boolean): if True, draw the parameter nodes
-rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
-<blockquote>
-<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
-<dl class="last docutils">
-<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
-<dd><p class="first">a legal pydot style dictionary.  For example:
-styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<dd><p class="first">model: PyTorch model instance</p>
+<p>png_fname (string): PNG file name</p>
+<p>dataset (string): one of ‘imagenet’ or ‘cifar10’.  This is required in order to create a dummy input of the correct shape.</p>
+<p>display_param_nodes (boolean): if True, draw the parameter nodes</p>
+<p>rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top ‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</p>
+<p>styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example:</p>
 <blockquote class="last">
-<div>‘fillcolor’: ‘gray’,
-‘style’: ‘rounded, filled’}</div></blockquote>
-</dd>
-</dl>
+<div>styles[‘conv1’] = {‘shape’: ‘oval’, ‘fillcolor’: ‘gray’, ‘style’: ‘rounded, filled’}</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -471,21 +453,13 @@ styles[‘conv1’] = {‘shape’: ‘oval’,</p>
 by SummaryGraph ‘sgraph’</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.
-png_fname (string): PNG file name
-display_param_nodes (boolean): if True, draw the parameter nodes
-rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top</p>
-<blockquote>
-<div>‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</div></blockquote>
-<dl class="last docutils">
-<dt>styles: a dictionary of styles.  Key is module name.  Value is</dt>
-<dd><p class="first">a legal pydot style dictionary.  For example:
-styles[‘conv1’] = {‘shape’: ‘oval’,</p>
+<dd><p class="first">sgraph (SummaryGraph): the SummaryGraph instance to draw.</p>
+<p>png_fname (string): PNG file name</p>
+<p>display_param_nodes (boolean): if True, draw the parameter nodes</p>
+<p>rankdir: diagram direction.  ‘TB’/’BT’ is Top-to-Bottom/Bottom-to-Top  ‘LR’/’R/L’ is Left-to-Rt/Rt-to-Left</p>
+<p>styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example:</p>
 <blockquote class="last">
-<div>‘fillcolor’: ‘gray’,
-‘style’: ‘rounded, filled’}</div></blockquote>
-</dd>
-</dl>
+<div>styles[‘conv1’] = {‘shape’: ‘oval’, ‘fillcolor’: ‘gray’, ‘style’: ‘rounded, filled’}</div></blockquote>
 </dd>
 </dl>
 </dd></dl>
@@ -521,15 +495,40 @@ registered hooks while the latter silently ignores them.</p>
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.draw_model_to_file">
 <code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">draw_model_to_file</code><span class="sig-paren">(</span><em>model</em>, <em>png_fname</em>, <em>dummy_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#draw_model_to_file"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.draw_model_to_file" title="永久链接至目标">¶</a></dt>
-<dd><p>Draw a language model graph to a PNG file.</p>
-<p>Caveat: the PNG that is produced has some problems, which we suspect are due to
-PyTorch issues related to RNN ONNX export.</p>
+<dd><p>将模型结构存储到png图像文件</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):      已训练好的模型</p>
+<p>png_fname (str):        图像文件名称和位置</p>
+<p class="last">dummy_input (tensor):   和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width]</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apputils.platform_summaries</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">draw_model_to_file</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;arch.png&#39;</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.macs_display">
 <code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">macs_display</code><span class="sig-paren">(</span><em>model</em>, <em>macs_file</em>, <em>dummy_input</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#macs_display"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.macs_display" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>分析网络的计算量MACs</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):          已训练好的模型</p>
+<p>macs_file (str):            存储计算量结果的文件名称和位置</p>
+<p class="last">dummy_input (tensor):       和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width]</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from apputils.platform_summaries import *
+&gt;&gt;&gt; macs_display(model, &#39;macs_file.xlsx&#39;， torch.FloatTensor(1, 3, 128, 128))
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.replace_quantize_module">
@@ -539,17 +538,60 @@ PyTorch issues related to RNN ONNX export.</p>
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.sensitivity_analysis">
 <code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">sensitivity_analysis</code><span class="sig-paren">(</span><em>model</em>, <em>sensitivity_file</em>, <em>test_func</em>, <em>sense_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#sensitivity_analysis"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.sensitivity_analysis" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>分析网络权重的敏感度, 就是剪枝后的performance loss</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):          已训练好的模型</p>
+<p>sensitivity_file (str):     存储敏感度分析结果的文件名称和位置</p>
+<p>test_func (func):           在Tester中定义的Test Process, 因为要得到performance, 需要每次剪枝后inference一次model</p>
+<p class="last">sense_type (str):           敏感度分析的维度(one of ‘element’/’filter’/’channel’)</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apputils.platform_summaries</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensitivity_analysis</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;sense_file.xlsx&#39;</span><span class="p">,</span> <span class="n">test_func</span><span class="p">,</span> <span class="s1">&#39;element&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.sparsity_display">
 <code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">sparsity_display</code><span class="sig-paren">(</span><em>model</em>, <em>sparsity_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#sparsity_display"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.sparsity_display" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>分析网络权重的稀疏性, 就是权重中有多少0</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):          已训练好的模型</p>
+<p class="last">sparsity_file (str):     存储稀疏性分析结果的文件名称和位置</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apputils.platform_summaries</span> <span class="k">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sparsity_display</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;spars_file.xlsx&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="DL_ImageGen_bench.apputils.platform_summaries.transform_to_onnx">
 <code class="descclassname">DL_ImageGen_bench.apputils.platform_summaries.</code><code class="descname">transform_to_onnx</code><span class="sig-paren">(</span><em>model</em>, <em>onnx_file</em>, <em>dummy_input</em>, <em>quantize_flag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/apputils/platform_summaries.html#transform_to_onnx"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.apputils.platform_summaries.transform_to_onnx" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>将网络模型和权重存储为onnx格式</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):          已训练好的模型</p>
+<p>onnx_file (str):            onnx文件名称和位置</p>
+<p>dummy_input (tensor):       和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width]</p>
+<p class="last">quantize_flag (bool):       模型是否为量化后模型, 如果是, 需要在存onnx模型时将ClippedLinearQuantization module替换为ClippedOnly module</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from apputils.platform_summaries import *
+&gt;&gt;&gt; transform_to_onnx(model, &#39;model.onnx&#39;， torch.FloatTensor(1, 3, 128, 128), False)
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-DL_ImageGen_bench.apputils">

@@ -517,8 +517,6 @@
 </li>
       <li><a href="DL_ImageGen_bench.distiller.html#module-DL_ImageGen_bench.distiller.utils">DL_ImageGen_bench.distiller.utils (模块)</a>
 </li>
-      <li><a href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation (模块)</a>
-</li>
       <li><a href="DL_ImageGen_bench.models.html#module-DL_ImageGen_bench.models">DL_ImageGen_bench.models (模块)</a>
 </li>
       <li><a href="DL_ImageGen_bench.models.C2SRCNN.html#module-DL_ImageGen_bench.models.C2SRCNN">DL_ImageGen_bench.models.C2SRCNN (模块)</a>
@@ -584,6 +582,8 @@
       <li><a href="DL_ImageGen_bench.options.Normal_options.html#module-DL_ImageGen_bench.options.Normal_options.test_options">DL_ImageGen_bench.options.Normal_options.test_options (模块)</a>
 </li>
       <li><a href="DL_ImageGen_bench.options.Normal_options.html#module-DL_ImageGen_bench.options.Normal_options.train_options">DL_ImageGen_bench.options.Normal_options.train_options (模块)</a>
+</li>
+      <li><a href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test (模块)</a>
 </li>
       <li><a href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train (模块)</a>
 </li>
@@ -737,8 +737,6 @@
         <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_current_visuals">(DL_ImageGen_bench.models.Deblur.test_model.TestModel 方法)</a>
 </li>
       </ul></li>
-      <li><a href="DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_eva_set">get_eva_set() (在 DL_ImageGen_bench.data.data 模块中)</a>
-</li>
       <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_feature">get_feature() (DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss 方法)</a>
 </li>
       <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.DiscLoss.get_g_loss">get_g_loss() (DL_ImageGen_bench.models.Deblur.losses.DiscLoss 方法)</a>
@@ -761,8 +759,6 @@
         <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.test_model.TestModel.get_image_paths">(DL_ImageGen_bench.models.Deblur.test_model.TestModel 方法)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.ContentLoss.get_loss">get_loss() (DL_ImageGen_bench.models.Deblur.losses.ContentLoss 方法)</a>
 
       <ul>
@@ -775,6 +771,8 @@
         <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss.get_loss">(DL_ImageGen_bench.models.Deblur.losses.PerceptualLoss 方法)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR.get_lr">get_lr() (DL_ImageGen_bench.distiller.learning_rate.MultiStepMultiGammaLR 方法)</a>
 
       <ul>
@@ -791,11 +789,13 @@
 </li>
       <li><a href="DL_ImageGen_bench.distiller.quantization.html#DL_ImageGen_bench.distiller.quantization.q_utils.get_tensor_max_abs">get_tensor_max_abs() (在 DL_ImageGen_bench.distiller.quantization.q_utils 模块中)</a>
 </li>
-      <li><a href="DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_test_set">get_test_set() (在 DL_ImageGen_bench.data.data 模块中)</a>
+      <li><a href="DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_testing_set">get_testing_set() (在 DL_ImageGen_bench.data.data 模块中)</a>
 </li>
       <li><a href="DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_training_set">get_training_set() (在 DL_ImageGen_bench.data.data 模块中)</a>
 </li>
       <li><a href="DL_ImageGen_bench.data.Deblur_data.html#DL_ImageGen_bench.data.Deblur_data.base_dataset.get_transform">get_transform() (在 DL_ImageGen_bench.data.Deblur_data.base_dataset 模块中)</a>
+</li>
+      <li><a href="DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_validation_set">get_validation_set() (在 DL_ImageGen_bench.data.data 模块中)</a>
 </li>
       <li><a href="DL_ImageGen_bench.apputils.Deblur_apputils.html#DL_ImageGen_bench.apputils.Deblur_apputils.get_data.GetData">GetData (DL_ImageGen_bench.apputils.Deblur_apputils.get_data 中的类)</a>
 </li>
@@ -991,7 +991,7 @@
 </li>
       <li><a href="DL_ImageGen_bench.distiller.pruning.html#DL_ImageGen_bench.distiller.pruning.magnitude_pruner.MagnitudeParameterPruner">MagnitudeParameterPruner (DL_ImageGen_bench.distiller.pruning.magnitude_pruner 中的类)</a>
 </li>
-      <li><a href="DL_ImageGen_bench.html#DL_ImageGen_bench.evaluation.main">main() (在 DL_ImageGen_bench.evaluation 模块中)</a>
+      <li><a href="DL_ImageGen_bench.html#DL_ImageGen_bench.test.main">main() (在 DL_ImageGen_bench.test 模块中)</a>
 
       <ul>
         <li><a href="DL_ImageGen_bench.html#DL_ImageGen_bench.train.main">(在 DL_ImageGen_bench.train 模块中)</a>
@@ -1487,11 +1487,9 @@
 </li>
       <li><a href="DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.logger.TensorBoardLogger">TensorBoardLogger (DL_ImageGen_bench.distiller.data_loggers.logger 中的类)</a>
 </li>
-      <li><a href="DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.test">test() (DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer 方法)</a>
+      <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.test">test() (DL_ImageGen_bench.models.Deblur.base_model.BaseModel 方法)</a>
 
       <ul>
-        <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.base_model.BaseModel.test">(DL_ImageGen_bench.models.Deblur.base_model.BaseModel 方法)</a>
-</li>
         <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN.test">(DL_ImageGen_bench.models.Deblur.conditional_gan_model.ConditionalGAN 方法)</a>
 </li>
         <li><a href="DL_ImageGen_bench.models.Deblur.html#DL_ImageGen_bench.models.Deblur.test_model.TestModel.test">(DL_ImageGen_bench.models.Deblur.test_model.TestModel 方法)</a>
@@ -1569,6 +1567,8 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.validate">validate() (DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer 方法)</a>
+</li>
       <li><a href="DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.policy.LossComponent.value">value (DL_ImageGen_bench.distiller.policy.LossComponent 属性)</a>
 </li>
       <li><a href="DL_ImageGen_bench.distiller.data_loggers.html#DL_ImageGen_bench.distiller.data_loggers.collector.ActivationSparsityCollector.value">value() (DL_ImageGen_bench.distiller.data_loggers.collector.ActivationSparsityCollector 方法)</a>
@@ -1583,10 +1583,10 @@
 </li>
       <li><a href="DL_ImageGen_bench.models.cifar10.html#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_bn_cifar">vgg13_bn_cifar() (在 DL_ImageGen_bench.models.cifar10.vgg_cifar 模块中)</a>
 </li>
-      <li><a href="DL_ImageGen_bench.models.cifar10.html#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_cifar">vgg13_cifar() (在 DL_ImageGen_bench.models.cifar10.vgg_cifar 模块中)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="DL_ImageGen_bench.models.cifar10.html#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg13_cifar">vgg13_cifar() (在 DL_ImageGen_bench.models.cifar10.vgg_cifar 模块中)</a>
+</li>
       <li><a href="DL_ImageGen_bench.models.cifar10.html#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_bn_cifar">vgg16_bn_cifar() (在 DL_ImageGen_bench.models.cifar10.vgg_cifar 模块中)</a>
 </li>
       <li><a href="DL_ImageGen_bench.models.cifar10.html#DL_ImageGen_bench.models.cifar10.vgg_cifar.vgg16_cifar">vgg16_cifar() (在 DL_ImageGen_bench.models.cifar10.vgg_cifar 模块中)</a>

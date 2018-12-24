@@ -145,33 +145,32 @@
             
   <h1>DL_ImageGen_bench.models.C2SRCNN.solver 源代码</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">log10</span>
 
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
-<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
-<span class="kn">import</span> <span class="nn">torch.backends.cudnn</span> <span class="k">as</span> <span class="nn">cudnn</span>
-<span class="kn">import</span> <span class="nn">torchnet.meter</span> <span class="k">as</span> <span class="nn">tnt</span>
-
-<span class="kn">from</span> <span class="nn">models.C2SRCNN.model</span> <span class="k">import</span> <span class="n">Net</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="c1"># Distiller imports</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">log10</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.backends.cudnn</span> <span class="k">as</span> <span class="nn">cudnn</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+<span class="kn">import</span> <span class="nn">torchnet.meter</span> <span class="k">as</span> <span class="nn">tnt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span> <span class="nn">apputils</span>
+<span class="kn">import</span> <span class="nn">distiller</span>
+<span class="kn">import</span> <span class="nn">torchvision.transforms</span> <span class="k">as</span> <span class="nn">transforms</span>
+<span class="kn">from</span> <span class="nn">distiller.data_loggers</span> <span class="k">import</span> <span class="n">PythonLogger</span><span class="p">,</span> <span class="n">TensorBoardLogger</span>
+<span class="kn">from</span> <span class="nn">models.C2SRCNN.model</span> <span class="k">import</span> <span class="n">Net</span>
+
 <span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 <span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">))</span>
 <span class="k">if</span> <span class="n">module_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">distiller</span>
-<span class="kn">import</span> <span class="nn">apputils</span>
-<span class="kn">from</span> <span class="nn">distiller.data_loggers</span> <span class="k">import</span> <span class="n">TensorBoardLogger</span><span class="p">,</span> <span class="n">PythonLogger</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
 
 <span class="n">INPUT_CHANNELS</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">INPUT_SIZE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">]</span>
@@ -187,7 +186,21 @@
 
 
 <div class="viewcode-block" id="C2SRCNNTrainer"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer">[文档]</a><span class="k">class</span> <span class="nc">C2SRCNNTrainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">training_loader</span><span class="p">,</span> <span class="n">testing_loader</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	    SR 神经网络训练过程(C2SRCNN, SRCNN的变体)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            config (dict): 参数列表 \n</span>
+<span class="sd">            training_loader (class DataLoader): 训练集DataLoader \n</span>
+<span class="sd">            validation_loader (class DataLoader): 验证集DataLoader</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; from models.C2SRCNN.solver import C2SRCNNTrainer</span>
+<span class="sd">            &gt;&gt;&gt; model = C2SRCNNTrainer(args, training_data_loader, validation_loader)</span>
+<span class="sd">            &gt;&gt;&gt; model.run()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">training_loader</span><span class="p">,</span> <span class="n">validation_loader</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">C2SRCNNTrainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">GPU_IN_USE</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">GPU_IN_USE</span> <span class="k">else</span> <span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
@@ -201,7 +214,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upscale_factor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">upscale_factor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">training_loader</span> <span class="o">=</span> <span class="n">training_loader</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span> <span class="o">=</span> <span class="n">testing_loader</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_loader</span> <span class="o">=</span> <span class="n">validation_loader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">save</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">print_freq</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trainOn</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">trainOn</span>
@@ -217,6 +230,17 @@
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;-------------- End ----------------&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="C2SRCNNTrainer.build_model"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.build_model">[文档]</a>    <span class="k">def</span> <span class="nf">build_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        构建模型, 不只是构建模型结构, 还包括定义loss计算的方式, 优化方式(optimizeer), 还有learning rate策略</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; from models.C2SRCNN.model import Net</span>
+<span class="sd">                &gt;&gt;&gt; self.model = Net(num_channels=1, upscale_factor=self.upscale_factor).to(self.device)  # 定义模型结构</span>
+<span class="sd">                &gt;&gt;&gt; self.criterion = nn.MSELoss() # 定义loss计算方式</span>
+<span class="sd">                &gt;&gt;&gt; self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr) # 定义优化方式</span>
+<span class="sd">                &gt;&gt;&gt; self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, milestones=[500, 1000, 1500, 2000], gamma=0.5) # 定义lr策略</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">resume</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -239,6 +263,16 @@
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Raw model:</span><span class="se">\n\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="C2SRCNNTrainer.img_preprocess"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.img_preprocess">[文档]</a>    <span class="k">def</span> <span class="nf">img_preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;bicubic&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        图像进入神经网络前的处理, SRCNN模型进入网络前要进行cheap scale up</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                data (tensor): training_loader送进来的样本 \n</span>
+<span class="sd">                interpolation (str): upscale的方式(one of bicubic/bilinear/nearest) </span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                processed_data (tensor): 经过处理后的神经网络输入</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">interpolation</span> <span class="o">==</span> <span class="s1">&#39;bicubic&#39;</span><span class="p">:</span>
             <span class="n">interpolation</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span>
         <span class="k">elif</span> <span class="n">interpolation</span> <span class="o">==</span> <span class="s1">&#39;bilinear&#39;</span><span class="p">:</span>
@@ -270,13 +304,36 @@
             <span class="k">return</span> <span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="C2SRCNNTrainer.save"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.save">[文档]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	        保存模型</span>
+
+<span class="sd">            用的是torch.save()方式保存模型, inference时只用torch.load()就可以还原模型, 不用重新构建模型结构 \n</span>
+<span class="sd">            但是要注意, 在inference时, 定义模型结构的model.py文件要保留在trainging phase时相同的位置</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; torch.save(self.model, model_out_path)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">model_out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">savefile</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">model_out_path</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Checkpoint saved to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_out_path</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="C2SRCNNTrainer.train"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.train">[文档]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">compression_scheduler</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        data: [torch.cuda.FloatTensor], 4 batches: [64, 64, 64, 8]</span>
+<span class="sd">            Train Process</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int): epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                compression_scheduler (class CompressionScheduler): 由compression schedule定义文件***.yaml构建的CompressionScheduler对象</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler.on_minibatch_begin(epoch)</span>
+<span class="sd">                &gt;&gt;&gt; output = self.model(data)                # 模型inferecne</span>
+<span class="sd">                &gt;&gt;&gt; loss = self.criterion(output, target)    # 计算loss</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler.before_backward_pass(epoch)</span>
+<span class="sd">                &gt;&gt;&gt; loss.backward()                          # 反向计算梯度</span>
+<span class="sd">                &gt;&gt;&gt; self.optimizer.step()                    # 根据梯度优化权重</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler.on_minibatch_end(epoch)       </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">losses</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="n">OVERALL_LOSS_KEY</span><span class="p">,</span> <span class="n">tnt</span><span class="o">.</span><span class="n">AverageValueMeter</span><span class="p">()),</span>
                               <span class="p">(</span><span class="n">OBJECTIVE_LOSS_KEY</span><span class="p">,</span> <span class="n">tnt</span><span class="o">.</span><span class="n">AverageValueMeter</span><span class="p">())])</span>
@@ -364,16 +421,26 @@
         <span class="c1"># print(&quot;    Average Loss: {:.4f}&quot;.format(train_loss / len(self.training_loader)))</span>
         <span class="c1"># write.add_scalar(&#39;Train/Loss&#39;, train_loss / len(self.training_loader), epoch)</span>
 
-<div class="viewcode-block" id="C2SRCNNTrainer.test"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.test">[文档]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+<div class="viewcode-block" id="C2SRCNNTrainer.validate"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.validate">[文档]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        data: [torch.cuda.FloatTensor], 10 batches: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]</span>
+<span class="sd">            Validation Process，在训练阶段利用验证集来supervise模型性能的过程</span>
+<span class="sd">            </span>
+<span class="sd">            这个过程不是训练必须的</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                model (class Net): 训练模型 \n</span>
+<span class="sd">                epoch (int): epoch id, 当前是training过程的第几个epoch</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; output = self.model(data)                # 模型inferecne</span>
+<span class="sd">                &gt;&gt;&gt; mse = self.criterion(prediction, target) # 验证集计算模型loss    </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="n">avg_psnr</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">batch_num</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">batch_num</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_loader</span><span class="p">):</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img_preprocess</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># resize input image size</span>
                 <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">),</span> <span class="n">target</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
                 <span class="n">prediction</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -387,16 +454,27 @@
 
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">89</span><span class="p">)</span>
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;| end of epoch </span><span class="si">{:3d}</span><span class="s1"> | time: </span><span class="si">{:5.2f}</span><span class="s1">s | valid psnr </span><span class="si">{:5.3f}</span><span class="s1"> | &#39;</span>
-                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">),</span> <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span><span class="p">)))</span>
+                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">),</span> <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_loader</span><span class="p">)))</span>
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">89</span><span class="p">)</span>
 
         <span class="n">stats</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Performance/Validation/&#39;</span><span class="p">,</span>
-                 <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;PSNR&#39;</span><span class="p">,</span>  <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span><span class="p">))]))</span>
+                 <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;PSNR&#39;</span><span class="p">,</span>  <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_loader</span><span class="p">))]))</span>
         <span class="n">tflogger</span><span class="o">.</span><span class="n">log_training_progress</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">testing_loader</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">avg_psnr</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_loader</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="C2SRCNNTrainer.run"><a class="viewcode-back" href="../../../../DL_ImageGen_bench.models.C2SRCNN.html#DL_ImageGen_bench.models.C2SRCNN.solver.C2SRCNNTrainer.run">[文档]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Trainer的主函数, 控制training的主流程</span>
+
+<span class="sd">            Examples:</span>
+<span class="sd">                &gt;&gt;&gt; self.build_model()                                                                                # 构建模型</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler = distiller.config.file_config(self.model, self.optimizer, self.compress)   # 构建compression scheduler</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler.on_epoch_begin(epoch)</span>
+<span class="sd">                &gt;&gt;&gt; self.train(epoch, compression_scheduler)   # Train Process</span>
+<span class="sd">                &gt;&gt;&gt; self.validate(self.model, epoch)               # Validation Process</span>
+<span class="sd">                &gt;&gt;&gt; compression_scheduler.on_epoch_end(epoch)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">build_model</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainOn</span><span class="p">:</span>
@@ -421,7 +499,7 @@
                 <span class="c1"># distiller.log_weights_sparsity(self.model, epoch, loggers=[tflogger, pylogger])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">compression_scheduler</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
 
                 <span class="c1"># sparsity logger</span>
                 <span class="n">distiller</span><span class="o">.</span><span class="n">log_weights_sparsity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">loggers</span><span class="o">=</span><span class="p">[</span><span class="n">tflogger</span><span class="p">,</span> <span class="n">pylogger</span><span class="p">])</span>

@@ -63,7 +63,7 @@ class DatasetFromFolder(data.Dataset):
 
 class DatasetFromEvaFolder(data.Dataset):
     """
-        从Folder获取dataset(Evaluation Phase)
+        从Folder获取dataset(Testing Phase)
 
         Arguments:
             image_dir (str): 数据文件夹的位置 \n

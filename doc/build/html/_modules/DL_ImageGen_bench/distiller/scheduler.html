@@ -210,8 +210,10 @@
 
 
 <div class="viewcode-block" id="CompressionScheduler"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler">[文档]</a><span class="k">class</span> <span class="nc">CompressionScheduler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Responsible for scheduling pruning and masking parameters.</span>
-
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compression scheduler对象, 定义network compression的过程</span>
+<span class="sd">        由scheduler定义文件生成, 需要在Train Process的不同位置加入不同的操作</span>
+<span class="sd">        Responsible for scheduling pruning and masking parameters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
@@ -247,6 +249,15 @@
                                        <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="n">frequency</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="CompressionScheduler.on_epoch_begin"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_begin">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在一个epoch开始的时候进行的compression schedule操作, 依compression的方法不同而不同</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int):                  epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                optimizer (class Optimizer)：   训练时的优化器</span>
+
+<span class="sd">            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">epoch</span><span class="p">]:</span>
                 <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sched_metadata</span><span class="p">[</span><span class="n">policy</span><span class="p">]</span>
@@ -254,6 +265,17 @@
                 <span class="n">policy</span><span class="o">.</span><span class="n">on_epoch_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">meta</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CompressionScheduler.on_minibatch_begin"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_begin">[文档]</a>    <span class="k">def</span> <span class="nf">on_minibatch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在一个batch开始的时候进行的compression schedule操作, 依compression的方法不同而不同</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int):                  epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                minibatch_id (int):           batch id, 当前是某个epoch中的第几个batch \n</span>
+<span class="sd">                minibatches_per_epoch (int):  一个epoch中的batch数量</span>
+<span class="sd">                optimizer (class Optimizer):  训练时的优化器</span>
+
+<span class="sd">            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">epoch</span><span class="p">]:</span>
                 <span class="n">policy</span><span class="o">.</span><span class="n">on_minibatch_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span>
@@ -261,6 +283,23 @@
 
 <div class="viewcode-block" id="CompressionScheduler.before_backward_pass"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.before_backward_pass">[文档]</a>    <span class="k">def</span> <span class="nf">before_backward_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">return_loss_components</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在计算loss之后进行的compression schedule操作, 依compression的方法不同而不同</span>
+<span class="sd">            因为做了network compression之后, loss会变化, 用这个操作去更新loss的值</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch \n</span>
+<span class="sd">                minibatches_per_epoch (int):   一个epoch中的batch数量</span>
+<span class="sd">                loss (float):                  未compression之前的loss值</span>
+<span class="sd">                optimizer (class Optimizer):   训练时的优化器</span>
+<span class="sd">                return_loss_components (bool): 是否将compression前后的loss都显示出来</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                overall_loss: 经过compression之后的总体loss </span>
+
+<span class="sd">            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># We pass the loss to the policies, which may override it</span>
         <span class="n">overall_loss</span> <span class="o">=</span> <span class="n">loss</span>
         <span class="n">loss_components</span> <span class="o">=</span> <span class="p">[]</span>
@@ -279,6 +318,17 @@
         <span class="k">return</span> <span class="n">overall_loss</span></div>
 
 <div class="viewcode-block" id="CompressionScheduler.on_minibatch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_minibatch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">minibatch_id</span><span class="p">,</span> <span class="n">minibatches_per_epoch</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在一个batch结束时进行的compression schedule操作, 依compression的方法不同而不同</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch \n</span>
+<span class="sd">                minibatches_per_epoch (int):   一个epoch中的batch数量</span>
+<span class="sd">                optimizer (class Optimizer):   训练时的优化器</span>
+
+<span class="sd">            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># When we get to this point, the weights are no longer maksed.  This is because during the backward</span>
         <span class="c1"># pass, the weights are updated.  So we choose to lazily apply the pruning mask, only if some</span>
         <span class="c1"># component is being called-back.</span>
@@ -293,6 +343,15 @@
                                         <span class="bp">self</span><span class="o">.</span><span class="n">zeros_mask_dict</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CompressionScheduler.on_epoch_end"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_end">[文档]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在一个epoch结束时进行的compression schedule操作, 依compression的方法不同而不同</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                epoch (int):                   epoch id, 当前是training过程的第几个epoch \n</span>
+<span class="sd">                optimizer (class Optimizer):   训练时的优化器</span>
+
+<span class="sd">            在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">policy</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">policies</span><span class="p">[</span><span class="n">epoch</span><span class="p">]:</span>
                 <span class="n">meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sched_metadata</span><span class="p">[</span><span class="n">policy</span><span class="p">]</span>

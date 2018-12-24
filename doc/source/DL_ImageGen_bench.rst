@@ -15,10 +15,10 @@ Subpackages
 Submodules
 ----------
 
-DL\_ImageGen\_bench.evaluation module
--------------------------------------
+DL\_ImageGen\_bench.test module
+-------------------------------
 
-.. automodule:: DL_ImageGen_bench.evaluation
+.. automodule:: DL_ImageGen_bench.test
     :members:
     :undoc-members:
     :show-inheritance:

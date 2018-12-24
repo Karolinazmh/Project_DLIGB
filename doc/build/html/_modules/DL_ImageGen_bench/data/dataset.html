@@ -165,6 +165,14 @@
 
 
 <div class="viewcode-block" id="DatasetFromFolder"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.dataset.DatasetFromFolder">[文档]</a><span class="k">class</span> <span class="nc">DatasetFromFolder</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        从Folder获取dataset(Training Phase)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            image_dir (str): 数据文件夹的位置 \n</span>
+<span class="sd">            input_transform (func): 输入图像的前处理操作(crop/resize, 转换为tensor类型) \n</span>
+<span class="sd">            target_transform (func): 目标图像的前处理操作(crop/resize, 转换为tensor类型) \n		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_dir</span><span class="p">,</span> <span class="n">input_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DatasetFromFolder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_image_file</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
@@ -173,6 +181,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">target_transform</span> <span class="o">=</span> <span class="n">target_transform</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在batch中获取单个样本对</span>
+<span class="sd">            用PIL将图像读入, 经过input_transform和target_transform进行必要的前处理并转换为tensor类型</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                index (int): batch中的sample id \n</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                input_image (tensor): 神经网络的输入tensor图像</span>
+<span class="sd">                target (tensor): 神经网络的目标tensor图像</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">input_image</span> <span class="o">=</span> <span class="n">load_img</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_filenames</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">input_image</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_transform</span><span class="p">:</span>
@@ -187,6 +206,14 @@
 
 
 <div class="viewcode-block" id="DatasetFromEvaFolder"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.dataset.DatasetFromEvaFolder">[文档]</a><span class="k">class</span> <span class="nc">DatasetFromEvaFolder</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        从Folder获取dataset(Testing Phase)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            image_dir (str): 数据文件夹的位置 \n</span>
+<span class="sd">            input_transform (func): 输入图像的前处理操作(crop/resize, 转换为tensor类型) \n</span>
+<span class="sd">            target_transform (func): 目标图像的前处理操作(crop/resize, 转换为tensor类型) \n		</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_dir</span><span class="p">,</span> <span class="n">input_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_transform</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DatasetFromEvaFolder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">join</span><span class="p">(</span><span class="n">image_dir</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">image_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_image_file</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span>
@@ -201,6 +228,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">upscale</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">upscale_factor</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            在batch中获取单个样本对</span>
+<span class="sd">            用PIL将图像读入, 经过input_transform和target_transform进行必要的前处理并转换为tensor类型</span>
+
+<span class="sd">            Arguments:</span>
+<span class="sd">                index (int): batch中的sample id \n</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                input_image (tensor): 神经网络的输入tensor图像</span>
+<span class="sd">                target (tensor): 神经网络的目标tensor图像</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_mode</span> <span class="o">==</span> <span class="s1">&#39;rgb&#39;</span><span class="p">:</span>
             <span class="n">input_image</span> <span class="o">=</span> <span class="n">load_img</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_filenames</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_mode</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>

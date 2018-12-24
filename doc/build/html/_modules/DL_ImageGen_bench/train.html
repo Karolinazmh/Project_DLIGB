@@ -143,19 +143,21 @@
             
   <h1>DL_ImageGen_bench.train 源代码</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="k">import</span> <span class="n">DataLoader</span>
-<span class="kn">from</span> <span class="nn">models.C2SRCNN.solver</span> <span class="k">import</span> <span class="n">C2SRCNNTrainer</span>
-<span class="kn">from</span> <span class="nn">models.Deblur.solver</span> <span class="k">import</span> <span class="n">DeblurGANTrainer</span>
 
-<span class="kn">from</span> <span class="nn">options.Normal_options.train_options</span> <span class="k">import</span> <span class="n">TrainOptions</span> <span class="k">as</span> <span class="n">NormTrainOption</span>
-<span class="kn">from</span> <span class="nn">options.Deblur_options.train_options</span> <span class="k">import</span> <span class="n">TrainOptions</span> <span class="k">as</span> <span class="n">DeblurGANTrainOptions</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">sys</span> <span class="k">as</span> <span class="nn">_sys</span>
 
-<span class="kn">from</span> <span class="nn">data.Deblur_data.data_loader</span> <span class="k">import</span> <span class="n">CreateDataLoader</span> <span class="k">as</span> <span class="n">DeblurDataLoader</span>
-<span class="kn">from</span> <span class="nn">data.data</span> <span class="k">import</span> <span class="n">get_training_set</span><span class="p">,</span> <span class="n">get_test_set</span>
-
 <span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="k">import</span> <span class="n">DataLoader</span>
+
+<span class="kn">from</span> <span class="nn">data.data</span> <span class="k">import</span> <span class="n">get_training_set</span><span class="p">,</span> <span class="n">get_validation_set</span>
+<span class="kn">from</span> <span class="nn">data.Deblur_data.data_loader</span> <span class="k">import</span> <span class="n">CreateDataLoader</span> <span class="k">as</span> <span class="n">DeblurDataLoader</span>
+<span class="kn">from</span> <span class="nn">models.C2SRCNN.solver</span> <span class="k">import</span> <span class="n">C2SRCNNTrainer</span>
+<span class="kn">from</span> <span class="nn">models.Deblur.solver</span> <span class="k">import</span> <span class="n">DeblurGANTrainer</span>
+<span class="kn">from</span> <span class="nn">options.Deblur_options.train_options</span> <span class="k">import</span> \
+    <span class="n">TrainOptions</span> <span class="k">as</span> <span class="n">DeblurGANTrainOptions</span>
+<span class="kn">from</span> <span class="nn">options.Normal_options.train_options</span> <span class="k">import</span> \
+    <span class="n">TrainOptions</span> <span class="k">as</span> <span class="n">NormTrainOption</span>
 
 <span class="c1"># ===========================================================</span>
 <span class="c1"># 1. Options Get from different option Form</span>
@@ -168,23 +170,23 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../DL_ImageGen_bench.html#DL_ImageGen_bench.train.main">[文档]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;模型训练阶段(Training Phase)的主入口</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    模型训练阶段(Training Phase)的主入口</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; from models.C2SRCNN.solver import C2SRCNNTrainer</span>
 <span class="sd">        &gt;&gt;&gt; from options.Normal_options.train_options import TrainOptions as NormTrainOption</span>
-<span class="sd">        &gt;&gt;&gt; from data.data import get_training_set, get_test_set</span>
+<span class="sd">        &gt;&gt;&gt; from data.data import get_training_set, get_validation_set</span>
 <span class="sd">        # Step 1. 参数列表获取(Options Get)</span>
 <span class="sd">        &gt;&gt;&gt; args = DeblurGANTrainOptions().parse()</span>
 <span class="sd">        # Step 2. 数据获取(Dataset Get)</span>
 <span class="sd">        &gt;&gt;&gt; train_set = get_training_set(args.upscale_factor, args.traindata)</span>
-<span class="sd">        &gt;&gt;&gt; test_set = get_test_set(args.upscale_factor, args.testdata)</span>
+<span class="sd">        &gt;&gt;&gt; validate_set = get_validation_set(args.upscale_factor, args.validata)</span>
 <span class="sd">        &gt;&gt;&gt; training_data_loader = DataLoader(dataset=train_set, batch_size=args.batchSize, shuffle=True)</span>
-<span class="sd">        &gt;&gt;&gt; testing_data_loader = DataLoader(dataset=test_set, batch_size=args.testBatchSize, shuffle=False)</span>
+<span class="sd">        &gt;&gt;&gt; validation_data_loader = DataLoader(dataset=validate_set, batch_size=args.valiBatchSize, shuffle=False)</span>
 <span class="sd">        # Step 3. 训练过程(Trainer)</span>
-<span class="sd">        &gt;&gt;&gt; model = C2SRCNNTrainer(args, training_data_loader, testing_data_loader)</span>
+<span class="sd">        &gt;&gt;&gt; model = C2SRCNNTrainer(args, training_data_loader, validation_data_loader)</span>
 <span class="sd">        &gt;&gt;&gt; model.run()</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># ===========================================================</span>
@@ -194,25 +196,25 @@
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">optform</span> <span class="o">==</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
         <span class="n">train_set</span> <span class="o">=</span> <span class="n">get_training_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">traindata</span><span class="p">)</span>
-        <span class="n">test_set</span> <span class="o">=</span> <span class="n">get_test_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">testdata</span><span class="p">)</span>
+        <span class="n">validate_set</span> <span class="o">=</span> <span class="n">get_validation_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">validata</span><span class="p">)</span>
         <span class="n">training_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">testing_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">testBatchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">validation_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">validate_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">valiBatchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">optform</span> <span class="o">==</span> <span class="s1">&#39;deblurGAN&#39;</span><span class="p">:</span>
         <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DeblurDataLoader</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="n">training_data_loader</span> <span class="o">=</span> <span class="n">train_loader</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
-        <span class="n">testing_data_loader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">validation_data_loader</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">train_set</span> <span class="o">=</span> <span class="n">get_training_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">traindata</span><span class="p">)</span>
-        <span class="n">test_set</span> <span class="o">=</span> <span class="n">get_test_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">testdata</span><span class="p">)</span>
+        <span class="n">validate_set</span> <span class="o">=</span> <span class="n">get_validation_set</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">validata</span><span class="p">)</span>
         <span class="n">training_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">train_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">testing_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">test_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">testBatchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">validation_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">validate_set</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">valiBatchSize</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># ===========================================================</span>
     <span class="c1"># 3. Training</span>
     <span class="c1"># ===========================================================</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">optform</span> <span class="o">==</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">model</span> <span class="o">==</span> <span class="s1">&#39;c2srcnn&#39;</span><span class="p">:</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">C2SRCNNTrainer</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">training_data_loader</span><span class="p">,</span> <span class="n">testing_data_loader</span><span class="p">)</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">C2SRCNNTrainer</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">training_data_loader</span><span class="p">,</span> <span class="n">validation_data_loader</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;the model does not exist&quot;</span><span class="p">)</span>
         <span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>

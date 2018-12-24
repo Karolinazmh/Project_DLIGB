@@ -228,13 +228,13 @@
 <span class="sd">    representation of the graph, is the same nn.Module is used several times in the</span>
 <span class="sd">    graph.  For example:</span>
 
-<span class="sd">        out = self.conv1(x)</span>
-<span class="sd">        out = self.bn1(out)</span>
-<span class="sd">        out = self.relu(out)    &lt;=== First use of self.relu</span>
+<span class="sd">        out = self.conv1(x) \n</span>
+<span class="sd">        out = self.bn1(out) \n</span>
+<span class="sd">        out = self.relu(out)    &lt;=== First use of self.relu \n</span>
 
-<span class="sd">        out = self.conv2(out)</span>
-<span class="sd">        out = self.bn2(out)</span>
-<span class="sd">        out = self.relu(out)    &lt;=== Second use of self.relu</span>
+<span class="sd">        out = self.conv2(out) \n</span>
+<span class="sd">        out = self.bn2(out)   \n</span>
+<span class="sd">        out = self.relu(out)    &lt;=== Second use of self.relu \n</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Edge</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Edge&#39;</span><span class="p">,</span> <span class="s1">&#39;src dst&#39;</span><span class="p">)</span>
 
@@ -699,15 +699,11 @@
 <span class="sd">    as represented by SummaryGraph &#39;sgraph&#39;.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw.</span>
-<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
-<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
-<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
-<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
-<span class="sd">                a legal pydot style dictionary.  For example:</span>
-<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
-<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
-<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw. \n</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes \n</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left \n</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example: \n</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;, &#39;fillcolor&#39;: &#39;gray&#39;, &#39;style&#39;: &#39;rounded, filled&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">op_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">op</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sgraph</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
@@ -738,16 +734,12 @@
 <span class="sd">    by SummaryGraph &#39;sgraph&#39;</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw.</span>
-<span class="sd">        png_fname (string): PNG file name</span>
-<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
-<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
-<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
-<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
-<span class="sd">                a legal pydot style dictionary.  For example:</span>
-<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
-<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
-<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">        sgraph (SummaryGraph): the SummaryGraph instance to draw. \n</span>
+<span class="sd">        png_fname (string): PNG file name \n</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes \n</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top  &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left \n</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example: \n</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;, &#39;fillcolor&#39;: &#39;gray&#39;, &#39;style&#39;: &#39;rounded, filled&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">png</span> <span class="o">=</span> <span class="n">create_png</span><span class="p">(</span><span class="n">sgraph</span><span class="p">,</span> <span class="n">display_param_nodes</span><span class="o">=</span><span class="n">display_param_nodes</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">png_fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fid</span><span class="p">:</span>
@@ -760,18 +752,13 @@
 <span class="sd">    simplifies the interface of draw_model_to_file().</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        model: PyTorch model instance</span>
-<span class="sd">        png_fname (string): PNG file name</span>
-<span class="sd">        dataset (string): one of &#39;imagenet&#39; or &#39;cifar10&#39;.  This is required in order to</span>
-<span class="sd">                          create a dummy input of the correct shape.</span>
-<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes</span>
-<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top</span>
-<span class="sd">                 &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left</span>
-<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is</span>
-<span class="sd">                a legal pydot style dictionary.  For example:</span>
-<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;,</span>
-<span class="sd">                                   &#39;fillcolor&#39;: &#39;gray&#39;,</span>
-<span class="sd">                                   &#39;style&#39;: &#39;rounded, filled&#39;}</span>
+<span class="sd">        model: PyTorch model instance \n</span>
+<span class="sd">        png_fname (string): PNG file name \n</span>
+<span class="sd">        dataset (string): one of &#39;imagenet&#39; or &#39;cifar10&#39;.  This is required in order to create a dummy input of the correct shape. \n</span>
+<span class="sd">        display_param_nodes (boolean): if True, draw the parameter nodes \n</span>
+<span class="sd">        rankdir: diagram direction.  &#39;TB&#39;/&#39;BT&#39; is Top-to-Bottom/Bottom-to-Top &#39;LR&#39;/&#39;R/L&#39; is Left-to-Rt/Rt-to-Left \n</span>
+<span class="sd">        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example:  \n</span>
+<span class="sd">                styles[&#39;conv1&#39;] = {&#39;shape&#39;: &#39;oval&#39;, &#39;fillcolor&#39;: &#39;gray&#39;, &#39;style&#39;: &#39;rounded, filled&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dataset</span> <span class="o">==</span> <span class="s1">&#39;imagenet&#39;</span><span class="p">:</span>

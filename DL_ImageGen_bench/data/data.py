@@ -81,9 +81,9 @@ def get_training_set(upscale_factor, train_dir):
                              target_transform=target_transform(crop_size))
 
 
-def get_test_set(upscale_factor, test_dir):
+def get_validation_set(upscale_factor, test_dir):
     """
-        获取Validataion dataset (在train的过程中supervise模型性能的数据库)
+        获取Validataion dataset (在train的过程中supervise模型performance的数据库)
 
         Arguments:
             upscale_factor (int): SR 图像的scale倍率 \n
@@ -102,9 +102,9 @@ def get_test_set(upscale_factor, test_dir):
                              target_transform=target_transform(crop_size))
 
 
-def get_eva_set(opt):
+def get_testing_set(opt):
     """
-        获取Evaluation dataset
+        获取Testing dataset
 
         Arguments:
             opt (dict): 参数列表

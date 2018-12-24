@@ -27,10 +27,17 @@ class ClippedOnly(nn.Module):
 
 
 def draw_model_to_file(model, png_fname, dummy_input):
-    """Draw a language model graph to a PNG file.
+    """
+        将模型结构存储到png图像文件
 
-    Caveat: the PNG that is produced has some problems, which we suspect are due to
-    PyTorch issues related to RNN ONNX export.
+        Arguments:
+            model (class Net):      已训练好的模型 \n
+            png_fname (str):        图像文件名称和位置 \n
+            dummy_input (tensor):   和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width]
+
+        Examples:
+            >>> from apputils.platform_summaries import *
+            >>> draw_model_to_file(model, 'arch.png', torch.FloatTensor(1, 3, 128, 128))
     """
     try:
         g = apputils.SummaryGraph(model, dummy_input)
@@ -45,6 +52,19 @@ def draw_model_to_file(model, png_fname, dummy_input):
 
 
 def sensitivity_analysis(model, sensitivity_file, test_func, sense_type):
+    """
+        分析网络权重的敏感度, 就是剪枝后的performance loss
+
+        Arguments:
+            model (class Net):          已训练好的模型 \n
+            sensitivity_file (str):     存储敏感度分析结果的文件名称和位置 \n
+            test_func (func):           在Tester中定义的Test Process, 因为要得到performance, 需要每次剪枝后inference一次model \n
+            sense_type (str):           敏感度分析的维度(one of 'element'/'filter'/'channel')
+
+        Examples:
+            >>> from apputils.platform_summaries import *
+            >>> sensitivity_analysis(model, 'sense_file.xlsx', test_func, 'element')
+    """
     msglogger.info("Running sensitivity tests")
     # test_func = partial(self.test, opt=opt)
     which_params = [param_name for param_name, _ in model.named_parameters()]
@@ -57,6 +77,17 @@ def sensitivity_analysis(model, sensitivity_file, test_func, sense_type):
 
 
 def sparsity_display(model, sparsity_file):
+    """
+        分析网络权重的稀疏性, 就是权重中有多少0
+
+        Arguments:
+            model (class Net):          已训练好的模型 \n
+            sparsity_file (str):     存储稀疏性分析结果的文件名称和位置
+
+        Examples:
+            >>> from apputils.platform_summaries import *
+            >>> sparsity_display(model, 'spars_file.xlsx')
+    """
     df_sparsity = distiller.weights_sparsity_summary(model)
     # Remove these two columns which contains uninteresting values
     df_sparsity = df_sparsity.drop(['Cols (%)', 'Rows (%)'], axis=1)
@@ -65,6 +96,18 @@ def sparsity_display(model, sparsity_file):
 
 
 def macs_display(model, macs_file, dummy_input):
+    """
+        分析网络的计算量MACs
+
+        Arguments:
+            model (class Net):          已训练好的模型 \n
+            macs_file (str):            存储计算量结果的文件名称和位置 \n
+            dummy_input (tensor):       和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width]
+
+        Examples:
+            >>> from apputils.platform_summaries import *
+            >>> macs_display(model, 'macs_file.xlsx'， torch.FloatTensor(1, 3, 128, 128))
+    """
     df_macs = distiller.model_performance_summary(model, dummy_input, 1)
 
     df_macs.to_csv(macs_file)
@@ -74,7 +117,19 @@ def macs_display(model, macs_file, dummy_input):
 
 
 def transform_to_onnx(model, onnx_file, dummy_input, quantize_flag):
+    """
+        将网络模型和权重存储为onnx格式
 
+        Arguments:
+            model (class Net):          已训练好的模型 \n
+            onnx_file (str):            onnx文件名称和位置 \n
+            dummy_input (tensor):       和网络输入相同维度的dummy数据, for example, torch.FloatTensor(1, 3, 128, 128), [batch, channel, height, width] \n
+            quantize_flag (bool):       模型是否为量化后模型, 如果是, 需要在存onnx模型时将ClippedLinearQuantization module替换为ClippedOnly module
+
+        Examples:
+            >>> from apputils.platform_summaries import *
+            >>> transform_to_onnx(model, 'model.onnx'， torch.FloatTensor(1, 3, 128, 128), False)
+    """
     if quantize_flag:
         replace_quantize_module(model)
 

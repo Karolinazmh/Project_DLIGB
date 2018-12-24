@@ -1,24 +1,22 @@
 from __future__ import print_function
+
+import os
+import sys
+from functools import partial, reduce
 from math import log10
 
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-
-from functools import reduce
-from functools import partial
 from PIL import Image
 
-# Distiller imports
-import os
-import sys
+import torchvision.transforms as transforms
+from apputils.platform_summaries import *
+from distiller.data_loggers import PythonLogger, TensorBoardLogger
+
 script_dir = os.path.dirname(__file__)
 module_path = os.path.abspath(os.path.join(script_dir, '..', '..'))
 if module_path not in sys.path:
     sys.path.append(module_path)
-from distiller.data_loggers import TensorBoardLogger, PythonLogger
-from apputils.platform_summaries import *
-
 
 INPUT_CHANNELS = 1
 INPUT_SIZE = [1, 540, 960]   # [channel, height, width]
@@ -34,6 +32,18 @@ OBJECTIVE_LOSS_KEY = 'Objective Loss'
 
 
 class XSRCNNTester(object):
+    """
+	    SR 神经网络测试过程(C2SRCNN, SRCNN的变体)
+
+        Arguments:
+            config (dict): 参数列表 \n
+            testing_loader (class DataLoader): 测试集DataLoader
+
+        Examples:
+            >>> from models.test_solver import XSRCNNTester
+            >>> model = XSRCNNTester(args, test_data_loader)
+            >>> model.run(args)
+    """
     def __init__(self, config, testing_loader):
         super(XSRCNNTester, self).__init__()
         self.GPU_IN_USE = torch.cuda.is_available()
@@ -64,6 +74,14 @@ class XSRCNNTester(object):
         msglogger.info('-------------- End ----------------')
 
     def build_model(self):
+        """
+	        构建模型, 从已经存储的权重文件.pth还原模型, 并定义评估metric(比如l2 loss)
+            SR 应用目前不支持load_dict()方式还原模型, 如有需要, 可以参考models.Deblur.test_solver.build_model
+
+            Examples:
+                >>> self.model = torch.load(model_file.pth)    # 从权重文件还原模型
+                >>> self.criterion = nn.MSELoss()              # 定义评估metric
+        """
         if self.resume:
             with open(self.resume, 'rb') as f:
                 self.model = torch.load(f)
@@ -76,6 +94,16 @@ class XSRCNNTester(object):
         msglogger.info('Raw model:\n\n{0}\n'.format(self.model))
 
     def img_preprocess(self, data, interpolation='bicubic'):
+        """
+	        图像进入神经网络前的处理, SRCNN模型进入网络前要进行cheap scale up
+
+            Arguments:
+                data (tensor): training_loader送进来的样本 \n
+                interpolation (str): upscale的方式(one of bicubic/bilinear/nearest) 
+
+            Returns:
+                processed_data (tensor): 经过处理后的神经网络输入
+        """
         if interpolation == 'bicubic':
             interpolation = Image.BICUBIC
         elif interpolation == 'bilinear':
@@ -107,6 +135,13 @@ class XSRCNNTester(object):
             return transform(data)
 
     def save_tensor2img(self, tensor, img_save_path):
+        """
+	        将神经网络输出的tensor数据存储到图像文件
+
+            Arguments:
+                tensor (tensor): 神经网络的输出tensor \n
+                img_save_path (str): 保存图像文件的位置 
+        """
         out_img = tensor.cpu()[0].detach().numpy()
         out_img *= 255.0
         out_img = out_img.clip(0, 255)
@@ -117,6 +152,17 @@ class XSRCNNTester(object):
         del out_img
 
     def test(self, model):
+        """
+	        Test Process, 测试过程
+
+            Arguments:
+                model (class Net): 已训练好的模型 
+
+            Examples:
+                >>> output = self.model(data)                       # 模型inferecne
+                >>> mse = self.criterion(prediction, target)        # 测试集计算模型loss  
+                >>> self.save_tensor2img(output, output_save_path)  # 将模型输出存储为图像文件
+        """
         avg_psnr = 0
         save_path = './results/%s/test_image' % self.model_name
         if not os.path.exists(save_path):
@@ -165,6 +211,22 @@ class XSRCNNTester(object):
         return avg_psnr / len(self.testing_loader)
 
     def run(self, opt):
+        """
+            Tester的主函数, 控制test的主流程
+
+            Arguments:
+                opt (dict): 参数列表
+
+            Examples:
+                >>> from apputils.platform_summaries import *
+                >>> self.build_model()          # 构建模型
+                >>> self.test(self.model)       # 测试模型
+                >>> draw_model_to_file(model, 'arch.png', torch.FloatTensor(1, 3, 128, 128))          # 画模型结构
+                >>> sensitivity_analysis(model, 'sense_file.xlsx', test_func, 'element')              # 权重敏感度分析
+                >>> sparsity_display(model, 'spars_file.xlsx')                                        # 权重稀疏性分析
+                >>> macs_display(model, 'macs_file.xlsx'， torch.FloatTensor(1, 3, 128, 128))         # 模型计算量估计
+                >>> transform_to_onnx(model, 'model.onnx'， torch.FloatTensor(1, 3, 128, 128), False) # 将模型和权重存为onnx格式文件
+        """
         self.build_model()
 
         resolution = reduce(lambda x, y: x * y, INPUT_SIZE)

@@ -84,13 +84,13 @@ class SummaryGraph(object):
     representation of the graph, is the same nn.Module is used several times in the
     graph.  For example:
 
-        out = self.conv1(x)
-        out = self.bn1(out)
-        out = self.relu(out)    <=== First use of self.relu
+        out = self.conv1(x) \n
+        out = self.bn1(out) \n
+        out = self.relu(out)    <=== First use of self.relu \n
 
-        out = self.conv2(out)
-        out = self.bn2(out)
-        out = self.relu(out)    <=== Second use of self.relu
+        out = self.conv2(out) \n
+        out = self.bn2(out)   \n
+        out = self.relu(out)    <=== Second use of self.relu \n
     """
     Edge = collections.namedtuple('Edge', 'src dst')
 
@@ -555,15 +555,11 @@ def create_png(sgraph, display_param_nodes=False, rankdir='TB', styles=None):
     as represented by SummaryGraph 'sgraph'.
 
     Args:
-        sgraph (SummaryGraph): the SummaryGraph instance to draw.
-        display_param_nodes (boolean): if True, draw the parameter nodes
-        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top
-                 'LR'/'R/L' is Left-to-Rt/Rt-to-Left
-        styles: a dictionary of styles.  Key is module name.  Value is
-                a legal pydot style dictionary.  For example:
-                styles['conv1'] = {'shape': 'oval',
-                                   'fillcolor': 'gray',
-                                   'style': 'rounded, filled'}
+        sgraph (SummaryGraph): the SummaryGraph instance to draw. \n
+        display_param_nodes (boolean): if True, draw the parameter nodes \n
+        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top 'LR'/'R/L' is Left-to-Rt/Rt-to-Left \n
+        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example: \n
+                styles['conv1'] = {'shape': 'oval', 'fillcolor': 'gray', 'style': 'rounded, filled'}
     """
 
     op_nodes = [op['name'] for op in sgraph.ops.values()]
@@ -594,16 +590,12 @@ def draw_model_to_file(sgraph, png_fname, display_param_nodes=False, rankdir='TB
     by SummaryGraph 'sgraph'
 
     Args:
-        sgraph (SummaryGraph): the SummaryGraph instance to draw.
-        png_fname (string): PNG file name
-        display_param_nodes (boolean): if True, draw the parameter nodes
-        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top
-                 'LR'/'R/L' is Left-to-Rt/Rt-to-Left
-        styles: a dictionary of styles.  Key is module name.  Value is
-                a legal pydot style dictionary.  For example:
-                styles['conv1'] = {'shape': 'oval',
-                                   'fillcolor': 'gray',
-                                   'style': 'rounded, filled'}
+        sgraph (SummaryGraph): the SummaryGraph instance to draw. \n
+        png_fname (string): PNG file name \n
+        display_param_nodes (boolean): if True, draw the parameter nodes \n
+        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top  'LR'/'R/L' is Left-to-Rt/Rt-to-Left \n
+        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example: \n
+                styles['conv1'] = {'shape': 'oval', 'fillcolor': 'gray', 'style': 'rounded, filled'}
         """
     png = create_png(sgraph, display_param_nodes=display_param_nodes)
     with open(png_fname, 'wb') as fid:
@@ -616,18 +608,13 @@ def draw_img_classifier_to_file(model, png_fname, dataset, display_param_nodes=F
     simplifies the interface of draw_model_to_file().
 
     Args:
-        model: PyTorch model instance
-        png_fname (string): PNG file name
-        dataset (string): one of 'imagenet' or 'cifar10'.  This is required in order to
-                          create a dummy input of the correct shape.
-        display_param_nodes (boolean): if True, draw the parameter nodes
-        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top
-                 'LR'/'R/L' is Left-to-Rt/Rt-to-Left
-        styles: a dictionary of styles.  Key is module name.  Value is
-                a legal pydot style dictionary.  For example:
-                styles['conv1'] = {'shape': 'oval',
-                                   'fillcolor': 'gray',
-                                   'style': 'rounded, filled'}
+        model: PyTorch model instance \n
+        png_fname (string): PNG file name \n
+        dataset (string): one of 'imagenet' or 'cifar10'.  This is required in order to create a dummy input of the correct shape. \n
+        display_param_nodes (boolean): if True, draw the parameter nodes \n
+        rankdir: diagram direction.  'TB'/'BT' is Top-to-Bottom/Bottom-to-Top 'LR'/'R/L' is Left-to-Rt/Rt-to-Left \n
+        styles: a dictionary of styles.  Key is module name.  Value is a legal pydot style dictionary.  For example:  \n
+                styles['conv1'] = {'shape': 'oval', 'fillcolor': 'gray', 'style': 'rounded, filled'}
     """
     try:
         if dataset == 'imagenet':

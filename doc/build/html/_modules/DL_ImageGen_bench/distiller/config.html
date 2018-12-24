@@ -287,7 +287,21 @@
 
 
 <div class="viewcode-block" id="file_config"><a class="viewcode-back" href="../../../DL_ImageGen_bench.distiller.html#DL_ImageGen_bench.distiller.config.file_config">[文档]</a><span class="k">def</span> <span class="nf">file_config</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read the schedule from file&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read the compression schedule from file</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            model (class Net):            模型结构 \n</span>
+<span class="sd">            optimizer (class Optimizer)   训练时的优化器 \n</span>
+<span class="sd">            filename (str)                定义comprerssion schedule的.yaml文件名</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            compression_scheduler(class distiller.scheduler.CompressionSceduler) Network CompressionScheduller对象</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; import distiller</span>
+<span class="sd">            &gt;&gt;&gt; distiller.config.file_config(model, optimizer, &#39;./models/C2SRCNN/agp_prune.yaml&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
         <span class="n">msglogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reading compression schedule from: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>

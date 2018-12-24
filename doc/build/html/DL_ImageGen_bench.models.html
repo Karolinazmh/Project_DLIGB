@@ -96,7 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -224,30 +224,104 @@
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester">
 <em class="property">class </em><code class="descclassname">DL_ImageGen_bench.models.test_solver.</code><code class="descname">XSRCNNTester</code><span class="sig-paren">(</span><em>config</em>, <em>testing_loader</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<blockquote>
+<div>SR 神经网络测试过程(C2SRCNN, SRCNN的变体)</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">config (dict): 参数列表</p>
+<p class="last">testing_loader (class DataLoader): 测试集DataLoader</p>
+</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">models.test_solver</span> <span class="k">import</span> <span class="n">XSRCNNTester</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">XSRCNNTester</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">test_data_loader</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester.build_model">
 <code class="descname">build_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester.build_model"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester.build_model" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>构建模型, 从已经存储的权重文件.pth还原模型, 并定义评估metric(比如l2 loss)</div></blockquote>
+<p>SR 应用目前不支持load_dict()方式还原模型, 如有需要, 可以参考models.Deblur.test_solver.build_model</p>
+<dl class="docutils">
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_file</span><span class="o">.</span><span class="n">pth</span><span class="p">)</span>    <span class="c1"># 从权重文件还原模型</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>              <span class="c1"># 定义评估metric</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester.img_preprocess">
 <code class="descname">img_preprocess</code><span class="sig-paren">(</span><em>data</em>, <em>interpolation='bicubic'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester.img_preprocess"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester.img_preprocess" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>图像进入神经网络前的处理, SRCNN模型进入网络前要进行cheap scale up</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">data (tensor): training_loader送进来的样本</p>
+<p class="last">interpolation (str): upscale的方式(one of bicubic/bilinear/nearest)</p>
+</dd>
+<dt>Returns:</dt>
+<dd>processed_data (tensor): 经过处理后的神经网络输入</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>opt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester.run"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester.run" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tester的主函数, 控制test的主流程</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>opt (dict): 参数列表</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from apputils.platform_summaries import *
+&gt;&gt;&gt; self.build_model()          # 构建模型
+&gt;&gt;&gt; self.test(self.model)       # 测试模型
+&gt;&gt;&gt; draw_model_to_file(model, &#39;arch.png&#39;, torch.FloatTensor(1, 3, 128, 128))          # 画模型结构
+&gt;&gt;&gt; sensitivity_analysis(model, &#39;sense_file.xlsx&#39;, test_func, &#39;element&#39;)              # 权重敏感度分析
+&gt;&gt;&gt; sparsity_display(model, &#39;spars_file.xlsx&#39;)                                        # 权重稀疏性分析
+&gt;&gt;&gt; macs_display(model, &#39;macs_file.xlsx&#39;， torch.FloatTensor(1, 3, 128, 128))         # 模型计算量估计
+&gt;&gt;&gt; transform_to_onnx(model, &#39;model.onnx&#39;， torch.FloatTensor(1, 3, 128, 128), False) # 将模型和权重存为onnx格式文件
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester.save_tensor2img">
 <code class="descname">save_tensor2img</code><span class="sig-paren">(</span><em>tensor</em>, <em>img_save_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester.save_tensor2img"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester.save_tensor2img" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>将神经网络输出的tensor数据存储到图像文件</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">tensor (tensor): 神经网络的输出tensor</p>
+<p class="last">img_save_path (str): 保存图像文件的位置</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.models.test_solver.XSRCNNTester.test">
 <code class="descname">test</code><span class="sig-paren">(</span><em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/models/test_solver.html#XSRCNNTester.test"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.models.test_solver.XSRCNNTester.test" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><blockquote>
+<div>Test Process, 测试过程</div></blockquote>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd>model (class Net): 已训练好的模型</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>                       <span class="c1"># 模型inferecne</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>        <span class="c1"># 测试集计算模型loss  </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">save_tensor2img</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">output_save_path</span><span class="p">)</span>  <span class="c1"># 将模型输出存储为图像文件</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

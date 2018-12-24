@@ -106,7 +106,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -259,7 +259,22 @@ scheduler.add_policy(policy, epochs=[0, 2, 4])</dd>
 <dl class="function">
 <dt id="DL_ImageGen_bench.distiller.config.file_config">
 <code class="descclassname">DL_ImageGen_bench.distiller.config.</code><code class="descname">file_config</code><span class="sig-paren">(</span><em>model</em>, <em>optimizer</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/config.html#file_config"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.config.file_config" title="永久链接至目标">¶</a></dt>
-<dd><p>Read the schedule from file</p>
+<dd><p>Read the compression schedule from file</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">model (class Net):            模型结构</p>
+<p>optimizer (class Optimizer)   训练时的优化器</p>
+<p class="last">filename (str)                定义comprerssion schedule的.yaml文件名</p>
+</dd>
+<dt>Returns:</dt>
+<dd>compression_scheduler(class distiller.scheduler.CompressionSceduler) Network CompressionScheduller对象</dd>
+<dt>Examples:</dt>
+<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">distiller</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distiller</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">file_config</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="s1">&#39;./models/C2SRCNN/agp_prune.yaml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
@@ -686,7 +701,9 @@ optionally return an instance of ‘PolicyLoss’ which will be used in place of
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler">
 <em class="property">class </em><code class="descclassname">DL_ImageGen_bench.distiller.scheduler.</code><code class="descname">CompressionScheduler</code><span class="sig-paren">(</span><em>model</em>, <em>device=device(type='cuda')</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler" title="永久链接至目标">¶</a></dt>
 <dd><p>基类：<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(在 Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Responsible for scheduling pruning and masking parameters.</p>
+<p>compression scheduler对象, 定义network compression的过程
+由scheduler定义文件生成, 需要在Train Process的不同位置加入不同的操作
+Responsible for scheduling pruning and masking parameters.</p>
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.add_policy">
 <code class="descname">add_policy</code><span class="sig-paren">(</span><em>policy</em>, <em>epochs=None</em>, <em>starting_epoch=None</em>, <em>ending_epoch=None</em>, <em>frequency=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.add_policy"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.add_policy" title="永久链接至目标">¶</a></dt>
@@ -705,7 +722,22 @@ optionally return an instance of ‘PolicyLoss’ which will be used in place of
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.before_backward_pass">
 <code class="descname">before_backward_pass</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>loss</em>, <em>optimizer=None</em>, <em>return_loss_components=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.before_backward_pass"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.before_backward_pass" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>在计算loss之后进行的compression schedule操作, 依compression的方法不同而不同
+因为做了network compression之后, loss会变化, 用这个操作去更新loss的值</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int):                   epoch id, 当前是training过程的第几个epoch</p>
+<p>minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch</p>
+<p class="last">minibatches_per_epoch (int):   一个epoch中的batch数量
+loss (float):                  未compression之前的loss值
+optimizer (class Optimizer):   训练时的优化器
+return_loss_components (bool): 是否将compression前后的loss都显示出来</p>
+</dd>
+<dt>Returns:</dt>
+<dd>overall_loss: 经过compression之后的总体loss</dd>
+</dl>
+<p>在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.load_state_dict">
@@ -726,22 +758,58 @@ names (keys) and parameter masks (values).</dd>
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_begin">
 <code class="descname">on_epoch_begin</code><span class="sig-paren">(</span><em>epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_epoch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_begin" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>在一个epoch开始的时候进行的compression schedule操作, 依compression的方法不同而不同</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int):                  epoch id, 当前是training过程的第几个epoch</p>
+<p class="last">optimizer (class Optimizer)：   训练时的优化器</p>
+</dd>
+</dl>
+<p>在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_end">
 <code class="descname">on_epoch_end</code><span class="sig-paren">(</span><em>epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_epoch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_epoch_end" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>在一个epoch结束时进行的compression schedule操作, 依compression的方法不同而不同</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int):                   epoch id, 当前是training过程的第几个epoch</p>
+<p class="last">optimizer (class Optimizer):   训练时的优化器</p>
+</dd>
+</dl>
+<p>在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_begin">
 <code class="descname">on_minibatch_begin</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_minibatch_begin"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_begin" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>在一个batch开始的时候进行的compression schedule操作, 依compression的方法不同而不同</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int):                  epoch id, 当前是training过程的第几个epoch</p>
+<p>minibatch_id (int):           batch id, 当前是某个epoch中的第几个batch</p>
+<p class="last">minibatches_per_epoch (int):  一个epoch中的batch数量
+optimizer (class Optimizer):  训练时的优化器</p>
+</dd>
+</dl>
+<p>在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_end">
 <code class="descname">on_minibatch_end</code><span class="sig-paren">(</span><em>epoch</em>, <em>minibatch_id</em>, <em>minibatches_per_epoch</em>, <em>optimizer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/DL_ImageGen_bench/distiller/scheduler.html#CompressionScheduler.on_minibatch_end"><span class="viewcode-link">[源代码]</span></a><a class="headerlink" href="#DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.on_minibatch_end" title="永久链接至目标">¶</a></dt>
-<dd></dd></dl>
+<dd><p>在一个batch结束时进行的compression schedule操作, 依compression的方法不同而不同</p>
+<dl class="docutils">
+<dt>Arguments:</dt>
+<dd><p class="first">epoch (int):                   epoch id, 当前是training过程的第几个epoch</p>
+<p>minibatch_id (int):            batch id, 当前是某个epoch中的第几个batch</p>
+<p class="last">minibatches_per_epoch (int):   一个epoch中的batch数量
+optimizer (class Optimizer):   训练时的优化器</p>
+</dd>
+</dl>
+<p>在Train Process中的具体位置参考./models/C2SRCNN/solver.train()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="DL_ImageGen_bench.distiller.scheduler.CompressionScheduler.state_dict">

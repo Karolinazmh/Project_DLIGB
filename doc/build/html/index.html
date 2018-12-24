@@ -146,6 +146,20 @@
             
   <div class="section" id="welcome-to-dl-imagegen-bench-s-documentation">
 <h1>Welcome to DL ImageGen Bench’s documentation!<a class="headerlink" href="#welcome-to-dl-imagegen-bench-s-documentation" title="永久链接至标题">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="永久链接至标题">¶</a></h2>
+<p>DL ImageGen Bench是一套基于pytorch的用于模型定义/训练/评估的代码框架, 它主要包括以下几个方面的功能:</p>
+<blockquote>
+<div><ul class="simple">
+<li>模型训练(Train)</li>
+<li>模型测试(Evaluation)</li>
+<li>网络压缩(Network Compression)</li>
+<li>模型评估, 包括参数敏感度分析(Sensitivity Analysis)、参数稀疏度分析(Sparsity Analysis)、计算量估计(MACs)、模型可视化(Visualization)等</li>
+<li>模型转换(pytorch -&gt; onnx)</li>
+<li>多模型Benchmark, 统一模型训练/测试接口, 方便比较多个模型的表现</li>
+</ul>
+</div></blockquote>
+<p>使用时, 分为两个阶段, 训练阶段(Training Phase)和测试阶段(Testing Phase), 分别对应着程序包中的两个主入口./train.py和./test.py, 这两个主程序的具体使用方式可以在DL_ImageGen_bench.train module和DL_ImageGen_bench.test module中查看</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -159,7 +173,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.evaluation">DL_ImageGen_bench.evaluation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.test">DL_ImageGen_bench.test module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench.train">DL_ImageGen_bench.train module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="DL_ImageGen_bench.html#module-DL_ImageGen_bench">Module contents</a></li>
 </ul>
@@ -168,12 +182,13 @@
 </div>
 </div>
 <div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="永久链接至标题">¶</a></h1>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="永久链接至标题">¶</a></h2>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">索引</span></a></li>
 <li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">模块索引</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">搜索页面</span></a></li>
 </ul>
+</div>
 </div>
 
 

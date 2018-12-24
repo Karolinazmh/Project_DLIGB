@@ -4,7 +4,7 @@ import argparse
 class TestOptions():
 	"""
 	
-	从命令行获取Evaluation Phase的参数列表
+	从命令行获取Testing Phase的参数列表
 
     """
 
@@ -15,7 +15,7 @@ class TestOptions():
 	def initialize(self):
 		# hyper-parameters
 		self.parser.add_argument(
-			'--evadata', type=str, default='./dataset/Test/Set29/MR_4x', help='evaluation set')
+			'--testdata', type=str, default='./dataset/Test/Set29/MR_4x', help='tesing set')
 		self.parser.add_argument('--upscale_factor', '-uf', type=int, default=4, help="super resolution upscale factor")
 		self.parser.add_argument(
 			'--resume', default='', type=str, metavar='PATH', help='path to latest checkpoint (default: none)')
@@ -34,7 +34,7 @@ class TestOptions():
 			'--sense', dest='sensitivity', choices=['element', 'filter', 'channel'],
 			help='test the sensitivity of layers to pruning')
 		self.parser.add_argument('--sensefile', type=str, help='sensitivity analysis file')
-		self.parser.add_argument('--macs', type=str, default=None, help='Macs evaluation file to save')
+		self.parser.add_argument('--macs', type=str, default=None, help='Macs estimate file to save')
 		self.parser.add_argument('--sparsity', type=str, default=None, help='Sparsity of model')
 		self.parser.add_argument('--toonnx', type=str, default=None, help='transform onnx file to save')
 		self.parser.add_argument('--quantize_flag', action='store_true', help='is model have benn quantized?')

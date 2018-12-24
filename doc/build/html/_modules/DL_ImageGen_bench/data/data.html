@@ -225,9 +225,9 @@
                              <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_test_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_test_set">[文档]</a><span class="k">def</span> <span class="nf">get_test_set</span><span class="p">(</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">test_dir</span><span class="p">):</span>
+<div class="viewcode-block" id="get_validation_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_validation_set">[文档]</a><span class="k">def</span> <span class="nf">get_validation_set</span><span class="p">(</span><span class="n">upscale_factor</span><span class="p">,</span> <span class="n">test_dir</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        获取Validataion dataset (在train的过程中supervise模型性能的数据库)</span>
+<span class="sd">        获取Validataion dataset (在train的过程中supervise模型performance的数据库)</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            upscale_factor (int): SR 图像的scale倍率 \n</span>
@@ -246,9 +246,9 @@
                              <span class="n">target_transform</span><span class="o">=</span><span class="n">target_transform</span><span class="p">(</span><span class="n">crop_size</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_eva_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_eva_set">[文档]</a><span class="k">def</span> <span class="nf">get_eva_set</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
+<div class="viewcode-block" id="get_testing_set"><a class="viewcode-back" href="../../../DL_ImageGen_bench.data.html#DL_ImageGen_bench.data.data.get_testing_set">[文档]</a><span class="k">def</span> <span class="nf">get_testing_set</span><span class="p">(</span><span class="n">opt</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        获取Evaluation dataset</span>
+<span class="sd">        获取Testing dataset</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">            opt (dict): 参数列表</span>
